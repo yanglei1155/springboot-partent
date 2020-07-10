@@ -22,6 +22,11 @@ public class UserServiceImpl extends BaseServcieImpl<UserMapper> implements User
        return user;
     }
 
+    /**
+     * 验证
+     * @param user
+     * @return
+     */
     @Override
     public User checkUser(User user) {
         if(user.getPassword()!=""&&user.getPassword()!=null){
