@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.SoldierResetInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.insigma.po.soldier.SoldierResetInfo" >
+    <id column="sri_id" property="sriId" jdbcType="INTEGER" />
+    <result column="sbi_id" property="sbiId" jdbcType="INTEGER" />
+    <result column="register_time" property="registerTime" jdbcType="VARCHAR" />
+    <result column="new_reset_type" property="newResetType" jdbcType="INTEGER" />
+    <result column="whe_rece_self_subs" property="wheReceSelfSubs" jdbcType="VARCHAR" />
+    <result column="self_subs_amount" property="selfSubsAmount" jdbcType="DECIMAL" />
+    <result column="whe_living_expenses" property="wheLivingExpenses" jdbcType="VARCHAR" />
+    <result column="living_expenses_month" property="livingExpensesMonth" jdbcType="VARCHAR" />
+    <result column="living_expenses_amout" property="livingExpensesAmout" jdbcType="DECIMAL" />
+    <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+    <result column="unit_category" property="unitCategory" jdbcType="VARCHAR" />
+    <result column="recommendation_time" property="recommendationTime" jdbcType="VARCHAR" />
+    <result column="receiving_time" property="receivingTime" jdbcType="VARCHAR" />
+    <result column="posts_name" property="postsName" jdbcType="VARCHAR" />
+    <result column="whe_on_the_staff" property="wheOnTheStaff" jdbcType="VARCHAR" />
+    <result column="whe_mou_guard" property="wheMouGuard" jdbcType="VARCHAR" />
+    <result column="unrec_rea_expl" property="unrecReaExpl" jdbcType="VARCHAR" />
+    <result column="job_message" property="jobMessage" jdbcType="VARCHAR" />
+  </resultMap>
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    	delete from soldier_reset_info where sri_id = #{sriId,jdbcType=INTEGER}
+  	</delete>
+  	<insert id="insert" parameterType="com.insigma.po.soldier.SoldierResetInfo" >
+	    insert into soldier_reset_info (sri_id, sbi_id, register_time, 
+	      new_reset_type, whe_rece_self_subs, self_subs_amount, 
+	      whe_living_expenses, living_expenses_month, 
+	      living_expenses_amout, unit_name, unit_category, 
+	      recommendation_time, receiving_time, 
+	      posts_name, whe_on_the_staff, whe_mou_guard, 
+	      unrec_rea_expl, job_message)
+	    values (#{sriId,jdbcType=INTEGER}, #{sbiId,jdbcType=INTEGER}, #{registerTime,jdbcType=VARCHAR}, 
+	      #{newResetType,jdbcType=INTEGER}, #{wheReceSelfSubs,jdbcType=VARCHAR}, #{selfSubsAmount,jdbcType=DECIMAL}, 
+	      #{wheLivingExpenses,jdbcType=VARCHAR}, #{livingExpensesMonth,jdbcType=VARCHAR}, 
+	      #{livingExpensesAmout,jdbcType=DECIMAL}, #{unitName,jdbcType=VARCHAR}, #{unitCategory,jdbcType=VARCHAR}, 
+	      #{recommendationTime,jdbcType=VARCHAR}, #{receivingTime,jdbcType=VARCHAR}, 
+	      #{postsName,jdbcType=VARCHAR}, #{wheOnTheStaff,jdbcType=VARCHAR}, #{wheMouGuard,jdbcType=VARCHAR}, 
+	      #{unrecReaExpl,jdbcType=VARCHAR}, #{jobMessage,jdbcType=VARCHAR})
+  	</insert>
+  
+  	<!-- 批量新增士兵信息 -->
+  	<insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="sbiId" keyColumn="sbi_id">
+    	insert into soldier_reset_info (sbi_id, register_time, 
+		      new_reset_type, whe_rece_self_subs, self_subs_amount, 
+		      whe_living_expenses, living_expenses_month, 
+		      living_expenses_amout, unit_name, unit_category, 
+		      recommendation_time, receiving_time, 
+		      posts_name, whe_on_the_staff, whe_mou_guard, 
+		      unrec_rea_expl, job_message) values 
+	      	<!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+        	<foreach collection="list" item="p" separator="," close=";">
+            	(#{p.sbiId,jdbcType=INTEGER}, #{p.registerTime,jdbcType=VARCHAR}, 
+			      #{p.newResetType,jdbcType=INTEGER}, #{p.wheReceSelfSubs,jdbcType=VARCHAR}, #{p.selfSubsAmount,jdbcType=DECIMAL}, 
+			      #{p.wheLivingExpenses,jdbcType=VARCHAR}, #{p.livingExpensesMonth,jdbcType=VARCHAR}, 
+			      #{p.livingExpensesAmout,jdbcType=DECIMAL}, #{p.unitName,jdbcType=VARCHAR}, #{p.unitCategory,jdbcType=VARCHAR}, 
+			      #{p.recommendationTime,jdbcType=VARCHAR}, #{p.receivingTime,jdbcType=VARCHAR}, 
+			      #{p.postsName,jdbcType=VARCHAR}, #{p.wheOnTheStaff,jdbcType=VARCHAR}, #{p.wheMouGuard,jdbcType=VARCHAR}, 
+			      #{p.unrecReaExpl,jdbcType=VARCHAR}, #{p.jobMessage,jdbcType=VARCHAR})
+        	</foreach>
+  	</insert>
+  	<!-- 批量更新士兵信息 -->
+  	<update id="updateList" parameterType="java.util.List">
+  		<foreach collection="list" item="p" index="index" open="" close="" separator=";">
+			update soldier_reset_info 
+			<trim prefix="set" suffixOverrides=",">
+			<if test='p.registerTime !=null and p.registerTime !="" '>
+	    		register_time = #{p.registerTime,jdbcType=VARCHAR},
+			</if>
+			<if test='p.newResetType !=null and p.newResetType !="" '>
+	    		new_reset_type = #{p.newResetType,jdbcType=INTEGER},
+			</if>
+			<if test='p.wheReceSelfSubs !=null and p.wheReceSelfSubs !="" '>
+	    		whe_rece_self_subs = #{p.wheReceSelfSubs,jdbcType=VARCHAR},
+			</if>
+			<if test='p.selfSubsAmount !=null and p.selfSubsAmount !="" '>
+	    		self_subs_amount = #{p.selfSubsAmount,jdbcType=DECIMAL},
+			</if>
+			<if test='p.wheLivingExpenses !=null and p.wheLivingExpenses !="" '>
+	    		whe_living_expenses = #{p.wheLivingExpenses,jdbcType=VARCHAR},
+			</if>
+			<if test='p.livingExpensesMonth !=null and p.livingExpensesMonth !="" '>
+	    		living_expenses_month = #{p.livingExpensesMonth,jdbcType=VARCHAR},
+			</if>
+			<if test='p.livingExpensesAmout !=null and p.livingExpensesAmout !="" '>
+	    		living_expenses_amout = #{p.livingExpensesAmout,jdbcType=DECIMAL},
+			</if>
+			<if test='p.unitName !=null and p.unitName !="" '>
+	    		unit_name = #{p.unitName,jdbcType=VARCHAR},
+			</if>
+			<if test='p.unitCategory !=null and p.unitCategory !="" '>
+	    		unit_category = #{p.unitCategory,jdbcType=VARCHAR},
+			</if>
+			<if test='p.recommendationTime !=null and p.recommendationTime !="" '>
+	    		recommendation_time = #{p.recommendationTime,jdbcType=VARCHAR},
+			</if>
+			<if test='p.receivingTime !=null and p.receivingTime !="" '>
+      			receiving_time = #{p.receivingTime,jdbcType=VARCHAR},
+			</if>
+			<if test='p.postsName !=null and p.postsName !="" '>
+     			posts_name = #{p.postsName,jdbcType=VARCHAR},
+			</if>
+			<if test='p.wheOnTheStaff !=null and p.wheOnTheStaff !="" '>
+      			whe_on_the_staff = #{p.wheOnTheStaff,jdbcType=VARCHAR},
+			</if>
+			<if test='p.wheMouGuard !=null and p.wheMouGuard !="" '>
+      			whe_mou_guard = #{p.wheMouGuard,jdbcType=VARCHAR},
+			</if>
+			<if test='p.unrecReaExpl !=null and p.unrecReaExpl !="" '>
+      			unrec_rea_expl = #{p.unrecReaExpl,jdbcType=VARCHAR},
+			</if>
+			<if test='p.jobMessage !=null and p.jobMessage !="" '>
+      			job_message = #{p.jobMessage,jdbcType=VARCHAR},
+			</if>
+			</trim>
+	    	where sbi_id = #{p.sbiId,jdbcType=INTEGER}
+		</foreach>
+  	</update>
+  
+  	<update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.SoldierResetInfo" >
+	    update soldier_reset_info
+	    set sbi_id = #{sbiId,jdbcType=INTEGER},
+	      register_time = #{registerTime,jdbcType=VARCHAR},
+	      new_reset_type = #{newResetType,jdbcType=INTEGER},
+	      whe_rece_self_subs = #{wheReceSelfSubs,jdbcType=VARCHAR},
+	      self_subs_amount = #{selfSubsAmount,jdbcType=DECIMAL},
+	      whe_living_expenses = #{wheLivingExpenses,jdbcType=VARCHAR},
+	      living_expenses_month = #{livingExpensesMonth,jdbcType=VARCHAR},
+	      living_expenses_amout = #{livingExpensesAmout,jdbcType=DECIMAL},
+	      unit_name = #{unitName,jdbcType=VARCHAR},
+	      unit_category = #{unitCategory,jdbcType=VARCHAR},
+	      recommendation_time = #{recommendationTime,jdbcType=VARCHAR},
+	      receiving_time = #{receivingTime,jdbcType=VARCHAR},
+	      posts_name = #{postsName,jdbcType=VARCHAR},
+	      whe_on_the_staff = #{wheOnTheStaff,jdbcType=VARCHAR},
+	      whe_mou_guard = #{wheMouGuard,jdbcType=VARCHAR},
+	      unrec_rea_expl = #{unrecReaExpl,jdbcType=VARCHAR},
+	      job_message = #{jobMessage,jdbcType=VARCHAR}
+	    where sri_id = #{sriId,jdbcType=INTEGER}
+  	</update>
+  	<select id="selectByPrimaryKey" resultType="com.insigma.po.soldier.SoldierResetInfo" parameterType="java.lang.Integer" >
+	    SELECT
+			sri_id,
+			sbi_id,
+			register_time,
+			(select param_value from sys_param_info where group_key='newResetType' and param_key=t.new_reset_type) new_reset_type,
+			(select param_value from sys_param_info where group_key='isOrNo' and param_key=t.whe_rece_self_subs) whe_rece_self_subs,
+			self_subs_amount,
+			(select param_value from sys_param_info where group_key='isOrNo' and param_key=t.whe_living_expenses) whe_living_expenses,
+			living_expenses_month,
+			living_expenses_amout,
+			unit_name,
+			(select param_value from sys_param_info where group_key='unitCategory' and param_key=t.unit_category) unit_category,
+			recommendation_time,
+			receiving_time,
+			posts_name,
+			(select param_value from sys_param_info where group_key='isOrNo' and param_key=t.whe_on_the_staff) whe_on_the_staff,
+			(select param_value from sys_param_info where group_key='isOrNo' and param_key=t.whe_mou_guard) whe_mou_guard,
+			(select param_value from sys_param_info where group_key='unrecReaExpl' and param_key=t.unrec_rea_expl) unrec_rea_expl,
+			job_message 
+		FROM
+			soldier_reset_info t
+	    where sbi_id = #{sbiId,jdbcType=INTEGER}
+  	</select>
+	<select id="selectAll" resultMap="BaseResultMap" >
+	    select sri_id, sbi_id, register_time, new_reset_type, whe_rece_self_subs, self_subs_amount, 
+	    whe_living_expenses, living_expenses_month, living_expenses_amout, unit_name, unit_category, 
+	    recommendation_time, receiving_time, posts_name, whe_on_the_staff, whe_mou_guard, 
+	    unrec_rea_expl, job_message
+	    from soldier_reset_info
+	</select>
+</mapper>

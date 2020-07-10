@@ -1,0 +1,1254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.SoldierBasicInfoMapper" >
+  
+  	<!-- 数据管理模块-查询士兵基础信息列表  -->
+  	<select id="querySoldierList" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="com.insigma.po.soldier.SoldierBasicInfo">
+		SELECT  *
+		FROM soldier_basic_info t  where 1=1
+	    <if test='checkStatus !=null and checkStatus !="" or checkStatus ==0 '>
+			and check_status=#{checkStatus}
+		</if>
+		<if test='status !=null and status !="" or status==0 '>
+			and status=#{status,jdbcType=INTEGER}
+		</if>
+	    <if test='ybId !=null and ybId !="" '>
+			and yb_id = #{ybId,jdbcType=INTEGER}
+		</if>
+		<if test='name !=null and name !="" '>
+			and name like '%${name}%'
+		</if>
+		<if test='regionalCode !=null and regionalCode !="" '>
+			<if test='regionalCode.length()==4'>
+				and regional_code like '${regionalCode}%'
+			</if>
+			<if test='regionalCode.length()==6'>
+				and regional_code = #{regionalCode,jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test=' wheTransfer== 1'>
+			and status in(1,2)
+		</if>
+		<if test=' wheTransfer== 2'>
+			and status =0
+		</if>
+		<if test=' wheTransfer== 3'>
+			and status =4
+		</if>
+		<if test='noticeStatus !=null and noticeStatus !="" or noticeStatus==0 '>
+			and notice_status = #{noticeStatus}
+		</if>
+		<if test='personnelType !=null and personnelType !="" '>
+			AND personnel_type = #{personnelType} 
+		</if> 
+		order by personnel_type,big_unit_name,regional_code
+  	</select>
+  	
+  	<!-- 数据管理模块-数据导入根据身份证号判断数据是否已存在 -->
+  	<select id="checkSoldierBasicInfo" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="java.lang.String" >
+	    select *
+	    from soldier_basic_info a
+	    where idcard = #{idcard}
+  	</select>
+  	
+  	<!-- 数据管理-查询地区级联数据 -->
+  	<select id="queryAreaCascadeData" resultType="com.insigma.po.soldier.AreaCascadeData"  parameterType="java.util.Map">
+	    <if test='flag == 1 '>
+			select count(1) pnum from soldier_basic_info t
+			where 1=1
+			<if test='ybId !=null and ybId !="" '>
+				AND yb_id = #{ybId} 
+			</if>
+			<if test='status !=null and status !="" or status ==0 '>
+				AND status=#{status}
+			</if>
+			<if test='checkStatus !=null and checkStatus !="" or checkStatus ==0 '>
+				AND check_status=#{checkStatus}
+			</if>
+			<if test='noticeStatus !=null and noticeStatus !="" or noticeStatus ==0 '>
+				AND notice_status=#{noticeStatus}
+			</if>
+			<if test='personnelType !=null and personnelType !="" '>
+				AND personnel_type = #{personnelType} 
+			</if> 
+			<if test='regionalCode !=null and regionalCode !="" '>
+				<if test='regionalCode.length()==4'>
+					AND regional_code like '${regionalCode}%'
+				</if>
+				<if test='regionalCode.length()==6'>
+					AND regional_code = #{regionalCode}
+				</if>
+			</if>
+			<if test='queryType =="1" '>
+				AND reset_type = 1 
+				AND (new_reset_type IS NULL or new_reset_type=1)
+			</if> 
+			<if test='queryType =="2" '>
+				AND new_reset_type=2 
+			</if>
+			<if test=' wheTransfer== 1'>
+				and status in(1,2)
+			</if>
+			<if test=' wheTransfer== 2'>
+				and status =0
+			</if>
+			<if test=' wheTransfer== 3'>
+				and status =4
+			</if>
+			<if test='registerStatus =="1" '>
+				and (t.register_status = '1' or register_status is null)
+			</if>
+			<if test='registerStatus =="2" '>
+				and t.register_status = '2'
+			</if>
+		</if>
+	    <if test='flag == 2 '>
+			SELECT
+				a.regional_name,a.regional_code,
+				IFNULL( b.pnum, 0 ) pnum 
+			FROM
+				sys_regional a
+				LEFT JOIN (
+				SELECT
+					CONCAT( substr( regional_code, 1, 4 ), '00' ) regional_code,
+					count( 1 ) pnum 
+				FROM
+					soldier_basic_info t
+				WHERE  1=1
+					<if test='ybId !=null and ybId !="" '>
+						AND yb_id = #{ybId} 
+					</if>
+					<if test='status !=null and status !="" or status ==0 '>
+						AND status=#{status}
+					</if>
+					<if test='checkStatus !=null and checkStatus !="" or checkStatus ==0 '>
+						AND check_status=#{checkStatus}
+					</if>
+					<if test='noticeStatus !=null and noticeStatus !="" or noticeStatus ==0 '>
+						AND notice_status=#{noticeStatus}
+					</if>
+					<if test='personnelType !=null and personnelType !="" '>
+						AND personnel_type = #{personnelType} 
+					</if> 
+					<if test='regionalCode !=null and regionalCode !="" '>
+						<if test='regionalCode.length()==4'>
+							AND regional_code like '${regionalCode}%'
+						</if>
+						<if test='regionalCode.length()==6'>
+							AND regional_code = #{regionalCode}
+						</if>
+					</if>
+					<if test='queryType =="1" '>
+						AND reset_type = 1 
+						AND (new_reset_type IS NULL or new_reset_type=1)
+					</if> 
+					<if test='queryType =="2" '>
+						AND new_reset_type=2 
+					</if>
+					<if test=' wheTransfer== 1'>
+						and status in(1,2)
+					</if>
+					<if test=' wheTransfer== 2'>
+						and status =0
+					</if>
+					<if test=' wheTransfer== 3'>
+						and status =4
+					</if>
+					<if test='registerStatus =="1" '>
+						and (t.register_status = '1' or register_status is null)
+					</if>
+					<if test='registerStatus =="2" '>
+						and t.register_status = '2'
+					</if>
+				GROUP BY
+				substr( regional_code, 1, 4 )) b ON b.regional_code = a.regional_code 
+			WHERE
+				parent_id = 330000
+				<if test='regionalCode !=null and regionalCode !="" '>
+					and a.regional_code = CONCAT(  substr( #{regionalCode}, 1, 4 ), '00' )  
+				</if>
+				order by a.regional_code
+		</if>
+	    <if test='flag == 3 '>
+			SELECT
+				a.regional_name,
+				a.regional_code,
+				IFNULL( b.pnum, 0 ) pnum 
+			FROM
+				sys_regional a
+				LEFT JOIN ( SELECT regional_code, count( 1 ) pnum FROM soldier_basic_info t
+							WHERE  1=1
+							<if test='ybId !=null and ybId !="" '>
+								AND yb_id = #{ybId} 
+							</if>
+							<if test='status !=null and status !="" or status ==0 '>
+								AND status=#{status}
+							</if>
+							<if test='checkStatus !=null and checkStatus !="" or checkStatus ==0 '>
+								AND check_status=#{checkStatus}
+							</if>
+							<if test='noticeStatus !=null and noticeStatus !="" or noticeStatus ==0 '>
+								AND notice_status=#{noticeStatus}
+							</if>
+							<if test='personnelType !=null and personnelType !="" '>
+								AND personnel_type = #{personnelType} 
+							</if> 
+							<if test='regionalCode !=null and regionalCode !="" '>
+								<if test='regionalCode.length()==4'>
+									AND regional_code like '${regionalCode}%'
+								</if>
+								<if test='regionalCode.length()==6'>
+									AND regional_code = #{regionalCode}
+								</if>
+							</if>
+							<if test='queryType =="1" '>
+								AND reset_type = 1 
+								AND (new_reset_type IS NULL or new_reset_type=1)
+							</if> 
+							<if test='queryType =="2" '>
+								AND new_reset_type=2 
+							</if>
+							<if test=' wheTransfer== 1'>
+								and status in(1,2)
+							</if>
+							<if test=' wheTransfer== 2'>
+								and status =0
+							</if>
+							<if test=' wheTransfer== 3'>
+								and status =4
+							</if>
+							<if test='registerStatus =="1" '>
+								and (t.register_status = '1' or register_status is null)
+							</if>
+							<if test='registerStatus =="2" '>
+								and t.register_status = '2'
+							</if>
+							 GROUP BY regional_code ) b 
+				ON b.regional_code = a.regional_code 
+			WHERE 1=1 
+				<if test='regionalCode !=null and regionalCode !="" '>
+					<if test='regionalCode.length()==4'>
+						and a.parent_id = CONCAT( #{regionalCode}, '00' ) 
+					</if>
+					<if test='regionalCode.length()==6'>
+						and a.regional_code = #{regionalCode}
+					</if>								
+				</if>
+			ORDER BY
+				a.regional_code
+		</if>
+  	</select>
+  	
+  	<!-- 根据sbiId查询详细信息 -->
+  	<select id="selectByPrimaryKey" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="java.lang.Integer" >
+	    select * from soldier_basic_info a where sbi_id = #{sbiId,jdbcType=INTEGER}
+  	</select>
+  
+  	<!-- 根据sbiId删除数据 -->
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    	delete from soldier_basic_info where sbi_id = #{sbiId,jdbcType=INTEGER}
+  	</delete>
+  	
+  	<update id="updateSql" parameterType="java.lang.String" >
+  		${_parameter}
+  	</update>
+  	
+  	<update id="updateListSql" parameterType="java.util.List" >
+  		<foreach collection="list" item="p" index="index" open="" close="" separator=";">
+			${p}
+		</foreach>
+  	</update>
+  	
+  	<!-- 档案审核-更新数据 -->
+  	<update id="updateArchivesAudit" parameterType="com.insigma.po.soldier.SoldierBasicInfo" >
+    	update soldier_basic_info set 
+    		idcard = #{idcard,jdbcType=VARCHAR},
+    		name = #{name,jdbcType=VARCHAR},
+    		sex = #{sex,jdbcType=VARCHAR},
+    		nation = #{nation,jdbcType=VARCHAR},
+    		birthday = #{birthday,jdbcType=VARCHAR},
+    		troops_name = #{troopsName,jdbcType=VARCHAR},
+    		big_unit_name = #{bigUnitName,jdbcType=VARCHAR},
+    		soldiers_military_rank = #{soldiersMilitaryRank,jdbcType=VARCHAR},
+    		enlisted_date = #{enlistedDate,jdbcType=VARCHAR},
+    		marriage_status = #{marriageStatus,jdbcType=VARCHAR},
+    		domicile = #{domicile,jdbcType=VARCHAR},
+    		reset_place = #{resetPlace,jdbcType=VARCHAR},
+    		phone = #{phone,jdbcType=VARCHAR},
+    		reset_category = #{resetCategory,jdbcType=VARCHAR},
+    		retired_date = #{retiredDate,jdbcType=VARCHAR},
+    		poli_affi_code = #{poliAffiCode,jdbcType=VARCHAR},
+    		tim_joi_party = #{timJoiParty,jdbcType=VARCHAR},
+    		edu_lev_code = #{eduLevCode,jdbcType=INTEGER},
+    		former_unit = #{formerUnit,jdbcType=VARCHAR},
+    		service_duration = #{serviceDuration,jdbcType=VARCHAR},
+    		enlisted_materials1 = #{enlistedMaterials1,jdbcType=VARCHAR},
+    		enlisted_materials2 = #{enlistedMaterials2,jdbcType=VARCHAR},
+    		enlisted_materials3 = #{enlistedMaterials3,jdbcType=VARCHAR},
+    		retired_materials1 = #{retiredMaterials1,jdbcType=VARCHAR},
+    		retired_materials2 = #{retiredMaterials2,jdbcType=VARCHAR},
+    		retired_materials3 = #{retiredMaterials3,jdbcType=VARCHAR},
+    		archives_score = #{archivesScore,jdbcType=VARCHAR},
+    		officers_materials1 = #{officersMaterials1,jdbcType=VARCHAR},
+    		officers_materials2 = #{officersMaterials2,jdbcType=VARCHAR},
+    		officers_materials3 = #{officersMaterials3,jdbcType=VARCHAR},
+    		officers_materials4 = #{officersMaterials4,jdbcType=VARCHAR},
+    		officers_materials5 = #{officersMaterials5,jdbcType=VARCHAR},
+    		officers_materials6 = #{officersMaterials6,jdbcType=VARCHAR},
+    		is_hard_area = #{isHardArea,jdbcType=VARCHAR},
+    		hard_area_remark = #{hardAreaRemark,jdbcType=VARCHAR},
+    		reward_materials = #{rewardMaterials,jdbcType=VARCHAR},
+    		reward_remark = #{rewardRemark,jdbcType=VARCHAR},
+    		punishment_materials = #{punishmentMaterials,jdbcType=VARCHAR},
+    		punishment_remark = #{punishmentRemark,jdbcType=VARCHAR},
+    		relocate_reason_materials1 = #{relocateReasonMaterials1,jdbcType=VARCHAR},
+    		relocate_reason_materials2 = #{relocateReasonMaterials2,jdbcType=VARCHAR},
+    		relocate_reason_materials3 = #{relocateReasonMaterials3,jdbcType=VARCHAR},
+    		relocate_reason_code = #{relocateReasonCode,jdbcType=VARCHAR},
+    		retired_type = #{retiredType,jdbcType=VARCHAR},
+    		idcard_materials = #{idcardMaterials,jdbcType=VARCHAR},
+    		marriage_materials = #{marriageMaterials,jdbcType=VARCHAR},
+    		spouse_name = #{spouseName,jdbcType=VARCHAR},
+    		martyr_children_materials = #{martyrChildrenMaterials,jdbcType=VARCHAR},
+    		is_martyr_children = #{isMartyrChildren,jdbcType=VARCHAR},
+    		disability_categories_materials = #{disabilityCategoriesMaterials,jdbcType=VARCHAR},
+    		disability_categories_code = #{disabilityCategoriesCode,jdbcType=VARCHAR},
+    		disable_grade_code = #{disableGradeCode,jdbcType=VARCHAR},
+    		archives_audit_remark = #{archivesAuditRemark,jdbcType=VARCHAR},
+    		regional_code = #{regionalCode,jdbcType=VARCHAR},
+    		status = #{status,jdbcType=INTEGER},
+    		remark = #{remark,jdbcType=VARCHAR},
+    		is_relocate_reason = #{isRelocateReason,jdbcType=VARCHAR},
+	    	professional = #{professional,jdbcType=VARCHAR},
+	    	total_score = #{totalScore,jdbcType=VARCHAR},
+			modify_time=sysdate()
+    	where sbi_id = #{sbiId,jdbcType=INTEGER}
+  	</update>
+  	
+  	<!-- 档案审核-批量更新士兵信息 -->
+  	<update id="updateArchivesList" parameterType="java.util.List">
+  		<foreach collection="list" item="p" index="index" open="" close="" separator=";">
+			update soldier_basic_info set 
+	    		idcard = #{p.idcard},
+	    		name = #{p.name},
+	    		sex = #{p.sex},
+	    		nation = #{p.nation},
+	    		birthday = #{p.birthday},
+	    		big_unit_name = #{p.bigUnitName},
+	    		soldiers_military_rank = #{p.soldiersMilitaryRank},
+	    		enlisted_date = #{p.enlistedDate},
+	    		marriage_status = #{p.marriageStatus},
+	    		domicile = #{p.domicile},
+	    		reset_place = #{p.resetPlace},
+	    		phone = #{p.phone},
+	    		reset_category = #{p.resetCategory},
+	    		retired_date = #{p.retiredDate},
+	    		poli_affi_code = #{p.poliAffiCode},
+	    		tim_joi_party = #{p.timJoiParty},
+	    		edu_lev_code = #{p.eduLevCode},
+	    		former_unit = #{p.formerUnit},
+	    		service_duration = #{p.serviceDuration},
+	    		enlisted_materials1 = #{p.enlistedMaterials1},
+	    		enlisted_materials2 = #{p.enlistedMaterials2},
+	    		enlisted_materials3 = #{p.enlistedMaterials3},
+	    		retired_materials1 = #{p.retiredMaterials1},
+	    		retired_materials2 = #{p.retiredMaterials2},
+	    		retired_materials3 = #{p.retiredMaterials3},
+	    		archives_score = #{p.archivesScore},
+	    		officers_materials1 = #{p.officersMaterials1},
+	    		officers_materials2 = #{p.officersMaterials2},
+	    		officers_materials3 = #{p.officersMaterials3},
+	    		officers_materials4 = #{p.officersMaterials4},
+	    		officers_materials5 = #{p.officersMaterials5},
+	    		officers_materials6 = #{p.officersMaterials6},
+	    		is_hard_area = #{p.isHardArea},
+	    		hard_area_remark = #{p.hardAreaRemark},
+	    		reward_materials = #{p.rewardMaterials},
+	    		reward_remark = #{p.rewardRemark},
+	    		punishment_materials = #{p.punishmentMaterials},
+	    		punishment_remark = #{p.punishmentRemark},
+	    		relocate_reason_materials1 = #{p.relocateReasonMaterials1},
+	    		relocate_reason_materials2 = #{p.relocateReasonMaterials2},
+	    		relocate_reason_materials3 = #{p.relocateReasonMaterials3},
+	    		relocate_reason_code = #{p.relocateReasonCode},
+	    		retired_type = #{p.retiredType},
+	    		idcard_materials = #{p.idcardMaterials},
+	    		marriage_materials = #{p.marriageMaterials},
+	    		spouse_name = #{p.spouseName},
+	    		martyr_children_materials = #{p.martyrChildrenMaterials},
+	    		is_martyr_children = #{p.isMartyrChildren},
+	    		disability_categories_materials = #{p.disabilityCategoriesMaterials},
+	    		disability_categories_code = #{p.disabilityCategoriesCode},
+	    		disable_grade_code = #{p.disableGradeCode},
+	    		archives_audit_remark = #{p.archivesAuditRemark},
+	    		regional_code = #{p.regionalCode},
+	    		status = #{p.status},
+	    		remark = #{p.remark},
+	    		is_relocate_reason = #{p.isRelocateReason},
+	    		personnel_type = #{p.personnelType},
+	    		professional = #{p.professional,jdbcType=VARCHAR},
+	    		new_reset_type = #{p.newResetType,jdbcType=INTEGER},
+	    		check_status = #{p.checkStatus,jdbcType=INTEGER},
+	    		total_score = #{p.totalScore,jdbcType=VARCHAR},
+				modify_time=sysdate()
+	    	where sbi_id = #{p.sbiId,jdbcType=INTEGER}
+		</foreach>
+  	</update>
+  	
+  	<!-- 新增单条数据 -->
+	<insert id="insert" parameterType="com.insigma.po.soldier.SoldierBasicInfo" useGeneratedKeys="true" keyProperty="sbiId" keyColumn="sbi_id">
+    	insert into soldier_basic_info (sbi_id, yb_id, idcard, 
+	      name, sex, nation, 
+	      birthday, troops_name, big_unit_name, 
+	      soldiers_military_rank, enlisted_date, marriage_status, 
+	      domicile, reset_place, phone, 
+	      reset_category, retired_date, poli_affi_code, 
+	      tim_joi_party, edu_lev_code, former_unit, service_duration,
+	      enlisted_materials1, enlisted_materials2, 
+	      enlisted_materials3, retired_materials1, 
+	      retired_materials2, retired_materials3, archives_score, 
+	      officers_materials1, officers_materials2, 
+	      officers_materials3, officers_materials4, 
+	      officers_materials5, officers_materials6, 
+	      is_hard_area, hard_area_remark, reward_materials, 
+	      reward_remark, punishment_materials, punishment_remark, 
+	      relocate_reason_materials1, relocate_reason_materials2, 
+      	  relocate_reason_materials3, relocate_reason_code, retired_type, 
+	      idcard_materials, marriage_materials, spouse_name, 
+	      martyr_children_materials, is_martyr_children, 
+	      disability_categories_materials, disability_categories_code, 
+	      disable_grade_code, archives_audit_remark, 
+	      regional_code, notice_status, file_path, 
+	      data_type, reset_type, new_reset_type, 
+	      register_status, status, check_status, 
+	      check_time, create_time, modify_time, 
+	      remark,is_relocate_reason,personnel_type,professional)
+	    values (#{sbiId,jdbcType=INTEGER}, #{ybId,jdbcType=INTEGER}, #{idcard,jdbcType=VARCHAR}, 
+	      #{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR}, 
+	      #{birthday,jdbcType=VARCHAR}, #{troopsName,jdbcType=VARCHAR}, #{bigUnitName,jdbcType=VARCHAR}, 
+	      #{soldiersMilitaryRank,jdbcType=VARCHAR}, #{enlistedDate,jdbcType=VARCHAR}, #{marriageStatus,jdbcType=VARCHAR}, 
+	      #{domicile,jdbcType=VARCHAR}, #{resetPlace,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+	      #{resetCategory,jdbcType=VARCHAR}, #{retiredDate,jdbcType=VARCHAR}, #{poliAffiCode,jdbcType=VARCHAR}, 
+	      #{timJoiParty,jdbcType=VARCHAR}, #{eduLevCode,jdbcType=INTEGER}, #{formerUnit,jdbcType=VARCHAR},#{serviceDuration,jdbcType=VARCHAR},  
+	      #{enlistedMaterials1,jdbcType=VARCHAR}, #{enlistedMaterials2,jdbcType=VARCHAR}, 
+	      #{enlistedMaterials3,jdbcType=VARCHAR}, #{retiredMaterials1,jdbcType=VARCHAR}, 
+	      #{retiredMaterials2,jdbcType=VARCHAR}, #{retiredMaterials3,jdbcType=VARCHAR}, #{archivesScore,jdbcType=VARCHAR}, 
+	      #{officersMaterials1,jdbcType=VARCHAR}, #{officersMaterials2,jdbcType=VARCHAR}, 
+	      #{officersMaterials3,jdbcType=VARCHAR}, #{officersMaterials4,jdbcType=VARCHAR}, 
+	      #{officersMaterials5,jdbcType=VARCHAR}, #{officersMaterials6,jdbcType=VARCHAR}, 
+	      #{isHardArea,jdbcType=VARCHAR}, #{hardAreaRemark,jdbcType=VARCHAR}, #{rewardMaterials,jdbcType=VARCHAR}, 
+	      #{rewardRemark,jdbcType=VARCHAR}, #{punishmentMaterials,jdbcType=VARCHAR}, #{punishmentRemark,jdbcType=VARCHAR}, 
+	      #{relocateReasonMaterials1,jdbcType=VARCHAR}, #{relocateReasonMaterials2,jdbcType=VARCHAR}, 
+      	  #{relocateReasonMaterials3,jdbcType=VARCHAR}, #{relocateReasonCode,jdbcType=VARCHAR}, #{retiredType,jdbcType=VARCHAR}, 
+	      #{idcardMaterials,jdbcType=VARCHAR}, #{marriageMaterials,jdbcType=VARCHAR}, #{spouseName,jdbcType=VARCHAR}, 
+	      #{martyrChildrenMaterials,jdbcType=VARCHAR}, #{isMartyrChildren,jdbcType=VARCHAR}, 
+	      #{disabilityCategoriesMaterials,jdbcType=VARCHAR}, #{disabilityCategoriesCode,jdbcType=VARCHAR}, 
+	      #{disableGradeCode,jdbcType=VARCHAR}, #{archivesAuditRemark,jdbcType=VARCHAR}, 
+	      #{regionalCode,jdbcType=VARCHAR}, 0, #{filePath,jdbcType=VARCHAR}, 
+	      #{dataType,jdbcType=INTEGER}, #{resetType,jdbcType=INTEGER}, #{newResetType,jdbcType=INTEGER}, 
+	      #{registerStatus,jdbcType=INTEGER},#{status,jdbcType=INTEGER},#{checkStatus,jdbcType=INTEGER}, 
+	      #{checkTime,jdbcType=TIMESTAMP}, sysdate(), #{modifyTime,jdbcType=TIMESTAMP}, 
+	      #{remark,jdbcType=VARCHAR},#{isRelocateReason,jdbcType=VARCHAR},#{personnelType,jdbcType=INTEGER},
+	      #{professional,jdbcType=VARCHAR})
+  	</insert>
+  	
+  	<!-- 批量新增士兵信息 -->
+  	<insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="sbiId" keyColumn="sbi_id">
+    	insert into soldier_basic_info (sbi_id, yb_id, idcard, 
+		      name, sex, nation, 
+		      birthday, troops_name, big_unit_name, 
+		      soldiers_military_rank, enlisted_date, marriage_status, 
+		      domicile, reset_place, phone, 
+		      reset_category, retired_date, poli_affi_code, 
+		      tim_joi_party, edu_lev_code, former_unit, service_duration,
+		      enlisted_materials1, enlisted_materials2, 
+		      enlisted_materials3, retired_materials1, 
+		      retired_materials2, retired_materials3, archives_score, 
+		      officers_materials1, officers_materials2, 
+		      officers_materials3, officers_materials4, 
+		      officers_materials5, officers_materials6, 
+		      is_hard_area, hard_area_remark, reward_materials, 
+		      reward_remark, punishment_materials, punishment_remark, 
+		      relocate_reason_materials1, relocate_reason_materials2, 
+	      	  relocate_reason_materials3, relocate_reason_code, retired_type, 
+		      idcard_materials, marriage_materials, spouse_name, 
+		      martyr_children_materials, is_martyr_children, 
+		      disability_categories_materials, disability_categories_code, 
+		      disable_grade_code, archives_audit_remark, 
+		      regional_code, notice_status, file_path, 
+		      data_type, reset_type, new_reset_type, 
+		      register_status, status, check_status, 
+		      check_time, create_time, modify_time, 
+		      remark,is_relocate_reason,personnel_type,professional) values 
+	      	<!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+        	<foreach collection="list" item="p" separator="," close=";">
+            	(#{p.sbiId,jdbcType=INTEGER}, #{p.ybId,jdbcType=INTEGER}, #{p.idcard,jdbcType=VARCHAR}, 
+			      #{p.name,jdbcType=VARCHAR}, #{p.sex,jdbcType=VARCHAR}, #{p.nation,jdbcType=VARCHAR}, 
+			      #{p.birthday,jdbcType=VARCHAR}, #{p.troopsName,jdbcType=VARCHAR}, #{p.bigUnitName,jdbcType=VARCHAR}, 
+			      #{p.soldiersMilitaryRank,jdbcType=VARCHAR}, #{p.enlistedDate,jdbcType=VARCHAR}, #{p.marriageStatus,jdbcType=VARCHAR}, 
+			      #{p.domicile,jdbcType=VARCHAR}, #{p.resetPlace,jdbcType=VARCHAR}, #{p.phone,jdbcType=VARCHAR}, 
+			      #{p.resetCategory,jdbcType=VARCHAR}, #{p.retiredDate,jdbcType=VARCHAR}, #{p.poliAffiCode,jdbcType=VARCHAR}, 
+			      #{p.timJoiParty,jdbcType=VARCHAR}, #{p.eduLevCode}, #{p.formerUnit,jdbcType=VARCHAR},#{p.serviceDuration,jdbcType=VARCHAR},  
+			      #{p.enlistedMaterials1,jdbcType=VARCHAR}, #{p.enlistedMaterials2,jdbcType=VARCHAR}, 
+			      #{p.enlistedMaterials3,jdbcType=VARCHAR}, #{p.retiredMaterials1,jdbcType=VARCHAR}, 
+			      #{p.retiredMaterials2,jdbcType=VARCHAR}, #{p.retiredMaterials3,jdbcType=VARCHAR}, #{p.archivesScore,jdbcType=VARCHAR}, 
+			      #{p.officersMaterials1,jdbcType=VARCHAR}, #{p.officersMaterials2,jdbcType=VARCHAR}, 
+			      #{p.officersMaterials3,jdbcType=VARCHAR}, #{p.officersMaterials4,jdbcType=VARCHAR}, 
+			      #{p.officersMaterials5,jdbcType=VARCHAR}, #{p.officersMaterials6,jdbcType=VARCHAR}, 
+			      #{p.isHardArea,jdbcType=VARCHAR}, #{p.hardAreaRemark,jdbcType=VARCHAR}, #{p.rewardMaterials,jdbcType=VARCHAR}, 
+			      #{p.rewardRemark,jdbcType=VARCHAR}, #{p.punishmentMaterials,jdbcType=VARCHAR}, #{p.punishmentRemark,jdbcType=VARCHAR}, 
+			      #{p.relocateReasonMaterials1,jdbcType=VARCHAR}, #{p.relocateReasonMaterials2,jdbcType=VARCHAR}, 
+		      	  #{p.relocateReasonMaterials3,jdbcType=VARCHAR}, #{p.relocateReasonCode,jdbcType=VARCHAR}, #{p.retiredType,jdbcType=VARCHAR}, 
+			      #{p.idcardMaterials,jdbcType=VARCHAR}, #{p.marriageMaterials,jdbcType=VARCHAR}, #{p.spouseName,jdbcType=VARCHAR}, 
+			      #{p.martyrChildrenMaterials,jdbcType=VARCHAR}, #{p.isMartyrChildren,jdbcType=VARCHAR}, 
+			      #{p.disabilityCategoriesMaterials,jdbcType=VARCHAR}, #{p.disabilityCategoriesCode,jdbcType=VARCHAR}, 
+			      #{p.disableGradeCode,jdbcType=VARCHAR}, #{p.archivesAuditRemark,jdbcType=VARCHAR}, 
+			      #{p.regionalCode,jdbcType=VARCHAR}, 0, #{p.filePath,jdbcType=VARCHAR}, 
+			      #{p.dataType,jdbcType=INTEGER}, #{p.resetType,jdbcType=INTEGER}, #{p.newResetType,jdbcType=INTEGER}, 
+			      #{p.registerStatus,jdbcType=INTEGER},#{p.status,jdbcType=INTEGER},#{p.checkStatus,jdbcType=INTEGER}, 
+			      #{p.checkTime,jdbcType=TIMESTAMP}, sysdate(), #{p.modifyTime,jdbcType=TIMESTAMP}, 
+			      #{p.remark,jdbcType=VARCHAR},#{p.isRelocateReason,jdbcType=VARCHAR},#{p.personnelType,jdbcType=INTEGER},
+			      #{p.professional,jdbcType=VARCHAR})
+        	</foreach>
+  	</insert>
+  	
+  	<update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.SoldierBasicInfo" >
+    	update soldier_basic_info set 
+    	<if test='ybId !=null and ybId !="" '>
+    		yb_id = #{ybId,jdbcType=INTEGER},
+		</if>
+		<if test='idcard !=null and idcard !="" '>
+    		idcard = #{idcard,jdbcType=VARCHAR},
+		</if>
+		<if test='name !=null and name !="" '>
+    		name = #{name,jdbcType=VARCHAR},
+		</if>
+		<if test='sex !=null and sex !="" '>
+    		sex = #{sex,jdbcType=VARCHAR},
+		</if>
+		<if test=' nation !=null and nation !="" '>
+    		nation = #{nation,jdbcType=VARCHAR},
+		</if>
+		<if test='birthday !=null and birthday !="" '>
+    		birthday = #{birthday,jdbcType=VARCHAR},
+		</if>
+		<if test=' troopsName !=null and troopsName !="" '>
+    		troops_name = #{troopsName,jdbcType=VARCHAR},
+		</if>
+	    <if test=' bigUnitName !=null and bigUnitName !="" '>
+    		big_unit_name = #{bigUnitName,jdbcType=VARCHAR},
+		</if>
+		<if test=' soldiersMilitaryRank !=null and soldiersMilitaryRank !="" '>
+    		soldiers_military_rank = #{soldiersMilitaryRank,jdbcType=VARCHAR},
+		</if>
+		<if test=' enlistedDate !=null and enlistedDate !="" '>
+    		enlisted_date = #{enlistedDate,jdbcType=VARCHAR},
+		</if>
+		<if test=' marriageStatus !=null and marriageStatus !="" '>
+    		marriage_status = #{marriageStatus,jdbcType=VARCHAR},
+		</if>
+		<if test=' domicile !=null and domicile !="" '>
+    		domicile = #{domicile,jdbcType=VARCHAR},
+		</if> 
+		<if test=' resetPlace !=null and resetPlace !="" '>
+    		reset_place = #{resetPlace,jdbcType=VARCHAR},
+		</if>  
+		<if test=' phone !=null and phone !="" '>
+    		phone = #{phone,jdbcType=VARCHAR},
+		</if>  
+		<if test=' resetCategory !=null and resetCategory !="" '>
+    		reset_category = #{resetCategory,jdbcType=VARCHAR},
+		</if>  
+		<if test=' retiredDate !=null and retiredDate !="" '>
+    		retired_date = #{retiredDate,jdbcType=VARCHAR},
+		</if>  
+		<if test=' poliAffiCode !=null and poliAffiCode !="" '>
+    		poli_affi_code = #{poliAffiCode,jdbcType=VARCHAR},
+		</if>  
+		<if test=' timJoiParty !=null and timJoiParty !="" '>
+    		tim_joi_party = #{timJoiParty,jdbcType=VARCHAR},
+		</if>  
+		<if test=' eduLevCode !=null and eduLevCode !="" '>
+    		edu_lev_code = #{eduLevCode,jdbcType=INTEGER},
+		</if>  
+		<if test=' formerUnit !=null and formerUnit !="" '>
+    		former_unit = #{formerUnit,jdbcType=VARCHAR},
+		</if>  
+		<if test=' serviceDuration !=null and serviceDuration !="" '>
+    		service_duration = #{serviceDuration,jdbcType=VARCHAR},
+		</if>
+		<if test=' enlistedMaterials1 !=null and enlistedMaterials1 !="" '>
+    		enlisted_materials1 = #{enlistedMaterials1,jdbcType=VARCHAR},
+		</if>  
+		<if test=' enlistedMaterials2 !=null and enlistedMaterials2 !="" '>
+    		enlisted_materials2 = #{enlistedMaterials2,jdbcType=VARCHAR},
+		</if>  
+		<if test=' enlistedMaterials3 !=null and enlistedMaterials3 !="" '>
+    		enlisted_materials3 = #{enlistedMaterials3,jdbcType=VARCHAR},
+		</if>  
+		<if test=' retiredMaterials1 !=null and retiredMaterials1 !="" '>
+    		retired_materials1 = #{retiredMaterials1,jdbcType=VARCHAR},
+		</if> 
+		<if test=' retiredMaterials2 !=null and retiredMaterials2 !="" '>
+    		retired_materials2 = #{retiredMaterials2,jdbcType=VARCHAR},
+		</if> 
+		<if test=' retiredMaterials3 !=null and retiredMaterials3 !="" '>
+    		retired_materials3 = #{retiredMaterials3,jdbcType=VARCHAR},
+		</if> 
+		<if test=' archivesScore !=null and archivesScore !="" '>
+    		archives_score = #{archivesScore,jdbcType=VARCHAR},
+		</if> 
+		<if test=' officersMaterials1 !=null and officersMaterials1 !="" '>
+    		officers_materials1 = #{officersMaterials1,jdbcType=VARCHAR},
+		</if> 
+		<if test=' officersMaterials2 !=null and officersMaterials2 !="" '>
+    		officers_materials2 = #{officersMaterials2,jdbcType=VARCHAR},
+		</if> 
+		<if test=' officersMaterials3 !=null and officersMaterials3 !="" '>
+    		officers_materials3 = #{officersMaterials3,jdbcType=VARCHAR},
+		</if> 
+		<if test=' officersMaterials4 !=null and officersMaterials4 !="" '>
+    		officers_materials4 = #{officersMaterials4,jdbcType=VARCHAR},
+		</if> 
+		<if test=' officersMaterials5 !=null and officersMaterials5 !="" '>
+    		officers_materials5 = #{officersMaterials5,jdbcType=VARCHAR},
+		</if> 
+		<if test=' officersMaterials6 !=null and officersMaterials6 !="" '>
+    		officers_materials6 = #{officersMaterials6,jdbcType=VARCHAR},
+		</if> 
+		<if test=' isHardArea !=null and isHardArea !="" '>
+    		is_hard_area = #{isHardArea,jdbcType=VARCHAR},
+		</if> 
+		<if test=' hardAreaRemark !=null and hardAreaRemark !="" '>
+    		hard_area_remark = #{hardAreaRemark,jdbcType=VARCHAR},
+		</if> 
+		<if test=' rewardMaterials !=null and rewardMaterials !="" '>
+    		reward_materials = #{rewardMaterials,jdbcType=VARCHAR},
+		</if> 
+		<if test=' rewardRemark !=null and rewardRemark !="" '>
+    		reward_remark = #{rewardRemark,jdbcType=VARCHAR},
+		</if> 
+		<if test=' punishmentMaterials !=null and punishmentMaterials !="" '>
+    		punishment_materials = #{punishmentMaterials,jdbcType=VARCHAR},
+		</if>  
+		<if test=' punishmentRemark !=null and punishmentRemark !="" '>
+    		punishment_remark = #{punishmentRemark,jdbcType=VARCHAR},
+		</if>  
+		<if test=' relocateReasonMaterials1 !=null and relocateReasonMaterials1 !="" '>
+    		relocate_reason_materials1 = #{relocateReasonMaterials1,jdbcType=VARCHAR},
+		</if>  
+		<if test=' relocateReasonMaterials2 and relocateReasonMaterials2 !="" '>
+    		relocate_reason_materials2 = #{relocateReasonMaterials2,jdbcType=VARCHAR},
+		</if>  
+		<if test=' relocateReasonMaterials3 and relocateReasonMaterials3 !="" '>
+    		relocate_reason_materials3 = #{relocateReasonMaterials3,jdbcType=VARCHAR},
+		</if>  
+		<if test=' relocateReasonCode !=null and relocateReasonCode !="" '>
+    		relocate_reason_code = #{relocateReasonCode,jdbcType=VARCHAR},
+		</if>  
+		<if test=' retiredType !=null and retiredType !="" '>
+    		retired_type = #{retiredType,jdbcType=VARCHAR},
+		</if>   
+		<if test=' idcardMaterials !=null and idcardMaterials !="" '>
+    		idcard_materials = #{idcardMaterials,jdbcType=VARCHAR},
+		</if>   
+		<if test=' marriageMaterials !=null and marriageMaterials !="" '>
+    		marriage_materials = #{marriageMaterials,jdbcType=VARCHAR},
+		</if>   
+		<if test=' spouseName !=null and spouseName !="" '>
+    		spouse_name = #{spouseName,jdbcType=VARCHAR},
+		</if>   
+		<if test=' martyrChildrenMaterials !=null and martyrChildrenMaterials !="" '>
+    		martyr_children_materials = #{martyrChildrenMaterials,jdbcType=VARCHAR},
+		</if>   
+		<if test=' isMartyrChildren !=null and isMartyrChildren !="" '>
+    		is_martyr_children = #{isMartyrChildren,jdbcType=VARCHAR},
+		</if>   
+		<if test=' disabilityCategoriesMaterials !=null and disabilityCategoriesMaterials !="" '>
+    		disability_categories_materials = #{disabilityCategoriesMaterials,jdbcType=VARCHAR},
+		</if>   
+		<if test=' disabilityCategoriesCode !=null and disabilityCategoriesCode !="" '>
+    		disability_categories_code = #{disabilityCategoriesCode,jdbcType=VARCHAR},
+		</if>    
+		<if test=' disableGradeCode !=null and disableGradeCode !="" '>
+    		disable_grade_code = #{disableGradeCode,jdbcType=VARCHAR},
+		</if>    
+		<if test=' archivesAuditRemark !=null and archivesAuditRemark !="" '>
+    		archives_audit_remark = #{archivesAuditRemark,jdbcType=VARCHAR},
+		</if>    
+		<if test=' regionalCode !=null and regionalCode !="" '>
+    		regional_code = #{regionalCode,jdbcType=VARCHAR},
+		</if>    
+		<if test=' noticeStatus !=null and noticeStatus !="" '>
+    		notice_status = #{noticeStatus,jdbcType=INTEGER},
+		</if>    
+		<if test=' filePath !=null and filePath !="" '>
+    		file_path = #{filePath,jdbcType=VARCHAR},
+		</if>    
+		<if test=' dataType !=null and dataType !="" '>
+    		data_type = #{dataType,jdbcType=INTEGER},
+		</if>    
+		<if test=' resetType !=null and resetType !="" '>
+    		reset_type = #{resetType,jdbcType=INTEGER},
+		</if>    
+		<if test=' newResetType !=null and newResetType !="" '>
+    		new_reset_type = #{newResetType,jdbcType=INTEGER},
+		</if>    
+		<if test=' registerStatus !=null and registerStatus !="" '>
+    		register_status = #{registerStatus,jdbcType=INTEGER},
+		</if>    
+		<if test=' status !=null and status !="" '>
+    		status = #{status,jdbcType=INTEGER},
+		</if>    
+		<if test=' checkStatus !=null and checkStatus !="" '>
+    		check_status = #{checkStatus,jdbcType=INTEGER},
+		</if>    
+		<if test=' checkTime !=null and checkTime !="" '>
+    		check_time = #{checkTime,jdbcType=TIMESTAMP},
+		</if>    
+		<if test=' remark !=null and remark !="" '>
+    		remark = #{remark,jdbcType=VARCHAR},
+		</if> 
+		<if test=' isRelocateReason !=null and isRelocateReason !="" '>
+    		is_relocate_reason = #{isRelocateReason,jdbcType=VARCHAR},
+		</if> 
+	  	<if test=' personnelType !=null and personnelType !="" '>
+    		personnel_type = #{personnelType},
+		</if>
+		<if test=' examScore !=null and examScore !="" '>
+    		exam_score = #{examScore},
+		</if>
+			modify_time=sysdate()
+    	where sbi_id = #{sbiId,jdbcType=INTEGER}
+  	</update>
+  
+  
+  	<!-- 查询可开具接收安置通知书人员 -->
+  	<select id="queryPrintReceivingNotice" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="com.insigma.po.soldier.SoldierBasicInfo">
+		SELECT
+			sbi_id,
+			idcard,
+			NAME,
+			reset_place,
+			big_unit_name ,
+			personnel_type,
+			notice_status
+		FROM
+			soldier_basic_info t 
+		WHERE
+			data_type = 1 
+			AND reset_type = 1 
+			and (new_reset_type is null or new_reset_type=1)
+			AND STATUS IN ( 1, 2, 3 ) 
+			AND yb_id = #{ybId,jdbcType=INTEGER}
+  	</select>
+  
+    <!-- 根据批次ID、大单位编码查询数据，用于校验导入数据数量是否完整  -->
+  	<select id="queryCheckData" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="com.insigma.po.soldier.SoldierBasicInfo">
+		SELECT *
+		FROM soldier_basic_info t  
+		where yb_id = #{ybId,jdbcType=INTEGER} and big_unit_name = #{bigUnitName} 
+  	</select>
+  
+  
+<!--   	<select id="querySoldierBasicInfo" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="com.insigma.po.soldier.SoldierBasicInfo" > -->
+<!-- 	    select sbi_id, yb_id, idcard, name, sex, nation, birthday, troops_name, big_unit_name,  -->
+<!-- 	    soldiers_military_rank, enlisted_date, marriage_status, domicile, reset_place, phone,  -->
+<!-- 	    reset_category, retired_date, poli_affi_code, tim_joi_party, edu_lev_code, former_unit,service_duration,  -->
+<!-- 	    enlisted_materials1, enlisted_materials2, enlisted_materials3, retired_materials1,  -->
+<!-- 	    retired_materials2, retired_materials3, archives_score, officers_materials1, officers_materials2,  -->
+<!-- 	    officers_materials3, officers_materials4, officers_materials5, officers_materials6,  -->
+<!-- 	    is_hard_area, hard_area_remark, reward_materials, reward_remark, punishment_materials,  -->
+<!-- 	    punishment_remark, relocate_reason_materials1, relocate_reason_materials2,relocate_reason_materials3,  -->
+<!-- 	    relocate_reason_code, retired_type, idcard_materials, marriage_materials, spouse_name, martyr_children_materials,  -->
+<!-- 	    is_martyr_children, disability_categories_materials, disability_categories_code,  -->
+<!-- 	    disable_grade_code, archives_audit_remark, regional_code, notice_status, file_path,  -->
+<!-- 	    data_type, reset_type, new_reset_type, register_status, status, check_status, check_time,  -->
+<!-- 	    create_time, modify_time, remark  -->
+<!-- 	    from soldier_basic_info a -->
+<!-- 	    where 1=1 -->
+<!-- 	    <if test='name !=null and name !="" '> -->
+<!-- 			and name = #{name,jdbcType=VARCHAR} -->
+<!-- 		</if> -->
+<!-- 	    <if test='idcard !=null and idcard !="" '> -->
+<!-- 			and idcard = #{idcard,jdbcType=VARCHAR} -->
+<!-- 		</if> -->
+<!--   	</select> -->
+  
+	   	<!-- 查询基础信息 -->
+<!--   	<select id="selectAll" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="com.insigma.po.soldier.SoldierBasicInfo"> -->
+<!-- 		SELECT   -->
+<!-- 			* -->
+<!-- 		FROM soldier_basic_info t  where 1=1 -->
+<!-- 	    <if test='checkStatus !=null and checkStatus !="" or checkStatus ==0 '> -->
+<!-- 			and check_status=#{checkStatus} -->
+<!-- 		</if> -->
+<!-- 		<if test='status !=null and status !="" or status==0 '> -->
+<!-- 			and status=#{status,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 		<if test='registerStatus !=null and registerStatus !="" or registerStatus ==0 '> -->
+<!-- 			and register_status=#{registerStatus,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 	    <if test='ybId !=null and ybId !="" '> -->
+<!-- 			and yb_id = #{ybId,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 		<if test='name !=null and name !="" '> -->
+<!-- 			and name like '%${name}%' -->
+<!-- 		</if> -->
+<!-- 		<if test='idcard !=null and idcard !="" '> -->
+<!-- 			and idcard = #{idcard,jdbcType=VARCHAR} -->
+<!-- 		</if> -->
+<!-- 		<if test='bigUnitName !=null and bigUnitName !="" '> -->
+<!-- 			and big_unit_name = #{bigUnitName} -->
+<!-- 		</if> -->
+<!-- 		<if test='regionalCode !=null and regionalCode !="" '> -->
+<!-- 			<if test='regionalCode.length()==4'> -->
+<!-- 				and regional_code like '${regionalCode}%' -->
+<!-- 			</if> -->
+<!-- 			<if test='regionalCode.length()==6'> -->
+<!-- 				and regional_code = #{regionalCode,jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 		</if> -->
+<!-- 		<if test='flag == 1 '> -->
+<!-- 			and reset_type = 1 and  (new_reset_type is null or new_reset_type=1 ) -->
+<!-- 		</if> -->
+<!-- 		<if test='dataType !=null and dataType !="" '> -->
+<!-- 			and data_type = #{dataType,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 		<if test='resetType !=null and resetType !="" '> -->
+<!-- 			and reset_type = #{resetType,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 		<if test='newResetType !=null and newResetType !="" '> -->
+<!-- 			and new_reset_type = #{newResetType,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 		order by regional_code,sbi_id -->
+<!--   	</select> -->
+  	
+  	
+  
+<!--   <select id="selectTroopsName" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="java.lang.String" > -->
+<!--     select troops_name  from soldier_basic_info  -->
+<!--      where troops_name like '${troopsName}%' -->
+<!--      group by troops_name -->
+<!--   </select> -->
+  
+  
+<!--   <select id="selectExpInfo" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="com.insigma.po.soldier.SoldierBasicInfo"> -->
+<!--     SELECT -->
+<!-- 		@rowno := @rowno + 1 AS rowno, -->
+<!-- 		a.NAME, -->
+<!-- 		a.idcard, -->
+<!-- 		rn.unit_name  -->
+<!-- 	FROM -->
+<!-- 		( SELECT @rowno := 0 ) t, -->
+<!-- 		soldier_basic_info a -->
+<!-- 		LEFT JOIN receiving_notice rn ON rn.idcard = a.idcard  -->
+<!-- 	WHERE a.check_status > 0  -->
+<!-- 	  AND a.STATUS IN ( 1, 2, 3 ) -->
+<!--     <if test='ybId !=null and ybId !="" '> -->
+<!-- 		and a.yb_id = #{ybId,jdbcType=INTEGER} -->
+<!-- 	</if> -->
+<!-- 	<if test='regionalCode !=null and regionalCode !="" '> -->
+<!-- 		and a.regional_code like '${regionalCode}%' -->
+<!-- 	</if> -->
+<!--   </select> -->
+  
+  
+<!--   	<select id="queryAuditData" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="com.insigma.po.soldier.SoldierBasicInfo"> -->
+<!-- 		select @rowno:=@rowno+1 as rowno, -->
+<!--     		sbi_id, yb_id, CONCAT(LEFT(t.idcard,12), '******') idcard,name,  -->
+<!--     		(select param_value from sys_param_info where group_key='sex' and param_key=t.sex) sex, birthday,  -->
+<!--     		troops_name, enlisted_date, -->
+<!--     		(select param_value from sys_param_info where group_key='bigUnitName' and param_key=t.big_unit_name) big_unit_name,  -->
+<!-- 			(select param_value from sys_param_info where group_key='nation' and param_key=t.nation) nation, -->
+<!-- 	    	(select param_value from sys_param_info where group_key='soldMilitRankCode' and param_key=t.soldiers_military_rank) soldiers_military_rank,   -->
+<!-- 			(select param_value from sys_param_info where group_key='marriageStatus' and param_key=t.marriage_status) marriage_status,  -->
+<!-- 			( SELECT regional_name FROM sys_regional_total e WHERE e.regional_code = t.domicile ) domicile, -->
+<!-- 			( SELECT regional_name FROM sys_regional_total e WHERE e.regional_code = t.reset_place) reset_place,  -->
+<!-- 			phone,( SELECT param_value FROM sys_param_info WHERE group_key = 'resetCategory' AND param_key = t.reset_category ) reset_category,  -->
+<!-- 			retired_date, poli_affi_code, tim_joi_party, edu_lev_code, former_unit, service_duration, -->
+<!-- 		    enlisted_materials1, enlisted_materials2, enlisted_materials3, retired_materials1,  -->
+<!-- 		    retired_materials2, retired_materials3, archives_score, officers_materials1, officers_materials2,  -->
+<!-- 		    officers_materials3, officers_materials4, officers_materials5, officers_materials6,  -->
+<!-- 		    is_hard_area, hard_area_remark, reward_materials, reward_remark, punishment_materials,  -->
+<!-- 		    punishment_remark, relocate_reason_materials1, relocate_reason_materials2,relocate_reason_materials3,  -->
+<!-- 		    relocate_reason_code, retired_type, idcard_materials, marriage_materials, spouse_name, martyr_children_materials,  -->
+<!-- 		    is_martyr_children, disability_categories_materials, disability_categories_code,  -->
+<!-- 		    disable_grade_code, archives_audit_remark, regional_code,  -->
+<!-- 		    (select regional_name FROM sys_regional sr where sr.regional_code in(( SELECT parent_id FROM sys_regional e WHERE e.regional_code = t.regional_code))) regionalName, -->
+<!-- 			ifnull(notice_status,0) notice_status,  -->
+<!-- 			file_path,data_type, reset_type, new_reset_type, register_status, status, check_status, check_time,  -->
+<!-- 	    	create_time, modify_time, remark  -->
+<!--        from soldier_basic_info t,(select @rowno:=0) r  -->
+<!-- 	  where data_type=1 and reset_type=1  -->
+<!-- 	    <if test='flag == 1 '> -->
+<!-- 			and reset_type = 1 and  (new_reset_type is null or new_reset_type=1 ) -->
+<!-- 			and (new_reset_type is null or new_reset_type=1  or new_reset_type=2) -->
+<!-- 		</if> -->
+<!-- 	    <if test='status !=null '> -->
+<!-- 			and status=#{status,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 	    <if test='ybId !=null and ybId !="" '> -->
+<!-- 			and yb_id = #{ybId,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 		<if test='name !=null and name !="" '> -->
+<!-- 			and name like '%${name}%' -->
+<!-- 		</if> -->
+<!-- 		<if test='regionalCode !=null and regionalCode !="" '> -->
+<!-- 			<if test='regionalCode.length()==4'> -->
+<!-- 				and regional_code like '${regionalCode}%' -->
+<!-- 			</if> -->
+<!-- 			<if test='regionalCode.length()==6'> -->
+<!-- 				and regional_code = #{regionalCode,jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 		</if> -->
+<!-- 		<if test='personnelType !=null and personnelType !="" '> -->
+<!-- 			AND personnel_type = #{personnelType} -->
+<!-- 		</if>  -->
+<!-- 		<if test='dataType !=null and dataType !="" '> -->
+<!-- 			and data_type = #{dataType,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 		<if test='resetType !=null and resetType !="" '> -->
+<!-- 			and reset_type = #{resetType,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 		<if test='newResetType !=null and newResetType !="" '> -->
+<!-- 			and new_reset_type = #{newResetType,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 		order by regional_code,name -->
+<!--   	</select> -->
+  
+  
+<!--   	<select id="querySporadicAuditData" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="com.insigma.po.soldier.SoldierBasicInfo"> -->
+<!--     	select  -->
+<!--     		sbi_id, yb_id, idcard, name, if(sex=1,'男','女') sex, birthday, troops_name, big_unit_name, enlisted_date, -->
+<!-- 			(select param_value from sys_param_info where group_key='nation' and param_key=t.nation) nation, -->
+<!-- 	    	(select param_value from sys_param_info where group_key='soldMilitRankCode' and param_key=t.soldiers_military_rank) soldiers_military_rank,   -->
+<!-- 			(select param_value from sys_param_info where group_key='marriageStatus' and param_key=t.marriage_status) marriage_status,  -->
+<!-- 			( SELECT regional_name FROM sys_regional_total e WHERE e.regional_code = t.domicile ) domicile, -->
+<!-- 			( SELECT regional_name FROM sys_regional_total e WHERE e.regional_code = t.reset_place) reset_place,  -->
+<!-- 			phone,reset_category, retired_date, poli_affi_code, tim_joi_party, edu_lev_code, former_unit, service_duration, -->
+<!-- 		    enlisted_materials1, enlisted_materials2, enlisted_materials3, retired_materials1,  -->
+<!-- 		    retired_materials2, retired_materials3, archives_score, officers_materials1, officers_materials2,  -->
+<!-- 		    officers_materials3, officers_materials4, officers_materials5, officers_materials6,  -->
+<!-- 		    is_hard_area, hard_area_remark, reward_materials, reward_remark, punishment_materials,  -->
+<!-- 		    punishment_remark, relocate_reason_materials1, relocate_reason_materials2,relocate_reason_materials3,  -->
+<!-- 	    	relocate_reason_code, retired_type, idcard_materials, marriage_materials, spouse_name, martyr_children_materials,  -->
+<!-- 		    is_martyr_children, disability_categories_materials, disability_categories_code,  -->
+<!-- 		    disable_grade_code, archives_audit_remark, regional_code,  -->
+<!-- 			ifnull(notice_status,0) notice_status,  -->
+<!-- 			file_path,data_type, reset_type, new_reset_type, register_status, status, check_status, check_time,  -->
+<!-- 	    	create_time, modify_time, remark     -->
+<!-- 		from soldier_basic_info t where data_type=2 and reset_type=1  -->
+<!-- 	    <if test='flag == 2 '> -->
+<!-- 			and status!=0 -->
+<!-- 		</if> -->
+<!-- 		<if test='flag == 3 '> -->
+<!-- 			and status in(11,13,14) -->
+<!-- 		</if> -->
+		
+<!-- 	    <if test='status !=null '> -->
+<!-- 			and status=#{status,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 	    <if test='ybId !=null and ybId !="" '> -->
+<!-- 			and yb_id = #{ybId,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 		<if test='name !=null and name !="" '> -->
+<!-- 			and name like '%${name}%' -->
+<!-- 		</if> -->
+<!-- 		<if test='regionalCode !=null and regionalCode !="" '> -->
+<!-- 			<if test='regionalCode.length()==4'> -->
+<!-- 				and regional_code like '${regionalCode}%' -->
+<!-- 			</if> -->
+<!-- 			<if test='regionalCode.length()==6'> -->
+<!-- 				and regional_code = #{regionalCode,jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 		</if> -->
+<!-- 	</select> -->
+  
+  
+<!--   	<select id="queryArchivesDetailed" resultType="com.insigma.po.soldier.SoldierBasicInfo"  parameterType="com.insigma.po.soldier.SoldierBasicInfo"> -->
+<!--     	select   -->
+<!--     		sbi_id, yb_id, idcard, name, if(sex=1,'男','女') sex, birthday, troops_name, big_unit_name, enlisted_date, -->
+<!-- 			(select param_value from sys_param_info where group_key='nation' and param_key=t.nation) nation, -->
+<!-- 	    	(select param_value from sys_param_info where group_key='soldMilitRankCode' and param_key=t.soldiers_military_rank) soldiers_military_rank,   -->
+<!-- 			(select param_value from sys_param_info where group_key='marriageStatus' and param_key=t.marriage_status) marriage_status,  -->
+<!-- 			( SELECT regional_name FROM sys_regional_total e WHERE e.regional_code = t.domicile ) domicile, -->
+<!-- 			( SELECT regional_name FROM sys_regional_total e WHERE e.regional_code = t.reset_place) reset_place,  -->
+<!-- 			phone,reset_category, retired_date, poli_affi_code, tim_joi_party, edu_lev_code, former_unit, service_duration, -->
+<!-- 		    enlisted_materials1, enlisted_materials2, enlisted_materials3, retired_materials1,  -->
+<!-- 		    retired_materials2, retired_materials3, archives_score, officers_materials1, officers_materials2,  -->
+<!-- 		    officers_materials3, officers_materials4, officers_materials5, officers_materials6,  -->
+<!-- 		    is_hard_area, hard_area_remark, reward_materials, reward_remark, punishment_materials,  -->
+<!-- 		    punishment_remark, relocate_reason_materials1, relocate_reason_materials2,relocate_reason_materials3,  -->
+<!-- 	    	relocate_reason_code, retired_type, idcard_materials, marriage_materials, spouse_name, martyr_children_materials,  -->
+<!-- 		    is_martyr_children, disability_categories_materials, disability_categories_code,  -->
+<!-- 		    disable_grade_code, archives_audit_remark, regional_code,  -->
+<!-- 			ifnull(notice_status,0)  notice_status,  -->
+<!-- 			file_path,data_type, reset_type, new_reset_type, register_status, status, check_status, check_time,  -->
+<!-- 	    	create_time, modify_time, remark -->
+<!-- 		from soldier_basic_info t where (status in(1,2,3,13) or reset_type=2) -->
+<!-- 	    <if test='ybId !=null and ybId !="" '> -->
+<!-- 			and yb_id = #{ybId,jdbcType=INTEGER} -->
+<!-- 		</if> -->
+<!-- 		<if test='name !=null and name !="" '> -->
+<!-- 			and name like '%${name}%' -->
+<!-- 		</if> -->
+<!-- 		<if test='regionalCode !=null and regionalCode !="" '> -->
+<!-- 			<if test='regionalCode.length()==4'> -->
+<!-- 				and regional_code like '${regionalCode}%' -->
+<!-- 			</if> -->
+<!-- 			<if test='regionalCode.length()==6'> -->
+<!-- 				and regional_code = #{regionalCode,jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 		</if> -->
+<!--   	</select> -->
+  
+  
+<!--   	<select id="querySoldierBasicInfoTreeNodes" resultType="com.insigma.po.soldier.SoldierBasicInfoTotal"  parameterType="java.util.Map"> -->
+<!--     	<if test='flag == 1 '> -->
+<!-- 			select count(1) pnum from soldier_basic_info  -->
+<!-- 			where 1=1 -->
+<!-- 			<if test='ybId !=null and ybId !="" '> -->
+<!-- 				AND yb_id = #{ybId}  -->
+<!-- 			</if> -->
+<!-- 			<if test='regionalCode !=null and regionalCode !="" '> -->
+<!-- 				<if test='regionalCode.length()==4'> -->
+<!-- 					and regional_code like '${regionalCode}%' -->
+<!-- 				</if> -->
+<!-- 				<if test='regionalCode.length()==6'> -->
+<!-- 					and regional_code = #{regionalCode} -->
+<!-- 				</if> -->
+<!-- 			</if> -->
+<!-- 		</if> -->
+<!-- 	    <if test='flag == 2 '> -->
+<!-- 			SELECT -->
+<!-- 				a.regional_name,a.regional_code, -->
+<!-- 				IFNULL( b.pnum, 0 ) pnum  -->
+<!-- 			FROM -->
+<!-- 				sys_regional a -->
+<!-- 				LEFT JOIN ( -->
+<!-- 				SELECT -->
+<!-- 					CONCAT( substr( regional_code, 1, 4 ), '00' ) regional_code, -->
+<!-- 					count( 1 ) pnum  -->
+<!-- 				FROM -->
+<!-- 					soldier_basic_info  -->
+<!-- 				WHERE  1=1 -->
+<!-- 					<if test='ybId !=null and ybId !="" '> -->
+<!-- 						AND yb_id = #{ybId}  -->
+<!-- 					</if> -->
+<!-- 					<if test='regionalCode !=null and regionalCode !="" '> -->
+<!-- 						<if test='regionalCode.length()==4'> -->
+<!-- 							and regional_code like '${regionalCode}%' -->
+<!-- 						</if> -->
+<!-- 						<if test='regionalCode.length()==6'> -->
+<!-- 							and regional_code = #{regionalCode} -->
+<!-- 						</if> -->
+<!-- 					</if> -->
+<!-- 				GROUP BY -->
+<!-- 				substr( regional_code, 1, 4 )) b ON b.regional_code = a.regional_code  -->
+<!-- 			WHERE -->
+<!-- 				parent_id = 330000 -->
+<!-- 				<if test='regionalCode !=null and regionalCode !="" '> -->
+<!-- 					and a.regional_code = CONCAT(  substr( #{regionalCode}, 1, 4 ), '00' )   -->
+<!-- 				</if> -->
+<!-- 				order by a.regional_code -->
+<!-- 		</if> -->
+<!-- 	    <if test='flag == 3 '> -->
+<!-- 			SELECT -->
+<!-- 				a.regional_name, -->
+<!-- 				a.regional_code, -->
+<!-- 				IFNULL( b.pnum, 0 ) pnum  -->
+<!-- 			FROM -->
+<!-- 				sys_regional a -->
+<!-- 				LEFT JOIN ( SELECT regional_code, count( 1 ) pnum FROM soldier_basic_info  -->
+<!-- 							WHERE  1=1 -->
+<!-- 							<if test='ybId !=null and ybId !="" '> -->
+<!-- 								AND yb_id = #{ybId}  -->
+<!-- 							</if>  -->
+<!-- 							<if test='regionalCode !=null and regionalCode !="" '> -->
+<!-- 								<if test='regionalCode.length()==4'> -->
+<!-- 									and regional_code like '${regionalCode}%' -->
+<!-- 								</if> -->
+<!-- 								<if test='regionalCode.length()==6'> -->
+<!-- 									and regional_code = #{regionalCode} -->
+<!-- 								</if> -->
+<!-- 							</if> -->
+<!-- 							 GROUP BY regional_code ) b  -->
+<!-- 				ON b.regional_code = a.regional_code  -->
+<!-- 			WHERE 1=1  -->
+<!-- 				<if test='regionalCode !=null and regionalCode !="" '> -->
+<!-- 					<if test='regionalCode.length()==4'> -->
+<!-- 						and a.parent_id = CONCAT( #{regionalCode}, '00' )  -->
+<!-- 					</if> -->
+<!-- 					<if test='regionalCode.length()==6'> -->
+<!-- 						and a.regional_code = #{regionalCode} -->
+<!-- 					</if>								 -->
+<!-- 				</if> -->
+<!-- 			ORDER BY -->
+<!-- 				a.regional_code -->
+<!-- 		</if> -->
+<!--   	</select> -->
+  
+  <!-- 档案审核数据导出 -->
+  <select id="queryArchivesReport" resultType="com.insigma.po.soldier.SoldierBasicInfoStatic"  parameterType="com.insigma.po.soldier.SoldierBasicInfoStatic">
+		SELECT
+			@rowno := @rowno + 1 AS rowno,
+			sbi_id,
+			yb_id,
+			idcard,
+			NAME,
+		IF( sex = 1, '男', '女' ) sex,
+			birthday,
+			troops_name,
+			( SELECT param_value FROM sys_param_info WHERE group_key = 'bigUnitName' AND param_key = t.big_unit_name ) big_unit_name,
+			enlisted_date,
+			( SELECT param_value FROM sys_param_info WHERE group_key = 'nation' AND param_key = t.nation ) nation,
+			( SELECT param_value FROM sys_param_info WHERE group_key = 'soldMilitRankCode' AND param_key = t.soldiers_military_rank ) soldiers_military_rank,
+			( SELECT param_value FROM sys_param_info WHERE group_key = 'marriageStatus' AND param_key = t.marriage_status ) marriage_status,
+			( SELECT regional_name FROM sys_regional_total e WHERE e.regional_code = t.domicile ) domicile,
+			( SELECT regional_name FROM sys_regional_total e WHERE e.regional_code = t.reset_place ) reset_place,
+			phone,
+			( SELECT param_value FROM sys_param_info WHERE group_key = 'resetCategory' AND param_key = t.reset_category ) reset_category,
+			retired_date,
+			( SELECT param_value FROM sys_param_info WHERE group_key = 'poliAffiCode' AND param_key = t.poli_affi_code ) poli_affi_code,
+			tim_joi_party,
+			( SELECT param_value FROM sys_param_info WHERE group_key = 'eduLevCode' AND param_key = t.edu_lev_code ) edu_lev_code,
+			former_unit,
+			service_duration,
+		IF( enlisted_materials1 = 1, "材料缺失", "" ) enlisted_materials1,
+		IF( enlisted_materials2 = 1, "材料缺失", "" ) enlisted_materials2,
+		IF( enlisted_materials3 = 1, "材料缺失", "" ) enlisted_materials3,
+		IF( retired_materials1 = 1, "材料缺失", "" ) retired_materials1,
+		IF( retired_materials2 = 1, "材料缺失", "" ) retired_materials2,
+		IF( retired_materials3 = 1, "材料缺失", "" ) retired_materials3,
+			archives_score,
+		IF( officers_materials1 = 1, "材料缺失", "" ) officers_materials1,
+		IF( officers_materials2 = 1, "材料缺失", "" ) officers_materials2,
+		IF( officers_materials3 = 1, "材料缺失", "" ) officers_materials3,
+		IF( officers_materials4 = 1, "材料缺失", "" ) officers_materials4,
+		IF( officers_materials5 = 1, "材料缺失", "" ) officers_materials5,
+		IF( officers_materials6 = 1, "材料缺失", "" ) officers_materials6,
+		IF( is_hard_area != "", IF ( is_hard_area = 1, "是", "否" ), "" ) is_hard_area,
+		IF( is_hard_area = 1, hard_area_remark, "" ) hard_area_remark,
+		IF( reward_materials = 1, "材料缺失", "" ) reward_materials,
+			reward_remark,
+		IF( punishment_materials = 1, "材料缺失", "" ) punishment_materials,
+			punishment_remark,
+		IF( relocate_reason_materials1 = 1, "材料缺失", "" ) relocate_reason_materials1,
+		IF( relocate_reason_materials2 = 1, "材料缺失", "" ) relocate_reason_materials2,
+		IF
+			( relocate_reason_materials3 = 1, "材料缺失", "" ) relocate_reason_materials3,
+			( SELECT param_value FROM sys_param_info WHERE group_key = 'relocateReasonCode' AND param_key = t.relocate_reason_code ) relocate_reason_code,
+			retired_type,
+		IF( idcard_materials = 1, "材料缺失", "" ) idcard_materials,
+		IF( marriage_materials = 1, "材料缺失", "" ) marriage_materials,
+			spouse_name,
+		IF( martyr_children_materials = 1, "材料缺失", "" ) martyr_children_materials,
+		IF( is_martyr_children != "", IF ( is_martyr_children = 1, "是", "否" ), "" ) is_martyr_children,
+		IF( disability_categories_materials = 1, "材料缺失", "" ) disability_categories_materials,
+			( SELECT param_value FROM sys_param_info WHERE group_key = 'disabilityCategoriesCode' AND param_key = t.disability_categories_code ) disability_categories_code,
+			( SELECT param_value FROM sys_param_info WHERE group_key = 'disableGradeCode' AND param_key = t.disable_grade_code ) disable_grade_code,
+			archives_audit_remark,
+			regional_code,
+			( SELECT regional_name FROM sys_regional sr WHERE sr.regional_code IN (( SELECT parent_id FROM sys_regional e  WHERE e.regional_code = t.regional_code ))) regionalName,
+			data_type,
+			reset_type,
+			new_reset_type,
+			register_status,
+			( SELECT param_value FROM sys_param_info WHERE group_key = 'archivesStatus' AND param_key = t.STATUS ) STATUS,
+			check_status,
+			check_time,
+			create_time,
+			modify_time,
+			remark 
+		FROM
+			( SELECT @rowno := 0 ) r,
+			soldier_basic_info t 
+		WHERE
+			data_type = 1 
+			AND reset_type = 1 
+			and (new_reset_type is null or new_reset_type=1)
+	    <if test='status !=null '>
+			and status=#{status,jdbcType=INTEGER}
+		</if>
+		<if test='sbiId !=null and sbiId !="" '>
+			and sbi_id = #{sbiId,jdbcType=INTEGER}
+		</if>
+	    <if test='ybId !=null and ybId !="" '>
+			and yb_id = #{ybId,jdbcType=INTEGER}
+		</if>
+		<if test='name !=null and name !="" '>
+			and name like '%${name}%'
+		</if>
+		<if test='regionalCode !=null and regionalCode !="" '>
+			<if test='regionalCode.length()==4'>
+				and regional_code like '${regionalCode}%'
+			</if>
+			<if test='regionalCode.length()==6'>
+				and regional_code = #{regionalCode,jdbcType=VARCHAR}
+			</if>
+		</if>
+  	</select>
+     <!--根据档案状态及地市编码等条件筛选详细信息-->
+  	<select id="getSoldierListByWhere" resultType="com.insigma.po.soldier.SoldierBasicInfo" parameterType="java.util.Map">
+		SELECT
+	g.regional_name,
+	o.param_value,
+	i.*
+   FROM
+	   soldier_basic_info i
+   LEFT JOIN (select *from sys_param_info where group_key='bigUnitName') o ON i.big_unit_name = o.param_key
+    LEFT JOIN sys_regional g ON g.regional_code = i.regional_code
+   WHERE i.status in
+	<if test='status !=null and status !="" '>
+       <foreach collection="status.split(',')" item="status" index="index" separator="," open="(" close=")">
+          #{status}
+	   </foreach>
+	</if>
+	<if test='regionalCode !=null and regionalCode !=""'>
+		AND i.regional_code LIKE '%${regionalCode}%'
+	</if>
+	<if test='ybId !=null and ybId !=""'>
+		AND i.yb_id =#{ybId}
+	</if>
+	<if test='ybId ==null || ybId==""'>
+		AND i.yb_id in(select yb_id from batch_management where year=#{year} )
+	</if>
+		<if test='personnelType !=null and personnelType !="" '>
+			AND i.personnel_type = #{personnelType}
+		</if>
+		<if test='name !=null and name !="" '>
+			AND i.name like '%${name}%'
+		</if>
+	GROUP BY i.name
+	</select>
+	<!--根据档案状态及地市编码统计总数-->
+	<select id="getCountByWhere" resultType="com.insigma.po.soldier.SoldierBasicInfo" parameterType="java.util.Map">
+    SELECT
+	g.regional_name,COUNT(*) as count
+   FROM
+	soldier_basic_info i
+   LEFT JOIN sys_regional g ON g.regional_code = i.regional_code
+   WHERE
+	i.status in
+	<if test='status !=null and status !="" '>
+       <foreach collection="status.split(',')" item="status" index="index" separator="," open="(" close=")">
+          #{status}
+	   </foreach>
+	</if>
+
+   <if test='regionalCode !=null and regionalCode !=""'>
+		AND i.regional_code =#{regionalCode}
+	</if>
+	<if test='ybId !=null and ybId !=""'>
+		AND i.yb_id =#{ybId}
+	</if>
+		<if test='personnelType !=null and personnelType !="" '>
+			AND i.personnel_type = #{personnelType}
+		</if>
+		<if test='ybId ==null || ybId==""'>
+			AND i.yb_id in(select yb_id from batch_management where year=#{year} )
+		</if>
+  GROUP BY g.regional_name
+  </select>
+</mapper>

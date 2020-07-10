@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.com.springboot.mapper.CollectMapper">
+    <insert id="collectProduct" parameterType="com.example.com.springboot.pojo.Collect">
+        insert into seckill_collect(uid,gid)values (#{uid},#{gid})
+    </insert>
+	<select id="selectCollectByWhere" parameterType="com.example.com.springboot.pojo.Collect" resultType="com.example.com.springboot.pojo.Collect">
+		select *from seckill_collect where  uid=#{uid} and gid=#{gid}
+	</select>
+    <select id="getCollectList" parameterType="com.example.com.springboot.pojo.Collect" resultType="com.example.com.springboot.pojo.Product">
+       SELECT
+	p.id,
+	p. NAME,
+	p.small_pice,
+	p.price,
+	p.coat_price,
+	p.create_time,
+	p.end_time,
+	p.start_time,
+	p. STATUS,
+	p.num,
+	p.stock_count,
+	p.introduction
+FROM
+	seckill_goods p
+LEFT JOIN seckill_collect c ON p.id = c.gid where uid=#{uid}
+    </select>
+</mapper>

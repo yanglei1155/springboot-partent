@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.SoldierResettlementStisticsMapper" >
+   <insert id="insertSoldierResettlementStistics" parameterType="java.util.List">
+     insert into soldier_resettlement_statistics(id,receive_unit,parent_unit,release_plan_num,resettlement_place,actual_receive_num,type,province)
+     values 
+     <foreach collection="list" item="item"  separator=",">
+         (   #{item.id},
+             #{item.receiveUnit},
+             #{item.parentUnit},
+             #{item.releasePlanNum},
+             #{item.resettlementPlace},
+             #{item.actualReceiveNum},
+             #{item.type},
+             #{item.province}
+         )
+     </foreach>
+   </insert>
+</mapper>

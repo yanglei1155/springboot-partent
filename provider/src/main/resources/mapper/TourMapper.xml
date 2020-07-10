@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.com.springboot.mapper.TourMapper">
+    <select id="getTourById" parameterType="com.example.com.springboot.pojo.Tour" resultType="com.example.com.springboot.pojo.Tour">
+         select *from tour where id=#{id}
+    </select>
+    <select id="getTourList" resultType="com.example.com.springboot.pojo.Tour">
+        select *from tour limit 0,8
+    </select>
+    <select id="getTourImgByTid" parameterType="com.example.com.springboot.pojo.Tour" resultType="com.example.com.springboot.pojo.TourImg">
+     select other_img from tour_img where tid=#{id}
+    </select>
+    <update id="zanCount" parameterType="com.example.com.springboot.pojo.Tour">
+         update tour set zan=#{zan},attention=#{attention} where id=#{id}
+    </update>
+</mapper>

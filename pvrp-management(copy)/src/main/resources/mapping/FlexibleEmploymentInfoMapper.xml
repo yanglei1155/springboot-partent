@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.FlexibleEmploymentInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.insigma.po.soldier.FlexibleEmploymentInfo" >
+    <id column="fei_id" property="feiId" jdbcType="INTEGER" />
+    <result column="sbi_id" property="sbiId" jdbcType="INTEGER" />
+    <result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="whe_rece_relf_subs" property="wheReceRelfSubs" jdbcType="INTEGER" />
+    <result column="self_subs_amount" property="selfSubsAmount" jdbcType="DECIMAL" />
+    <result column="whe_Liv_allow" property="wheLivAllow" jdbcType="INTEGER" />
+    <result column="payment_money" property="paymentMoney" jdbcType="DECIMAL" />
+    <result column="payment_month" property="paymentMonth" jdbcType="INTEGER" />
+    <result column="domicile" property="domicile" jdbcType="VARCHAR" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from flexible_employment_info
+    where fei_id = #{feiId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.insigma.po.soldier.FlexibleEmploymentInfo" >
+    insert into flexible_employment_info (fei_id, sbi_id, bank_account, 
+      name, bank_name, whe_rece_relf_subs, 
+      self_subs_amount, whe_Liv_allow, payment_money, 
+      payment_month, domicile,file_path)
+    values (#{feiId,jdbcType=INTEGER}, #{sbiId,jdbcType=INTEGER}, #{bankAccount,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, #{wheReceRelfSubs,jdbcType=INTEGER}, 
+      #{selfSubsAmount,jdbcType=DECIMAL}, #{wheLivAllow,jdbcType=INTEGER}, #{paymentMoney,jdbcType=DECIMAL}, 
+      #{paymentMonth,jdbcType=INTEGER}, #{domicile,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.FlexibleEmploymentInfo" >
+    update flexible_employment_info
+    set sbi_id = #{sbiId,jdbcType=INTEGER},
+      bank_account = #{bankAccount,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      whe_rece_relf_subs = #{wheReceRelfSubs,jdbcType=INTEGER},
+      self_subs_amount = #{selfSubsAmount,jdbcType=DECIMAL},
+      whe_Liv_allow = #{wheLivAllow,jdbcType=INTEGER},
+      payment_money = #{paymentMoney,jdbcType=DECIMAL},
+      payment_month = #{paymentMonth,jdbcType=INTEGER},
+      domicile = #{domicile,jdbcType=VARCHAR},
+      file_path=#{filePath,jdbcType=VARCHAR}
+    where fei_id = #{feiId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select fei_id, sbi_id, bank_account, name, bank_name, whe_rece_relf_subs, self_subs_amount, 
+    whe_Liv_allow, payment_money, payment_month, domicile,file_path
+    from flexible_employment_info
+    where sbi_id = #{sbiId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select fei_id, sbi_id, bank_account, name, bank_name, whe_rece_relf_subs, self_subs_amount, 
+    whe_Liv_allow, payment_money, payment_month, domicile,file_path
+    from flexible_employment_info
+  </select>
+</mapper>

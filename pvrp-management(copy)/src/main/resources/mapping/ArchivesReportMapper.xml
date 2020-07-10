@@ -1,0 +1,2361 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.ArchivesReportMapper" >
+  
+ 	<!-- 安置类别统计表 -->
+  	<select id="queryReport1" resultType="com.insigma.po.soldier.ArchivesReport" parameterType="java.util.Map">
+	    SELECT
+		a.*,
+		IFNULL(b.hzcount,0) hzcount,
+		IFNULL(c.nbcount,0) nbcount,
+		IFNULL(d.wzcount,0) wzcount,
+		IFNULL(e.jxcount,0) jxcount,
+		IFNULL(f.huzcount,0) huzcount,
+		IFNULL(g.sxcount,0) sxcount,
+		IFNULL(h.jhcount,0) jhcount,
+		IFNULL(i.qzcount,0) qzcount,
+		IFNULL(j.zscount,0) zscount,
+		IFNULL(k.tzcount,0) tzcount,
+		IFNULL(l.lscount,0) lscount 
+		FROM
+			( SELECT param_key, param_value reset_category 
+			FROM sys_param_info 
+			WHERE group_key = 'resetCategory' AND STATUS = 1
+				<if test='personnelType !=null and personnelType !="" and personnelType=="1"'>
+					AND param_key !='2' 
+				</if> 
+				<if test='personnelType !=null and personnelType !="" and personnelType=="2"'>
+					AND param_key ='2' 
+				</if> 
+			) a
+			LEFT JOIN (
+			SELECT
+				b1.reset_category,
+				count( 1 ) hzcount 
+			FROM
+				soldier_basic_info b1 
+			WHERE b1.regional_code LIKE '3301%' 
+				<if test=' wheTransfer== 1'>
+					and status in(1,2)
+				</if>
+				<if test='ybId ==null and ybId =="" '>
+					AND b1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND b1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND b1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				b1.reset_category 
+			) b ON b.reset_category = a.param_key
+			LEFT JOIN (
+			SELECT
+				c1.reset_category,
+				count( 1 ) nbcount 
+			FROM
+				soldier_basic_info c1 
+			WHERE c1.regional_code LIKE '3302%' 
+				<if test=' wheTransfer== 1'>
+					and status in(1,2)
+				</if>
+				<if test='ybId ==null and ybId =="" '>
+					AND c1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND c1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND c1.personnel_type = #{personnelType} 
+				</if> 
+			GROUP BY
+				c1.reset_category 
+			) c ON c.reset_category = a.param_key
+			LEFT JOIN (
+			SELECT
+				d1.reset_category,
+				count( 1 ) wzcount 
+			FROM
+				soldier_basic_info d1 
+			WHERE d1.regional_code LIKE '3303%'  
+				<if test=' wheTransfer== 1'>
+					and status in(1,2)
+				</if>
+				<if test='ybId ==null and ybId =="" '>
+					AND d1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND d1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND d1.personnel_type = #{personnelType} 
+				</if> 
+			GROUP BY
+				d1.reset_category 
+			) d ON d.reset_category = a.param_key
+			LEFT JOIN (
+			SELECT
+				e1.reset_category,
+				count( 1 ) jxcount 
+			FROM
+				soldier_basic_info e1 
+			WHERE e1.regional_code LIKE '3304%'  
+				<if test=' wheTransfer== 1'>
+					and status in(1,2)
+				</if>
+				<if test='ybId ==null and ybId =="" '>
+					AND e1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND e1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND e1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				e1.reset_category 
+			) e ON e.reset_category = a.param_key
+			LEFT JOIN (
+			SELECT
+				f1.reset_category,
+				count( 1 ) huzcount 
+			FROM
+				soldier_basic_info f1 
+			WHERE f1.regional_code LIKE '3305%' 
+				<if test=' wheTransfer== 1'>
+					and status in(1,2)
+				</if>
+				<if test='ybId ==null and ybId =="" '>
+					AND f1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND f1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND f1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				f1.reset_category 
+			) f ON f.reset_category = a.param_key
+			LEFT JOIN (
+			SELECT
+				g1.reset_category,
+				count( 1 ) sxcount 
+			FROM
+				soldier_basic_info g1 
+			WHERE g1.regional_code LIKE '3306%' 
+				<if test=' wheTransfer== 1'>
+					and status in(1,2)
+				</if>
+				<if test='ybId ==null and ybId =="" '>
+					AND g1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND g1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND g1.personnel_type = #{personnelType} 
+				</if> 
+			GROUP BY
+				g1.reset_category 
+			) g ON g.reset_category = a.param_key
+			LEFT JOIN (
+			SELECT
+				h1.reset_category,
+				count( 1 ) jhcount 
+			FROM
+				soldier_basic_info h1 
+			WHERE h1.regional_code LIKE '3307%'  
+				<if test=' wheTransfer== 1'>
+					and status in(1,2)
+				</if>
+				<if test='ybId ==null and ybId =="" '>
+					AND h1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND h1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND h1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				h1.reset_category 
+			) h ON h.reset_category = a.param_key
+			LEFT JOIN (
+			SELECT
+				i1.reset_category,
+				count( 1 ) qzcount 
+			FROM
+				soldier_basic_info i1 
+			WHERE i1.regional_code LIKE '3308%'  
+				<if test=' wheTransfer== 1'>
+					and status in(1,2)
+				</if>
+				<if test='ybId ==null and ybId =="" '>
+					AND i1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND i1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND i1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				i1.reset_category 
+			) i ON i.reset_category = a.param_key
+			LEFT JOIN (
+			SELECT
+				j1.reset_category,
+				count( 1 ) zscount 
+			FROM
+				soldier_basic_info j1 
+			WHERE j1.regional_code LIKE '3309%'  
+				<if test=' wheTransfer== 1'>
+					and status in(1,2)
+				</if>
+				<if test='ybId ==null and ybId =="" '>
+					AND j1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND j1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND j1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				j1.reset_category 
+			) j ON j.reset_category = a.param_key
+			LEFT JOIN (
+			SELECT
+				k1.reset_category,
+				count( 1 ) tzcount 
+			FROM
+				soldier_basic_info k1 
+			WHERE k1.regional_code LIKE '3310%'
+				<if test=' wheTransfer== 1'>
+					and status in(1,2)
+				</if>
+				<if test='ybId ==null and ybId =="" '>
+					AND k1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND k1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND k1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				k1.reset_category 
+			) k ON k.reset_category = a.param_key
+			LEFT JOIN (
+			SELECT
+				l1.reset_category,
+				count( 1 ) lscount 
+			FROM
+				soldier_basic_info l1 
+			WHERE l1.regional_code LIKE '3311%'  
+				<if test=' wheTransfer== 1'>
+					and status in(1,2)
+				</if>
+				<if test='ybId ==null and ybId =="" '>
+					AND l1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND l1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND l1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+			l1.reset_category 
+			) l ON l.reset_category = a.param_key
+			order by a.param_key
+  	</select>
+  	
+  	
+  	<!-- 易地安置统计表 -->
+  	<select id="queryReport2" resultType="com.insigma.po.soldier.ArchivesReport" parameterType="java.util.Map">
+	    SELECT
+			a.*,
+			IFNULL( b.hzcount, 0 ) hzcount,
+			IFNULL( c.nbcount, 0 ) nbcount,
+			IFNULL( d.wzcount, 0 ) wzcount,
+			IFNULL( e.jxcount, 0 ) jxcount,
+			IFNULL( f.huzcount, 0 ) huzcount,
+			IFNULL( g.sxcount, 0 ) sxcount,
+			IFNULL( h.jhcount, 0 ) jhcount,
+			IFNULL( i.qzcount, 0 ) qzcount,
+			IFNULL( j.zscount, 0 ) zscount,
+			IFNULL( k.tzcount, 0 ) tzcount,
+			IFNULL( l.lscount, 0 ) lscount 
+		FROM
+			( SELECT param_key, param_value relocate_reason FROM sys_param_info WHERE group_key = 'isRelocateReason' AND STATUS = 1 ) a
+			LEFT JOIN (
+			SELECT
+				b1.is_relocate_reason,
+				count( 1 ) hzcount 
+			FROM
+				soldier_basic_info b1 
+			WHERE b1.regional_code LIKE '3301%' AND b1.is_relocate_reason > 0  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND b1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND b1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND b1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				b1.is_relocate_reason 
+			) b ON b.is_relocate_reason = a.param_key
+			LEFT JOIN (
+			SELECT
+				c1.is_relocate_reason,
+				count( 1 ) nbcount 
+			FROM
+				soldier_basic_info c1 
+			WHERE c1.regional_code LIKE '3302%' AND c1.is_relocate_reason > 0  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND c1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND c1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND c1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				c1.is_relocate_reason 
+			) c ON c.is_relocate_reason = a.param_key
+			LEFT JOIN (
+			SELECT
+				d1.is_relocate_reason,
+				count( 1 ) wzcount 
+			FROM
+				soldier_basic_info d1 
+			WHERE d1.regional_code LIKE '3303%' AND d1.is_relocate_reason > 0  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND d1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND d1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND d1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				d1.is_relocate_reason 
+			) d ON d.is_relocate_reason = a.param_key
+			LEFT JOIN (
+			SELECT
+				e1.is_relocate_reason,
+				count( 1 ) jxcount 
+			FROM
+				soldier_basic_info e1 
+			WHERE e1.regional_code LIKE '3304%' AND e1.is_relocate_reason > 0  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND e1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND e1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND e1.personnel_type = #{personnelType} 
+				</if> 
+			GROUP BY
+				e1.is_relocate_reason 
+			) e ON e.is_relocate_reason = a.param_key
+			LEFT JOIN (
+			SELECT
+				f1.is_relocate_reason,
+				count( 1 ) huzcount 
+			FROM
+				soldier_basic_info f1 
+			WHERE f1.regional_code LIKE '3305%' AND f1.is_relocate_reason > 0  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND f1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND f1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND f1.personnel_type = #{personnelType} 
+				</if> 
+			GROUP BY
+				f1.is_relocate_reason 
+			) f ON f.is_relocate_reason = a.param_key
+			LEFT JOIN (
+			SELECT
+				g1.is_relocate_reason,
+				count( 1 ) sxcount 
+			FROM
+				soldier_basic_info g1 
+			WHERE g1.regional_code LIKE '3306%' AND g1.is_relocate_reason > 0  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND g1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND g1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND g1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				g1.is_relocate_reason 
+			) g ON g.is_relocate_reason = a.param_key
+			LEFT JOIN (
+			SELECT
+				h1.is_relocate_reason,
+				count( 1 ) jhcount 
+			FROM
+				soldier_basic_info h1 
+			WHERE h1.regional_code LIKE '3307%' AND h1.is_relocate_reason > 0  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND h1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND h1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND h1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				h1.is_relocate_reason 
+			) h ON h.is_relocate_reason = a.param_key
+			LEFT JOIN (
+			SELECT
+				i1.is_relocate_reason,
+				count( 1 ) qzcount 
+			FROM
+				soldier_basic_info i1 
+			WHERE i1.regional_code LIKE '3308%' AND i1.is_relocate_reason > 0  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND i1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND i1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND i1.personnel_type = #{personnelType} 
+				</if> 
+			GROUP BY
+				i1.is_relocate_reason 
+			) i ON i.is_relocate_reason = a.param_key
+			LEFT JOIN (
+			SELECT
+				j1.is_relocate_reason,
+				count( 1 ) zscount 
+			FROM
+				soldier_basic_info j1 
+			WHERE j1.regional_code LIKE '3309%' AND j1.is_relocate_reason > 0  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND j1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND j1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND j1.personnel_type = #{personnelType} 
+				</if> 
+			GROUP BY
+				j1.is_relocate_reason 
+			) j ON j.is_relocate_reason = a.param_key
+			LEFT JOIN (
+			SELECT
+				k1.is_relocate_reason,
+				count( 1 ) tzcount 
+			FROM
+				soldier_basic_info k1 
+			WHERE k1.regional_code LIKE '3310%' AND k1.is_relocate_reason > 0  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND k1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND k1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND k1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				k1.is_relocate_reason 
+			) k ON k.is_relocate_reason = a.param_key
+			LEFT JOIN (
+			SELECT
+				l1.is_relocate_reason,
+				count( 1 ) lscount 
+			FROM
+				soldier_basic_info l1 
+			WHERE l1.regional_code LIKE '3311%' AND l1.is_relocate_reason > 0  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND l1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND l1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND l1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				l1.is_relocate_reason 
+			) l ON l.is_relocate_reason = a.param_key 
+		ORDER BY
+			a.param_key
+  	</select>
+  	
+  	<!-- 档案审核问题汇总表 -->
+  	<select id="queryReport3" resultType="com.insigma.po.soldier.ArchivesReport" parameterType="java.util.Map">
+  		SELECT
+			a.*,
+			IFNULL(materials1,0) materials1,IFNULL(materials2,0) materials2,IFNULL(materials3,0) materials3,
+			IFNULL(materials4,0) materials4,IFNULL(materials5,0) materials5,IFNULL(materials6,0) materials6,
+			IFNULL(materials7,0) materials7,IFNULL(materials8,0) materials8,IFNULL(materials9,0) materials9,
+			IFNULL(materials10,0) materials10,IFNULL(materials11,0) materials11,IFNULL(materials12,0) materials12,
+			IFNULL(materials13,0) materials13,IFNULL(materials14,0) materials14,IFNULL(materials15,0) materials15,
+			IFNULL(materials16,0) materials16,IFNULL(materials17,0) materials17,IFNULL(materials18,0) materials18,
+			IFNULL(materials19,0) materials19,IFNULL(materials20,0) materials20,IFNULL(materials21,0) materials21,
+			IFNULL(materials22,0) materials22,IFNULL(archives_audit_remark,0) audit_remark_num,
+			IFNULL(remark,0) remark_num
+		FROM
+			( SELECT regional_code, regional_name FROM sys_regional a1 WHERE a1.parent_id = '330000' AND STATUS = 1 ) a
+			LEFT JOIN ( SELECT substr( b1.regional_code, 1, 4 ) regional_code,count( 1 ) materials1 FROM soldier_basic_info b1 
+									WHERE b1.enlisted_materials1 = 1 
+									<if test='ybId ==null and ybId =="" '>
+										AND b1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND b1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND b1.personnel_type = #{personnelType} 
+									</if>
+									 GROUP BY substr( b1.regional_code, 1, 4 ) 
+			) b ON b.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( c1.regional_code, 1, 4 ) regional_code,count( 1 ) materials2 FROM soldier_basic_info c1 
+									WHERE c1.enlisted_materials2 = 1
+									<if test='ybId ==null and ybId =="" '>
+										AND c1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND c1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND c1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( c1.regional_code, 1, 4 ) 
+			) c ON c.regional_code = substr( a.regional_code, 1, 4 ) 
+			
+			LEFT JOIN ( SELECT substr( d1.regional_code, 1, 4 ) regional_code,count( 1 ) materials3 FROM soldier_basic_info d1 
+									WHERE d1.enlisted_materials3 = 1
+									<if test='ybId ==null and ybId =="" '>
+										AND d1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND d1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND d1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( d1.regional_code, 1, 4 ) 
+			) d ON d.regional_code = substr( a.regional_code, 1, 4 ) 
+			
+			LEFT JOIN ( SELECT substr( e1.regional_code, 1, 4 ) regional_code,count( 1 ) materials4 FROM soldier_basic_info e1 
+									WHERE e1.retired_materials1 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND e1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND e1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND e1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( e1.regional_code, 1, 4 ) 
+			) e ON e.regional_code = substr( a.regional_code, 1, 4 ) 
+			
+			LEFT JOIN ( SELECT substr( f1.regional_code, 1, 4 ) regional_code,count( 1 ) materials5 FROM soldier_basic_info f1 
+									WHERE f1.retired_materials2 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND f1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND f1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND f1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( f1.regional_code, 1, 4 ) 
+			) f ON f.regional_code = substr( a.regional_code, 1, 4 ) 
+			
+			LEFT JOIN ( SELECT substr( g1.regional_code, 1, 4 ) regional_code,count( 1 ) materials6 FROM soldier_basic_info g1 
+									WHERE g1.retired_materials3 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND g1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND g1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND g1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( g1.regional_code, 1, 4 ) 
+			) g ON g.regional_code = substr( a.regional_code, 1, 4 ) 
+			
+			LEFT JOIN ( SELECT substr( h1.regional_code, 1, 4 ) regional_code,count( 1 ) materials7 FROM soldier_basic_info h1 
+									WHERE h1.officers_materials1 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND h1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND h1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND h1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( h1.regional_code, 1, 4 ) 
+			) h ON h.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( i1.regional_code, 1, 4 ) regional_code,count( 1 ) materials8 FROM soldier_basic_info i1 
+									WHERE i1.officers_materials2 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND i1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND i1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND i1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( i1.regional_code, 1, 4 ) 
+			) i ON i.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( j1.regional_code, 1, 4 ) regional_code,count( 1 ) materials9 FROM soldier_basic_info j1 
+									WHERE j1.officers_materials3 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND j1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND j1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND j1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( j1.regional_code, 1, 4 ) 
+			) j ON j.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( k1.regional_code, 1, 4 ) regional_code,count( 1 ) materials10 FROM soldier_basic_info k1 
+									WHERE k1.officers_materials4 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND k1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND k1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND k1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( k1.regional_code, 1, 4 ) 
+			) k ON k.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( l1.regional_code, 1, 4 ) regional_code,count( 1 ) materials11 FROM soldier_basic_info l1 
+									WHERE l1.officers_materials5 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND l1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND l1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND l1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( l1.regional_code, 1, 4 ) 
+			) l ON l.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( m1.regional_code, 1, 4 ) regional_code,count( 1 ) materials12 FROM soldier_basic_info m1 
+									WHERE m1.officers_materials6 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND m1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND m1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND m1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( m1.regional_code, 1, 4 ) 
+			) m ON m.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( n1.regional_code, 1, 4 ) regional_code,count( 1 ) materials13 FROM soldier_basic_info n1 
+									WHERE n1.is_hard_area = 1 and n1.hard_area_remark is null  
+									<if test='ybId ==null and ybId =="" '>
+										AND n1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND n1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND n1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( n1.regional_code, 1, 4 ) 
+			) n ON n.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( o1.regional_code, 1, 4 ) regional_code,count( 1 ) materials14 FROM soldier_basic_info o1 
+									WHERE o1.reward_materials = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND o1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND o1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND o1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( o1.regional_code, 1, 4 ) 
+			) o ON o.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( p1.regional_code, 1, 4 ) regional_code,count( 1 ) materials15 FROM soldier_basic_info p1 
+									WHERE p1.punishment_materials = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND p1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND p1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND p1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( p1.regional_code, 1, 4 ) 
+			) p ON p.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( q1.regional_code, 1, 4 ) regional_code,count( 1 ) materials16 FROM soldier_basic_info q1 
+									WHERE q1.relocate_reason_materials1 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND q1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND q1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND q1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( q1.regional_code, 1, 4 ) 
+			) q ON q.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( r1.regional_code, 1, 4 ) regional_code,count( 1 ) materials17 FROM soldier_basic_info r1 
+									WHERE r1.relocate_reason_materials2 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND r1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND r1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND r1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( r1.regional_code, 1, 4 ) 
+			) r ON r.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( s1.regional_code, 1, 4 ) regional_code,count( 1 ) materials18 FROM soldier_basic_info s1 
+									WHERE s1.relocate_reason_materials3 = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND s1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND s1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND s1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( s1.regional_code, 1, 4 ) 
+			) s ON s.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( t1.regional_code, 1, 4 ) regional_code,count( 1 ) materials19 FROM soldier_basic_info t1 
+									WHERE t1.idcard_materials = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND t1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND t1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND t1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( t1.regional_code, 1, 4 ) 
+			) t ON t.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( u1.regional_code, 1, 4 ) regional_code,count( 1 ) materials20 FROM soldier_basic_info u1 
+									WHERE u1.marriage_materials = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND u1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND u1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND u1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( u1.regional_code, 1, 4 ) 
+			) u ON u.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( v1.regional_code, 1, 4 ) regional_code,count( 1 ) materials21 FROM soldier_basic_info v1 
+									WHERE v1.martyr_children_materials = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND v1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND v1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND v1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( v1.regional_code, 1, 4 ) 
+			) v ON v.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( w1.regional_code, 1, 4 ) regional_code,count( 1 ) materials22 FROM soldier_basic_info w1 
+									WHERE w1.disability_categories_materials = 1  
+									<if test='ybId ==null and ybId =="" '>
+										AND w1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND w1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND w1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( w1.regional_code, 1, 4 ) 
+			) w ON w.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( x1.regional_code, 1, 4 ) regional_code,count( 1 ) archives_audit_remark FROM soldier_basic_info x1 
+									WHERE LENGTH(x1.archives_audit_remark)>0
+									<if test='ybId ==null and ybId =="" '>
+										AND x1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND x1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND x1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( x1.regional_code, 1, 4 ) 
+			) x ON x.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( y1.regional_code, 1, 4 ) regional_code,count( 1 ) remark FROM soldier_basic_info y1 
+									WHERE LENGTH(y1.remark)>0
+									<if test='ybId ==null and ybId =="" '>
+										AND y1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND y1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND y1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( y1.regional_code, 1, 4 ) 
+			) y ON y.regional_code = substr( a.regional_code, 1, 4 )
+		ORDER BY a.regional_code
+  	</select>
+  	
+  	
+  	
+  	<!-- 档案审核问题明细表 -->
+  	<select id="queryReport4" resultType="com.insigma.po.soldier.ArchivesReport" parameterType="java.util.Map">
+  		SELECT @rowno:=@rowno+1 as rowno,
+			(select regional_name from sys_regional r where r.regional_code=CONCAT( substr( a.regional_code, 1, 4 ), '00' ) ) regional_name,
+			a.NAME,
+			(select param_value from sys_param_info where group_key = 'bigUnitName' and param_key=a.big_unit_name) big_unit_name,
+			(SELECT param_value FROM sys_param_info WHERE group_key = 'archivesStatus' AND param_key = a.STATUS ) STATUS,
+			CASE 
+				status 
+				WHEN 2 THEN
+<!-- 					CONCAT(ifnull(archives_audit_remark,"") ,ifnull(remark,""))  -->
+					archives_audit_remark
+				WHEN 4 THEN
+					(SELECT ( SELECT param_value FROM sys_param_info WHERE group_key = 'returnRemark' AND param_key = al.return_remark ) return_remark 
+					FROM audit_log al 
+					WHERE al.al_id IN ( SELECT max( al_id ) FROM audit_log group by sbi_id) and sbi_id = a.sbi_id) 
+			ELSE '' 
+			END archives_audit_remark ,remark
+		FROM
+			soldier_basic_info a ,(select @rowno:=0) t
+		WHERE (
+				a.enlisted_materials1 = 1 
+				OR a.enlisted_materials2 = 1 
+				OR a.enlisted_materials3 = 1 
+				OR a.retired_materials1 = 1 
+				OR a.retired_materials2 = 1 
+				OR a.retired_materials3 = 1 
+				OR a.officers_materials1 = 1 
+				OR a.officers_materials2 = 1 
+				OR a.officers_materials3 = 1 
+				OR a.officers_materials4 = 1 
+				OR a.officers_materials5 = 1 
+				OR a.officers_materials6 = 1 
+				OR ( a.is_hard_area = 1 AND a.hard_area_remark IS NULL ) 
+				OR a.reward_materials = 1 
+				OR a.punishment_materials = 1 
+				OR a.relocate_reason_materials1 = 1 
+				OR a.relocate_reason_materials2 = 1 
+				OR a.relocate_reason_materials3 = 1 
+				OR a.idcard_materials = 1 
+				OR a.marriage_materials = 1 
+				OR a.martyr_children_materials = 1 
+				OR a.disability_categories_materials = 1 
+				OR a.disability_categories_materials = 1
+				OR LENGTH(a.archives_audit_remark)>0
+				OR LENGTH(a.remark)>0
+			)
+<!-- 			and a.status in(0,2,4) -->
+			
+			<if test='regionalCode !=null and regionalCode !="" '>
+				AND a.regional_code like '${regionalCode}%'
+			</if>
+			<if test='name !=null and name !="" '>
+				AND a.name like'%${name}%'
+			</if>
+			<if test='ybId ==null and ybId =="" '>
+				AND a.yb_id in(select yb_id from batch_management where year=#{year} )
+			</if>
+			<if test='ybId !=null and ybId !="" '>
+				AND a.yb_id = #{ybId} 
+			</if>
+			<if test='personnelType !=null and personnelType !="" '>
+				AND a.personnel_type = #{personnelType} 
+			</if>										
+			order by regional_code,sbi_id
+  	</select>
+  	
+  	
+  	<!-- 人员综合表 -->
+  	<select id="queryReport5" resultType="com.insigma.po.soldier.SoldierBasicInfoStatic" parameterType="java.util.Map">
+  		SELECT @rowno := @rowno + 1 AS rowno,
+			t.sbi_id,
+			t.idcard,
+			t.name,
+			t.sex,
+			t.nation,
+			t.birthday,
+			t.troops_name,
+			t.big_unit_name,
+			t.soldiers_military_rank,
+			t.enlisted_date,
+			t.marriage_status,
+			t.domicile,
+			t.reset_place,
+			t.phone,
+			t.reset_category,
+			t.retired_date,
+			t.poli_affi_code,
+			t.tim_joi_party,
+			t.edu_lev_code,
+			t.former_unit,
+			t.service_duration,
+			t.archives_score,
+			t.is_hard_area,
+			t.hard_area_remark,
+			t.reward_remark,
+			t.punishment_remark,
+			t.relocate_reason_code,
+			t.is_relocate_reason,
+			t.retired_type,
+			t.spouse_name,
+			t.is_martyr_children,
+			t.disability_categories_code,
+			t.disable_grade_code,
+			t.archives_audit_remark,
+			t.regional_code,
+			t.professional,
+
+			a.register_time,
+			IFNULL(a.new_reset_type,t.new_reset_type) new_reset_type,
+			a.whe_rece_self_subs,
+			a.self_subs_amount,
+			a.whe_living_expenses,
+			a.living_expenses_month,
+			a.living_expenses_amout,
+			a.unit_name,
+			a.unit_category,
+			a.recommendation_time,
+			a.receiving_time,
+			a.posts_name,
+			a.whe_on_the_staff,
+			a.whe_mou_guard,
+			a.unrec_rea_expl,
+			a.job_message
+			
+		FROM
+			( SELECT @rowno := 0 ) r,soldier_basic_info t left join soldier_reset_info a on a.sbi_id = t.sbi_id
+		WHERE 1=1  and t.status in(1,2)
+			<if test='name !=null and name !="" '>
+				and t.name like '%${name}%'
+			</if>
+			<if test='regionalCode !=null and regionalCode !="" '>
+				<if test='regionalCode.length()==4'>
+					and t.regional_code like '${regionalCode}%'
+				</if>
+				<if test='regionalCode.length()==6'>
+					and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+				</if>
+			</if>
+<!-- 			<if test='ybId ==null and ybId =="" '> -->
+<!-- 				AND t.yb_id in(select yb_id from batch_management where year=#{year} ) -->
+<!-- 			</if> -->
+			<if test='ybId !=null and ybId !="" '>
+				AND t.yb_id = #{ybId} 
+			</if>
+			<if test='personnelType !=null and personnelType !="" '>
+				AND t.personnel_type = #{personnelType} 
+			</if> 
+			<if test='queryType =="1" '>
+				AND t.reset_type = 1 
+				AND (t.new_reset_type IS NULL or t.new_reset_type=1)
+				AND t.sbi_id not in(select sbi_id from soldier_reset_info a WHERE a.new_reset_type=2)
+			</if> 
+			<if test='queryType =="2" '>
+				AND t.new_reset_type=2 
+			</if>
+		 <if test='sex !=null and sex !="" '>
+			AND t.sex = #{sex}
+		 </if>
+		<if test='nation !=null and nation !="" '>
+			AND t.nation = #{nation}
+		</if>
+		<if test='marriage_status !=null and marriage_status !="" '>
+			AND t.marriage_status = #{marriage_status}
+		</if>
+		<if test='soldiers_military_rank !=null and soldiers_military_rank !="" '>
+			AND t.soldiers_military_rank = #{soldiers_military_rank}
+		</if>
+		<if test='poli_affi_code !=null and poli_affi_code !="" '>
+			AND t.poli_affi_code = #{poli_affi_code}
+		</if>
+		<if test='edu_lev_code !=null and edu_lev_code !="" '>
+			AND t.edu_lev_code = #{edu_lev_code}
+		</if>
+		<if test='disability_categories_code !=null and disability_categories_code !="" '>
+			AND t.disability_categories_code = #{disability_categories_code}
+		</if>
+		<if test='disable_grade_code !=null and disable_grade_code !="" '>
+			AND t.disable_grade_code = #{disable_grade_code}
+		</if>
+		<if test='is_hard_area !=null and is_hard_area !="" '>
+			AND t.is_hard_area = #{is_hard_area}
+		</if>
+		<if test='hard_area_remark !=null and hard_area_remark !="" '>
+			AND t.hard_area_remark like '%${is_hard_area}%'
+		</if>
+		<if test='reward_remark !=null and reward_remark !="" '>
+			AND t.reward_remark like '%${reward_remark}%'
+		</if>
+		<if test='punishment_remark !=null and punishment_remark !="" '>
+			AND t.punishment_remark like '%${punishment_remark}%'
+		</if>
+		<if test='minAge !=null and minAge !="" '>
+			<if test='maxAge !=null and maxAge !="" '>
+			     AND t.birthday between #{maxAge} and  #{minAge}
+			</if>
+		</if>
+		<if test='service_duration_begin !=null and service_duration_begin !="" '>
+		    AND  REPLACE(t.service_duration,'个月','') between #{service_duration_begin} and #{service_duration_end}
+		</if>
+		order by t.regional_code
+  	</select>
+  	
+  	
+  	<!-- 艰边/立功/处分统计表 -->
+  	<select id="queryReport6" resultType="com.insigma.po.soldier.ArchivesReport" parameterType="java.util.Map">
+  		SELECT 
+			a.*,
+			IFNULL(is_hard_area,0) is_hard_area_count,IFNULL(reward_remark,0) reward_count,IFNULL(punishment_remark,0) punishment_count
+		FROM
+			( SELECT regional_code, regional_name FROM sys_regional a1 WHERE a1.parent_id = '330000' AND STATUS = 1 ) a
+			LEFT JOIN ( SELECT substr( b1.regional_code, 1, 4 ) regional_code,count( 1 ) is_hard_area FROM soldier_basic_info b1 
+									WHERE b1.is_hard_area ='1'  and status in(1,2)   
+									<if test='ybId ==null and ybId =="" '>
+										AND b2.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND b1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND b1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( b1.regional_code, 1, 4 ) 
+			) b ON b.regional_code = substr( a.regional_code, 1, 4 )
+			
+			LEFT JOIN ( SELECT substr( c1.regional_code, 1, 4 ) regional_code,count( 1 ) reward_remark FROM soldier_basic_info c1 
+									WHERE c1.reward_remark !=''     and status in(1,2)
+									<if test='ybId ==null and ybId =="" '>
+										AND c1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND c1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND c1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( c1.regional_code, 1, 4 ) 
+			) c ON c.regional_code = substr( a.regional_code, 1, 4 ) 
+			
+			LEFT JOIN ( SELECT substr( d1.regional_code, 1, 4 ) regional_code,count( 1 ) punishment_remark FROM soldier_basic_info d1 
+									WHERE d1.punishment_remark !=''     and status in(1,2)
+									<if test='ybId ==null and ybId =="" '>
+										AND d1.yb_id in(select yb_id from batch_management where year=#{year} )
+									</if>
+									<if test='ybId !=null and ybId !="" '>
+										AND d1.yb_id = #{ybId} 
+									</if>
+									<if test='personnelType !=null and personnelType !="" '>
+										AND d1.personnel_type = #{personnelType} 
+									</if>
+									GROUP BY substr( d1.regional_code, 1, 4 ) 
+			) d ON d.regional_code = substr( a.regional_code, 1, 4 ) 
+			
+		ORDER BY a.regional_code
+  	</select>
+  	
+  	<!-- 成绩综合表 -->
+  	<select id="queryReport7" resultType="com.insigma.po.soldier.ArchivesReport" parameterType="java.util.Map">
+	  	SELECT
+			* 
+		FROM (
+	  		SELECT
+			@rowno := @rowno + 1 AS rowno,
+			a.NAME,
+			regional_code,
+			idcard,
+			archives_score,
+			exam_score,
+			total_score 
+		FROM
+			( SELECT @rowno := 0 ) t,soldier_basic_info a 
+		WHERE reset_type = 1  and status in(1,2)
+			<if test='ybId !=null and ybId !="" '>
+				and yb_id = #{ybId,jdbcType=INTEGER}
+			</if>
+			<if test='name !=null and name !="" '>
+				and name like '%${name}%'
+			</if>
+			<if test='regionalCode !=null and regionalCode !="" '>
+				and regional_code in
+				<foreach collection="regionalCode.split(',')" item="regional_code" index="index" separator="," open="(" close=")">
+					#{regional_code}
+				</foreach>
+			</if>
+			<if test='province !=null and province !=""'>
+				 and regional_code like '%${province}%'
+			</if>
+			ORDER BY  
+			CAST( total_score  as decimal(11,2)) desc, 
+			CAST( archives_score  as decimal(11,2)) desc, 
+			CAST( exam_score  as decimal(11,2)) desc
+			) a 
+			ORDER BY rowno
+  	</select>
+  	
+  
+  	<!-- 易地安置原因统计表 -->
+  	<select id="queryReport8" resultType="com.insigma.po.soldier.ArchivesReport" parameterType="java.util.Map">
+	    SELECT
+			a.*,
+			IFNULL( b.hzcount, 0 ) hzcount,
+			IFNULL( c.nbcount, 0 ) nbcount,
+			IFNULL( d.wzcount, 0 ) wzcount,
+			IFNULL( e.jxcount, 0 ) jxcount,
+			IFNULL( f.huzcount, 0 ) huzcount,
+			IFNULL( g.sxcount, 0 ) sxcount,
+			IFNULL( h.jhcount, 0 ) jhcount,
+			IFNULL( i.qzcount, 0 ) qzcount,
+			IFNULL( j.zscount, 0 ) zscount,
+			IFNULL( k.tzcount, 0 ) tzcount,
+			IFNULL( l.lscount, 0 ) lscount 
+		FROM
+			( SELECT param_key, param_value FROM sys_param_info WHERE group_key = 'relocateReasonCode' AND STATUS = 1 order by order_id) a
+			LEFT JOIN (
+			SELECT
+				b1.relocate_reason_code,
+				count( 1 ) hzcount 
+			FROM
+				soldier_basic_info b1 
+			WHERE b1.relocate_reason_code > 0 
+				AND b1.regional_code LIKE '3301%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND b1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND b1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND b1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				b1.relocate_reason_code 
+			) b ON b.relocate_reason_code = a.param_key
+			LEFT JOIN (
+			SELECT
+				c1.relocate_reason_code,
+				count( 1 ) nbcount 
+			FROM
+				soldier_basic_info c1 
+			WHERE c1.relocate_reason_code > 0 
+				AND c1.regional_code LIKE '3302%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND c1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND c1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND c1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				c1.relocate_reason_code 
+			) c ON c.relocate_reason_code = a.param_key
+			LEFT JOIN (
+			SELECT
+				d1.relocate_reason_code,
+				count( 1 ) wzcount 
+			FROM
+				soldier_basic_info d1 
+			WHERE d1.relocate_reason_code > 0 
+				AND d1.regional_code LIKE '3303%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND d1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND d1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND d1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				d1.relocate_reason_code 
+			) d ON d.relocate_reason_code = a.param_key
+			LEFT JOIN (
+			SELECT
+				e1.relocate_reason_code,
+				count( 1 ) jxcount 
+			FROM
+				soldier_basic_info e1 
+			WHERE e1.relocate_reason_code > 0 
+				AND e1.regional_code LIKE '3304%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND e1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND e1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND e1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				e1.relocate_reason_code 
+			) e ON e.relocate_reason_code = a.param_key
+			LEFT JOIN (
+			SELECT
+				f1.relocate_reason_code,
+				count( 1 ) huzcount 
+			FROM
+				soldier_basic_info f1 
+			WHERE f1.relocate_reason_code > 0 
+				AND f1.regional_code LIKE '3305%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND f1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND f1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND f1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				f1.relocate_reason_code 
+			) f ON f.relocate_reason_code = a.param_key
+			LEFT JOIN (
+			SELECT
+				g1.relocate_reason_code,
+				count( 1 ) sxcount 
+			FROM
+				soldier_basic_info g1 
+			WHERE g1.relocate_reason_code > 0 
+				AND g1.regional_code LIKE '3306%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND g1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND g1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND g1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				g1.relocate_reason_code 
+			) g ON g.relocate_reason_code = a.param_key
+			LEFT JOIN (
+			SELECT
+				h1.relocate_reason_code,
+				count( 1 ) jhcount 
+			FROM
+				soldier_basic_info h1 
+			WHERE h1.relocate_reason_code > 0 
+				AND h1.regional_code LIKE '3307%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND h1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND h1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND h1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				h1.relocate_reason_code 
+			) h ON h.relocate_reason_code = a.param_key
+			LEFT JOIN (
+			SELECT
+				i1.relocate_reason_code,
+				count( 1 ) qzcount 
+			FROM
+				soldier_basic_info i1 
+			WHERE i1.relocate_reason_code > 0 
+				AND i1.regional_code LIKE '3308%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND i1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND i1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND i1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				i1.relocate_reason_code 
+			) i ON i.relocate_reason_code = a.param_key
+			LEFT JOIN (
+			SELECT
+				j1.relocate_reason_code,
+				count( 1 ) zscount 
+			FROM
+				soldier_basic_info j1 
+			WHERE j1.relocate_reason_code > 0 
+				AND j1.regional_code LIKE '3309%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND j1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND j1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND j1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				j1.relocate_reason_code 
+			) j ON j.relocate_reason_code = a.param_key
+			LEFT JOIN (
+			SELECT
+				k1.relocate_reason_code,
+				count( 1 ) tzcount 
+			FROM
+				soldier_basic_info k1 
+			WHERE k1.relocate_reason_code > 0 
+				AND k1.regional_code LIKE '3310%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND k1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND k1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND k1.personnel_type = #{personnelType} 
+				</if> 
+			GROUP BY
+				k1.relocate_reason_code 
+			) k ON k.relocate_reason_code = a.param_key
+			LEFT JOIN (
+			SELECT
+				l1.relocate_reason_code,
+				count( 1 ) lscount 
+			FROM
+				soldier_basic_info l1 
+			WHERE l1.relocate_reason_code > 0 
+				AND l1.regional_code LIKE '3311%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND l1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND l1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND l1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				l1.relocate_reason_code 
+			) l ON l.relocate_reason_code = a.param_key 
+		ORDER BY
+			a.param_key
+  	</select>
+  	
+  	<!-- 符合条件退役人员分类表 -->
+  	<select id="queryReport9" resultType="com.insigma.po.soldier.ArchivesReport" parameterType="java.util.Map">
+	    SELECT
+			a.*,
+			IFNULL( b.hzcount, 0 ) hzcount,
+			IFNULL( c.nbcount, 0 ) nbcount,
+			IFNULL( d.wzcount, 0 ) wzcount,
+			IFNULL( e.jxcount, 0 ) jxcount,
+			IFNULL( f.huzcount, 0 ) huzcount,
+			IFNULL( g.sxcount, 0 ) sxcount,
+			IFNULL( h.jhcount, 0 ) jhcount,
+			IFNULL( i.qzcount, 0 ) qzcount,
+			IFNULL( j.zscount, 0 ) zscount,
+			IFNULL( k.tzcount, 0 ) tzcount,
+			IFNULL( l.lscount, 0 ) lscount 
+		FROM
+			( SELECT param_key, param_value FROM sys_param_info WHERE group_key = 'personnelType' AND STATUS = 1 ) a
+			LEFT JOIN (
+			SELECT
+				b1.personnel_type,
+				count( 1 ) hzcount 
+			FROM
+				soldier_basic_info b1 
+			WHERE b1.regional_code LIKE '3301%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND b1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND b1.yb_id = #{ybId} 
+				</if>
+			GROUP BY
+				b1.personnel_type 
+			) b ON b.personnel_type = a.param_key
+			LEFT JOIN (
+			SELECT
+				c1.personnel_type,
+				count( 1 ) nbcount 
+			FROM
+				soldier_basic_info c1 
+			WHERE c1.regional_code LIKE '3302%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND c1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND c1.yb_id = #{ybId} 
+				</if>
+			GROUP BY
+				c1.personnel_type 
+			) c ON c.personnel_type = a.param_key
+			LEFT JOIN (
+			SELECT
+				d1.personnel_type,
+				count( 1 ) wzcount 
+			FROM
+				soldier_basic_info d1 
+			WHERE d1.regional_code LIKE '3303%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND d1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND d1.yb_id = #{ybId} 
+				</if> 
+			GROUP BY
+				d1.personnel_type 
+			) d ON d.personnel_type = a.param_key
+			LEFT JOIN (
+			SELECT
+				e1.personnel_type,
+				count( 1 ) jxcount 
+			FROM
+				soldier_basic_info e1 
+			WHERE e1.regional_code LIKE '3304%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND e1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND e1.yb_id = #{ybId} 
+				</if>
+			GROUP BY
+				e1.personnel_type 
+			) e ON e.personnel_type = a.param_key
+			LEFT JOIN (
+			SELECT
+				f1.personnel_type,
+				count( 1 ) huzcount 
+			FROM
+				soldier_basic_info f1 
+			WHERE f1.regional_code LIKE '3305%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND f1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND f1.yb_id = #{ybId} 
+				</if>
+			GROUP BY
+				f1.personnel_type 
+			) f ON f.personnel_type = a.param_key
+			LEFT JOIN (
+			SELECT
+				g1.personnel_type,
+				count( 1 ) sxcount 
+			FROM
+				soldier_basic_info g1 
+			WHERE g1.regional_code LIKE '3306%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND g1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND g1.yb_id = #{ybId} 
+				</if>
+			GROUP BY
+				g1.personnel_type 
+			) g ON g.personnel_type = a.param_key
+			LEFT JOIN (
+			SELECT
+				h1.personnel_type,
+				count( 1 ) jhcount 
+			FROM
+				soldier_basic_info h1 
+			WHERE h1.regional_code LIKE '3307%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND h1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND h1.yb_id = #{ybId} 
+				</if>
+			GROUP BY
+				h1.personnel_type 
+			) h ON h.personnel_type = a.param_key
+			LEFT JOIN (
+			SELECT
+				i1.personnel_type,
+				count( 1 ) qzcount 
+			FROM
+				soldier_basic_info i1 
+			WHERE i1.regional_code LIKE '3308%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND i1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND i1.yb_id = #{ybId} 
+				</if>
+			GROUP BY
+				i1.personnel_type 
+			) i ON i.personnel_type = a.param_key
+			LEFT JOIN (
+			SELECT
+				j1.personnel_type,
+				count( 1 ) zscount 
+			FROM
+				soldier_basic_info j1 
+			WHERE j1.regional_code LIKE '3309%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND j1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND j1.yb_id = #{ybId} 
+				</if> 
+			GROUP BY
+				j1.personnel_type 
+			) j ON j.personnel_type = a.param_key
+			LEFT JOIN (
+			SELECT
+				k1.personnel_type,
+				count( 1 ) tzcount 
+			FROM
+				soldier_basic_info k1 
+			WHERE k1.regional_code LIKE '3310%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND k1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND k1.yb_id = #{ybId} 
+				</if>
+			GROUP BY
+				k1.personnel_type 
+			) k ON k.personnel_type = a.param_key
+			LEFT JOIN (
+			SELECT
+				l1.personnel_type,
+				count( 1 ) lscount 
+			FROM
+				soldier_basic_info l1 
+			WHERE l1.regional_code LIKE '3311%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND l1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND l1.yb_id = #{ybId} 
+				</if> 
+			GROUP BY
+				l1.personnel_type 
+			) l ON l.personnel_type = a.param_key 
+		ORDER BY
+			a.param_key
+  	</select>
+  	
+  	<!-- 退役人员数量统计表 -->
+  	<select id="queryReport10" resultType="com.insigma.po.soldier.ArchivesReport" parameterType="java.util.Map">
+	    <if test='resetType ==1 or resetType==3 '>
+	    SELECT 
+				CONCAT(t.YEAR,'政府安排') YEAR,
+				IFNULL(SUM( t.hzcount ), 0 ) hzcount,
+				IFNULL(SUM( t.nbcount ), 0 ) nbcount,
+				IFNULL(SUM( t.wzcount ), 0 ) wzcount,
+				IFNULL(SUM( t.jxcount ), 0 ) jxcount,
+				IFNULL(SUM( t.huzcount ), 0 ) huzcount,
+				IFNULL(SUM( t.sxcount ), 0 ) sxcount,
+				IFNULL(SUM( t.jhcount ), 0 ) jhcount,
+				IFNULL(SUM( t.qzcount ), 0 ) qzcount,
+				IFNULL(SUM( t.zscount ), 0 ) zscount,
+				IFNULL(SUM( t.tzcount ), 0 ) tzcount,
+				IFNULL(SUM( t.lscount ), 0 ) lscount
+			FROM
+				(
+				SELECT a.YEAR,b.hzcount,c.nbcount,d.wzcount,e.jxcount,f.huzcount,g.sxcount,h.jhcount,i.qzcount,j.zscount,k.tzcount,l.lscount
+				FROM ( SELECT * FROM batch_management WHERE 1=1
+					<if test='year !=null and year !="" '>
+						and YEAR = #{year}
+					</if> ) a
+					LEFT JOIN (
+					SELECT yb_id,count( 1 ) hzcount 
+					FROM
+						soldier_basic_info t 
+					WHERE
+						t.regional_code LIKE '3301%' and status in(1,2)
+						AND reset_type = 1 
+						AND ( new_reset_type IS NULL OR new_reset_type = 1 ) 
+						AND personnel_type = #{personnelType} 
+						AND yb_id IN ( SELECT yb_id FROM batch_management WHERE 1=1
+							<if test='year !=null and year !="" '>
+								AND YEAR = #{year}
+							</if> ) 
+					GROUP BY yb_id 
+					) b ON b.yb_id = a.yb_id 
+					LEFT JOIN (
+					SELECT yb_id,count( 1 ) nbcount 
+					FROM
+						soldier_basic_info t 
+					WHERE
+						t.regional_code LIKE '3302%'  and status in(1,2)
+						AND reset_type = 1 
+						AND ( new_reset_type IS NULL OR new_reset_type = 1 ) 
+						AND personnel_type = #{personnelType} 
+						AND yb_id IN ( SELECT yb_id FROM batch_management WHERE  1=1
+							<if test='year !=null and year !="" '>
+								AND YEAR = #{year}
+							</if> )
+					GROUP BY yb_id 
+					) c ON c.yb_id = a.yb_id 
+					LEFT JOIN (
+					SELECT yb_id,count( 1 ) wzcount 
+					FROM
+						soldier_basic_info t 
+					WHERE
+						t.regional_code LIKE '3303%' and status in(1,2)
+						AND reset_type = 1 
+						AND ( new_reset_type IS NULL OR new_reset_type = 1 ) 
+						AND personnel_type = #{personnelType} 
+						AND yb_id IN ( SELECT yb_id FROM batch_management WHERE  1=1
+							<if test='year !=null and year !="" '>
+								AND YEAR = #{year}
+							</if> )
+					GROUP BY yb_id 
+					) d ON d.yb_id = a.yb_id 
+					LEFT JOIN (
+					SELECT yb_id,count( 1 ) jxcount 
+					FROM
+						soldier_basic_info t 
+					WHERE
+						t.regional_code LIKE '3304%' and status in(1,2)
+						AND reset_type = 1 
+						AND ( new_reset_type IS NULL OR new_reset_type = 1 ) 
+						AND personnel_type = #{personnelType} 
+						AND yb_id IN ( SELECT yb_id FROM batch_management WHERE  1=1
+							<if test='year !=null and year !="" '>
+								AND YEAR = #{year}
+							</if> )
+					GROUP BY yb_id 
+					) e ON e.yb_id = a.yb_id 
+					LEFT JOIN (
+					SELECT yb_id,count( 1 ) huzcount 
+					FROM
+						soldier_basic_info t 
+					WHERE
+						t.regional_code LIKE '3305%' and status in(1,2)
+						AND reset_type = 1 
+						AND ( new_reset_type IS NULL OR new_reset_type = 1 ) 
+						AND personnel_type = #{personnelType} 
+						AND yb_id IN ( SELECT yb_id FROM batch_management WHERE  1=1
+							<if test='year !=null and year !="" '>
+								AND YEAR = #{year}
+							</if> )
+					GROUP BY yb_id 
+					) f ON f.yb_id = a.yb_id 
+					LEFT JOIN (
+					SELECT yb_id,count( 1 ) sxcount 
+					FROM
+						soldier_basic_info t 
+					WHERE
+						t.regional_code LIKE '3306%' and status in(1,2)
+						AND reset_type = 1 
+						AND ( new_reset_type IS NULL OR new_reset_type = 1 ) 
+						AND personnel_type = #{personnelType} 
+						AND yb_id IN ( SELECT yb_id FROM batch_management WHERE  1=1
+							<if test='year !=null and year !="" '>
+								AND YEAR = #{year}
+							</if> )
+					GROUP BY yb_id 
+					) g ON g.yb_id = a.yb_id 
+					LEFT JOIN (
+					SELECT yb_id,count( 1 ) jhcount 
+					FROM
+						soldier_basic_info t 
+					WHERE
+						t.regional_code LIKE '3307%' and status in(1,2)
+						AND reset_type = 1 
+						AND ( new_reset_type IS NULL OR new_reset_type = 1 ) 
+						AND personnel_type = #{personnelType} 
+						AND yb_id IN ( SELECT yb_id FROM batch_management WHERE  1=1
+							<if test='year !=null and year !="" '>
+								AND YEAR = #{year}
+							</if> )
+					GROUP BY yb_id 
+					) h ON h.yb_id = a.yb_id 
+					LEFT JOIN (
+					SELECT yb_id,count( 1 ) qzcount 
+					FROM
+						soldier_basic_info t 
+					WHERE
+						t.regional_code LIKE '3308%' and status in(1,2)
+						AND reset_type = 1 
+						AND ( new_reset_type IS NULL OR new_reset_type = 1 ) 
+						AND personnel_type = #{personnelType} 
+						AND yb_id IN ( SELECT yb_id FROM batch_management WHERE  1=1
+							<if test='year !=null and year !="" '>
+								AND YEAR = #{year}
+							</if> )
+					GROUP BY yb_id 
+					) i ON i.yb_id = a.yb_id 
+					LEFT JOIN (
+					SELECT yb_id,count( 1 ) zscount 
+					FROM
+						soldier_basic_info t 
+					WHERE
+						t.regional_code LIKE '3309%' and status in(1,2)
+						AND reset_type = 1 
+						AND ( new_reset_type IS NULL OR new_reset_type = 1 ) 
+						AND personnel_type = #{personnelType} 
+						AND yb_id IN ( SELECT yb_id FROM batch_management WHERE  1=1
+							<if test='year !=null and year !="" '>
+								AND YEAR = #{year}
+							</if> )
+					GROUP BY yb_id 
+					) j ON j.yb_id = a.yb_id 
+					LEFT JOIN (
+					SELECT yb_id,count( 1 ) tzcount 
+					FROM
+						soldier_basic_info t 
+					WHERE
+						t.regional_code LIKE '3310%' and status in(1,2)
+						AND reset_type = 1 
+						AND ( new_reset_type IS NULL OR new_reset_type = 1 ) 
+						AND personnel_type = #{personnelType} 
+						AND yb_id IN ( SELECT yb_id FROM batch_management WHERE  1=1
+							<if test='year !=null and year !="" '>
+								AND YEAR = #{year}
+							</if> )
+					GROUP BY yb_id 
+					) k ON k.yb_id = a.yb_id 
+					LEFT JOIN (
+					SELECT yb_id,count( 1 ) lscount 
+					FROM
+						soldier_basic_info t 
+					WHERE
+						t.regional_code LIKE '3311%' and status in(1,2)
+						AND reset_type = 1 
+						AND ( new_reset_type IS NULL OR new_reset_type = 1 ) 
+						AND personnel_type = #{personnelType} 
+						AND yb_id IN ( SELECT yb_id FROM batch_management WHERE  1=1
+							<if test='year !=null and year !="" '>
+								AND YEAR = #{year}
+							</if> )
+					GROUP BY yb_id 
+					) l ON l.yb_id = a.yb_id 
+					
+				) t 
+			GROUP BY t.`year` 
+			</if>
+			<if test="resetType ==3">
+				union all 
+			</if>
+			<if test="resetType ==2 or resetType ==3 ">
+			SELECT 
+				CONCAT(t.YEAR,'自主就业') YEAR,
+				IFNULL(SUM( t.hzcount ), 0 ) hzcount,
+				IFNULL(SUM( t.nbcount ), 0 ) nbcount,
+				IFNULL(SUM( t.wzcount ), 0 ) wzcount,
+				IFNULL(SUM( t.jxcount ), 0 ) jxcount,
+				IFNULL(SUM( t.huzcount ), 0 ) huzcount,
+				IFNULL(SUM( t.sxcount ), 0 ) sxcount,
+				IFNULL(SUM( t.jhcount ), 0 ) jhcount,
+				IFNULL(SUM( t.qzcount ), 0 ) qzcount,
+				IFNULL(SUM( t.zscount ), 0 ) zscount,
+				IFNULL(SUM( t.tzcount ), 0 ) tzcount,
+				IFNULL(SUM( t.lscount ), 0 ) lscount
+			FROM
+				(
+			SELECT 
+				a.YEAR,
+				b.hzcount,c.nbcount,d.wzcount,e.jxcount,f.huzcount,g.sxcount,h.jhcount,i.qzcount,j.zscount,k.tzcount,l.lscount
+			FROM
+				( SELECT YEAR FROM soldier_basic_info_ose 
+					where 
+					personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if>
+					GROUP BY YEAR ) a
+				LEFT JOIN (
+				SELECT YEAR,count( 1 ) hzcount 
+				FROM
+					soldier_basic_info_ose t 
+				WHERE
+					t.regional_code LIKE '3301%' 
+					AND personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if>
+				GROUP BY YEAR 
+				) b ON b.YEAR = a.YEAR
+				LEFT JOIN (
+				SELECT YEAR,count( 1 ) nbcount 
+				FROM
+					soldier_basic_info_ose t 
+				WHERE
+					t.regional_code LIKE '3302%' 
+					AND personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if>
+				GROUP BY YEAR 
+				) c ON c.YEAR = a.YEAR
+				LEFT JOIN (
+				SELECT YEAR,count( 1 ) wzcount 
+				FROM
+					soldier_basic_info_ose t 
+				WHERE
+					t.regional_code LIKE '3303%' 
+					AND personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if>
+				GROUP BY YEAR 
+				) d ON d.YEAR = a.YEAR
+				LEFT JOIN (
+				SELECT YEAR,count( 1 ) jxcount 
+				FROM
+					soldier_basic_info_ose t 
+				WHERE
+					t.regional_code LIKE '3304%' 
+					AND personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if>
+				GROUP BY YEAR 
+				) e ON e.YEAR = a.YEAR
+				LEFT JOIN (
+				SELECT YEAR,count( 1 ) huzcount 
+				FROM
+					soldier_basic_info_ose t 
+				WHERE
+					t.regional_code LIKE '3305%' 
+					AND personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if>
+				GROUP BY YEAR 
+				) f ON f.YEAR = a.YEAR
+				LEFT JOIN (
+				SELECT YEAR,count( 1 ) sxcount 
+				FROM
+					soldier_basic_info_ose t 
+				WHERE
+					t.regional_code LIKE '3306%' 
+					AND personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if>
+				GROUP BY YEAR 
+				) g ON g.YEAR = a.YEAR
+				LEFT JOIN (
+				SELECT YEAR,count( 1 ) jhcount 
+				FROM
+					soldier_basic_info_ose t 
+				WHERE
+					t.regional_code LIKE '3307%' 
+					AND personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if>
+				GROUP BY YEAR 
+				) h ON h.YEAR = a.YEAR
+				LEFT JOIN (
+				SELECT YEAR,count( 1 ) qzcount 
+				FROM
+					soldier_basic_info_ose t 
+				WHERE
+					t.regional_code LIKE '3308%' 
+					AND personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if>
+				GROUP BY YEAR 
+				) i ON i.YEAR = a.YEAR
+				LEFT JOIN (
+				SELECT YEAR,count( 1 ) zscount 
+				FROM
+					soldier_basic_info_ose t 
+				WHERE
+					t.regional_code LIKE '3309%' 
+					AND personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if>
+				GROUP BY YEAR 
+				) j ON j.YEAR = a.YEAR
+				LEFT JOIN (
+				SELECT YEAR,count( 1 ) tzcount 
+				FROM
+					soldier_basic_info_ose t 
+				WHERE
+					t.regional_code LIKE '3310%' 
+					AND personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if> 
+				GROUP BY YEAR 
+				) k ON k.YEAR = a.YEAR
+				LEFT JOIN (
+				SELECT YEAR,count( 1 ) lscount 
+				FROM
+					soldier_basic_info_ose t 
+				WHERE
+					t.regional_code LIKE '3311%' 
+					AND personnel_type = #{personnelType} 
+					<if test='year !=null and year !="" '>
+						AND YEAR = #{year}
+					</if>
+				GROUP BY YEAR 
+				) l ON l.YEAR = a.YEAR)  t GROUP BY t.year
+			</if>
+  	</select>
+  	
+  	<!-- 档案审核通过数据基础信息导出 -->
+  	<select id="queryReport11" resultType="com.insigma.po.soldier.SoldierBasicInfo" parameterType="java.util.Map">
+  		SELECT @rowno:=@rowno+1 as rowno,sbi_id, yb_id,name,idcard,
+			(select param_value from sys_param_info where group_key='sex' and param_key=t.sex) sex,
+			birthday, troops_name, enlisted_date,
+			(select param_value from sys_param_info where group_key='bigUnitName' and param_key=t.big_unit_name) big_unit_name,
+			(select param_value from sys_param_info where group_key='nation' and param_key=t.nation) nation,
+	    	(select param_value from sys_param_info where group_key='soldMilitRankCode' and param_key=t.soldiers_military_rank) soldiers_military_rank,  
+			(select param_value from sys_param_info where group_key='marriageStatus' and param_key=t.marriage_status) marriage_status, 
+			( SELECT regional_name FROM sys_regional_total e WHERE e.regional_code = t.domicile ) domicile,
+			( SELECT regional_name FROM sys_regional_total e WHERE e.regional_code = t.reset_place) reset_place, 
+			phone,retired_date, 
+			(select param_value from sys_param_info where group_key='poliAffiCode' and param_key=t.poli_affi_code) poli_affi_code, 
+			tim_joi_party, 
+			(select param_value from sys_param_info where group_key='eduLevCode' and param_key=t.edu_lev_code) edu_lev_code, 
+			former_unit, service_duration,
+			(select param_value from sys_param_info where group_key='resetCategory' and param_key=t.reset_category) reset_category, 
+		    (select param_value from sys_param_info where group_key='relocateReasonCode' and param_key=t.relocate_reason_code) relocate_reason_code,
+		    spouse_name,
+		    (select param_value from sys_param_info where group_key='isOrNo' and param_key=t.is_martyr_children) is_martyr_children,
+		    (select param_value from sys_param_info where group_key='disabilityCategoriesCode' and param_key=t.disability_categories_code) disability_categories_code, 
+		    (select param_value from sys_param_info where group_key='disableGradeCode' and param_key=t.disable_grade_code) disable_grade_code,
+		    retired_type,
+		    (select param_value from sys_param_info where group_key='isOrNo' and param_key=t.is_hard_area) is_hard_area, 
+		    hard_area_remark, reward_remark, punishment_materials
+		FROM ( SELECT @rowno := 0 ) a,soldier_basic_info t   
+		WHERE  reset_type=1 and status in(1,2)
+			and (new_reset_type is null or new_reset_type=1)
+			<if test='status !=null and status !="" '>
+				and status=#{status}
+			</if>
+			<if test='regionalCode !=null and regionalCode !="" '>
+				<if test='regionalCode.length()==4'>
+					and regional_code like '${regionalCode}%'
+				</if>
+				<if test='regionalCode.length()==6'>
+					and regional_code = #{regionalCode,jdbcType=VARCHAR}
+				</if>
+			</if>
+			<if test='ybId !=null and ybId !="" '>
+				AND t.yb_id = #{ybId} 
+			</if>
+			<if test='personnelType !=null and personnelType !="" '>
+				AND t.personnel_type = #{personnelType} 
+			</if> 
+  	</select>
+  	
+  	
+  	<!-- 根据大单位统计各地市人数 -->
+  	<select id="queryReport12" resultType="com.insigma.po.soldier.ArchivesReport" parameterType="java.util.Map">
+	    SELECT
+		a.*,
+		IFNULL(b.hzcount,0) hzcount,
+		IFNULL(c.nbcount,0) nbcount,
+		IFNULL(d.wzcount,0) wzcount,
+		IFNULL(e.jxcount,0) jxcount,
+		IFNULL(f.huzcount,0) huzcount,
+		IFNULL(g.sxcount,0) sxcount,
+		IFNULL(h.jhcount,0) jhcount,
+		IFNULL(i.qzcount,0) qzcount,
+		IFNULL(j.zscount,0) zscount,
+		IFNULL(k.tzcount,0) tzcount,
+		IFNULL(l.lscount,0) lscount 
+		FROM
+			( SELECT param_key, param_value 
+			FROM sys_param_info 
+			WHERE group_key = 'bigUnitName' AND STATUS = 1
+			) a
+			LEFT JOIN (
+			SELECT
+				b1.big_unit_name,
+				count( 1 ) hzcount 
+			FROM
+				soldier_basic_info b1 
+			WHERE b1.regional_code LIKE '3301%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND b1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND b1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND b1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				b1.big_unit_name 
+			) b ON b.big_unit_name = a.param_key
+			LEFT JOIN (
+			SELECT
+				c1.big_unit_name,
+				count( 1 ) nbcount 
+			FROM
+				soldier_basic_info c1 
+			WHERE c1.regional_code LIKE '3302%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND c1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND c1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND c1.personnel_type = #{personnelType} 
+				</if> 
+			GROUP BY
+				c1.big_unit_name 
+			) c ON c.big_unit_name = a.param_key
+			LEFT JOIN (
+			SELECT
+				d1.big_unit_name,
+				count( 1 ) wzcount 
+			FROM
+				soldier_basic_info d1 
+			WHERE d1.regional_code LIKE '3303%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND d1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND d1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND d1.personnel_type = #{personnelType} 
+				</if> 
+			GROUP BY
+				d1.big_unit_name 
+			) d ON d.big_unit_name = a.param_key
+			LEFT JOIN (
+			SELECT
+				e1.big_unit_name,
+				count( 1 ) jxcount 
+			FROM
+				soldier_basic_info e1 
+			WHERE e1.regional_code LIKE '3304%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND e1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND e1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND e1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				e1.big_unit_name 
+			) e ON e.big_unit_name = a.param_key
+			LEFT JOIN (
+			SELECT
+				f1.big_unit_name,
+				count( 1 ) huzcount 
+			FROM
+				soldier_basic_info f1 
+			WHERE f1.regional_code LIKE '3305%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND f1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND f1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND f1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				f1.big_unit_name 
+			) f ON f.big_unit_name = a.param_key
+			LEFT JOIN (
+			SELECT
+				g1.big_unit_name,
+				count( 1 ) sxcount 
+			FROM
+				soldier_basic_info g1 
+			WHERE g1.regional_code LIKE '3306%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND g1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND g1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND g1.personnel_type = #{personnelType} 
+				</if> 
+			GROUP BY
+				g1.big_unit_name 
+			) g ON g.big_unit_name = a.param_key
+			LEFT JOIN (
+			SELECT
+				h1.big_unit_name,
+				count( 1 ) jhcount 
+			FROM
+				soldier_basic_info h1 
+			WHERE h1.regional_code LIKE '3307%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND h1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND h1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND h1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				h1.big_unit_name 
+			) h ON h.big_unit_name = a.param_key
+			LEFT JOIN (
+			SELECT
+				i1.big_unit_name,
+				count( 1 ) qzcount 
+			FROM
+				soldier_basic_info i1 
+			WHERE i1.regional_code LIKE '3308%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND i1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND i1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND i1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				i1.big_unit_name 
+			) i ON i.big_unit_name = a.param_key
+			LEFT JOIN (
+			SELECT
+				j1.big_unit_name,
+				count( 1 ) zscount 
+			FROM
+				soldier_basic_info j1 
+			WHERE j1.regional_code LIKE '3309%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND j1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND j1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND j1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				j1.big_unit_name 
+			) j ON j.big_unit_name = a.param_key
+			LEFT JOIN (
+			SELECT
+				k1.big_unit_name,
+				count( 1 ) tzcount 
+			FROM
+				soldier_basic_info k1 
+			WHERE k1.regional_code LIKE '3310%' and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND k1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND k1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND k1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+				k1.big_unit_name 
+			) k ON k.big_unit_name = a.param_key
+			LEFT JOIN (
+			SELECT
+				l1.big_unit_name,
+				count( 1 ) lscount 
+			FROM
+				soldier_basic_info l1 
+			WHERE l1.regional_code LIKE '3311%'  and status in(1,2)
+				<if test='ybId ==null and ybId =="" '>
+					AND l1.yb_id in(select yb_id from batch_management where year=#{year} )
+				</if>
+				<if test='ybId !=null and ybId !="" '>
+					AND l1.yb_id = #{ybId} 
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					AND l1.personnel_type = #{personnelType} 
+				</if>
+			GROUP BY
+			l1.big_unit_name 
+			) l ON l.big_unit_name = a.param_key
+			order by a.param_key
+  	</select>
+  	
+  	<!-- 符合条件退役人员接收单位类别统计表 -->
+  	<select id="queryReport13" resultType="com.insigma.po.soldier.ArchivesReport" parameterType="java.util.Map">
+	     select t.regional_name,
+				ifnull(a.count1,0) count1,
+				ifnull(b.count2,0) count2,
+				ifnull(c.count3,0) count3,
+				ifnull(d.count4,0) count4,
+				ifnull(e.count5,0) count5,
+				ifnull(f.count6,0) count6,
+				ifnull(g.count7,0) count7,
+				ifnull(h.count8,0) count8,
+				ifnull(i.count9,0) count9,
+				ifnull(j.count10,0) count10,
+				ifnull(k.count11,0) count11 
+			from 
+				(select * from sys_regional where parent_id=330000) t
+				left join (
+				select SUBSTR(a3.regional_code,1,4) regional_code,count(1) count1 from soldier_basic_info a3 
+				where a3.yb_id = #{ybId} 
+				<if test='personnelType !=null and personnelType !="" '>
+					AND t.personnel_type = #{personnelType} 
+				</if> 
+				AND a3.sbi_id in(
+				select sbi_id from post_selection_management a2 where a2.rui_id in(
+				select rui_id from reset_unit_info a1 where a1.unit_category=1)) group by SUBSTR(a3.regional_code,1,4)) a 
+				on CONCAT(a.regional_code,'00')=t.regional_code 
+				left join (
+				select SUBSTR(a3.regional_code,1,4) regional_code,count(1) count2 from soldier_basic_info a3 
+				where a3.yb_id = #{ybId} 
+				<if test='personnelType !=null and personnelType !="" '>
+					AND t.personnel_type = #{personnelType} 
+				</if>  
+				AND a3.sbi_id in(
+				select sbi_id from post_selection_management a2 where a2.rui_id in(
+				select rui_id from reset_unit_info a1 where a1.unit_category=11)) group by SUBSTR(a3.regional_code,1,4)) b 
+				on CONCAT(b.regional_code,'00')=t.regional_code 
+				left join (
+				select SUBSTR(a3.regional_code,1,4) regional_code,count(1) count3 from soldier_basic_info a3 
+				where a3.yb_id = #{ybId} 
+				<if test='personnelType !=null and personnelType !="" '>
+					AND t.personnel_type = #{personnelType} 
+				</if> 
+				AND a3.sbi_id in(
+				select sbi_id from post_selection_management a2 where a2.rui_id in(
+				select rui_id from reset_unit_info a1 where a1.unit_category=4)) group by SUBSTR(a3.regional_code,1,4)) c 
+				on CONCAT(c.regional_code,'00')=t.regional_code 
+				left join (
+				select SUBSTR(a3.regional_code,1,4) regional_code,count(1) count4 from soldier_basic_info a3 
+				where a3.yb_id = #{ybId} 
+				<if test='personnelType !=null and personnelType !="" '>
+					AND t.personnel_type = #{personnelType} 
+				</if>  
+				AND a3.sbi_id in(
+				select sbi_id from post_selection_management a2 where a2.rui_id in(
+				select rui_id from reset_unit_info a1 where a1.unit_category=5)) group by SUBSTR(a3.regional_code,1,4)) d 
+				on CONCAT(d.regional_code,'00')=t.regional_code 
+				left join (
+				select SUBSTR(a3.regional_code,1,4) regional_code,count(1) count5 from soldier_basic_info a3 
+				where a3.yb_id = #{ybId} 
+				<if test='personnelType !=null and personnelType !="" '>
+					AND t.personnel_type = #{personnelType} 
+				</if> 
+				AND a3.sbi_id in(
+				select sbi_id from post_selection_management a2 where a2.rui_id in(
+				select rui_id from reset_unit_info a1 where a1.unit_category=6)) group by SUBSTR(a3.regional_code,1,4)) e 
+				on CONCAT(e.regional_code,'00')=t.regional_code
+				left join (
+				select SUBSTR(a3.regional_code,1,4) regional_code,count(1) count6 from soldier_basic_info a3 
+				where a3.yb_id = #{ybId} 
+				<if test='personnelType !=null and personnelType !="" '>
+					AND t.personnel_type = #{personnelType} 
+				</if>  
+				AND a3.sbi_id in(
+				select sbi_id from post_selection_management a2 where a2.rui_id in(
+				select rui_id from reset_unit_info a1 where a1.unit_category in(3,12))) group by SUBSTR(a3.regional_code,1,4)) f 
+				on CONCAT(f.regional_code,'00')=t.regional_code
+				left join (
+				select SUBSTR(a3.regional_code,1,4) regional_code,count(1) count7 from soldier_basic_info a3 
+				where a3.yb_id = #{ybId} 
+				<if test='personnelType !=null and personnelType !="" '>
+					AND t.personnel_type = #{personnelType} 
+				</if>  
+				AND a3.sbi_id in(
+				select sbi_id from post_selection_management a2 where a2.rui_id in(
+				select rui_id from reset_unit_info a1 where a1.unit_category=8)) group by SUBSTR(a3.regional_code,1,4)) g 
+				on CONCAT(g.regional_code,'00')=t.regional_code
+				left join (
+				select SUBSTR(a3.regional_code,1,4) regional_code,count(1) count8 from soldier_basic_info a3 
+				where a3.yb_id = #{ybId} 
+				<if test='personnelType !=null and personnelType !="" '>
+					AND t.personnel_type = #{personnelType} 
+				</if>  
+				AND a3.sbi_id in(
+				select sbi_id from post_selection_management a2 where a2.rui_id in(
+				select rui_id from reset_unit_info a1 where a1.unit_category=9)) group by SUBSTR(a3.regional_code,1,4)) h 
+				on CONCAT(h.regional_code,'00')=t.regional_code
+				left join (
+				select SUBSTR(a3.regional_code,1,4) regional_code,count(1) count9 from soldier_basic_info a3 
+				where a3.yb_id = #{ybId} 
+				<if test='personnelType !=null and personnelType !="" '>
+					AND t.personnel_type = #{personnelType} 
+				</if>
+				AND a3.sbi_id in(
+				select sbi_id from post_selection_management a2 where a2.rui_id in(
+				select rui_id from reset_unit_info a1 where a1.unit_category=10)) group by SUBSTR(a3.regional_code,1,4)) i 
+				on CONCAT(i.regional_code,'00')=t.regional_code
+				left join (
+				select SUBSTR(a3.regional_code,1,4) regional_code,count(1) count10 from soldier_basic_info a3 
+				where a3.yb_id = #{ybId} 
+				<if test='personnelType !=null and personnelType !="" '>
+					AND t.personnel_type = #{personnelType} 
+				</if> 
+				AND a3.sbi_id in(
+				select sbi_id from post_selection_management a2 where a2.rui_id in(
+				select rui_id from reset_unit_info a1 where a1.unit_category=2)) group by SUBSTR(a3.regional_code,1,4)) j 
+				on CONCAT(j.regional_code,'00')=t.regional_code
+				left join (
+					SELECT SUBSTR( a1.regional_code, 1, 4 ) regional_code,count( 1 ) count11 
+					FROM soldier_basic_info a1 
+					WHERE yb_id = #{ybId} 
+					<if test='personnelType !=null and personnelType !="" '>
+						AND t.personnel_type = #{personnelType} 
+					</if>
+					AND new_reset_type IN ( 2, 3 ) 
+					GROUP BY SUBSTR( a1.regional_code, 1, 4 )) k
+				on CONCAT(k.regional_code,'00')=t.regional_code
+			order by t.regional_code
+  	</select>
+</mapper>

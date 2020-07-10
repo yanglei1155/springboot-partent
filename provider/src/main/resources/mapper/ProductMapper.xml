@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.com.springboot.mapper.ProductMapper">
+    <insert id="saveProduct" parameterType="com.example.com.springboot.pojo.Product">
+         insert into seckill_goods(id,name,small_pice,price,coat_price,create_time,end_time,start_time,status,num,stock_count,introduction)
+         values (#{id},#{name},#{small_pice},#{price},#{coat_price},#{create_time},#{end_time},#{start_time},#{status},#{num},#{stock_count},#{introduction})
+     </insert>
+    <select id="getTotalCount" resultType="java.lang.Integer" parameterType="com.example.com.springboot.pojo.Product">
+        select count(id) from seckill_goods
+        <where>
+            and status ='1'
+            <if test="nowTime !='' and nowTime !=null">
+                and end_time>#{nowTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="getListProduct" parameterType="com.example.com.springboot.pojo.PageModel"
+            resultType="com.example.com.springboot.pojo.Product">
+        select *from seckill_goods
+        <where>
+            and status ='1'
+            <if test="nowTime !='' and nowTime !=null">
+                and end_time>#{nowTime}
+            </if>
+        </where>
+        ORDER BY create_time DESC LIMIT #{startIndex},#{pageSize}
+    </select>
+
+    <select id="getProductById" parameterType="com.example.com.springboot.pojo.Product"
+            resultType="com.example.com.springboot.pojo.Product">
+        select *from seckill_goods where id=#{id}
+    </select>
+
+    <update id="editProductById" parameterType="com.example.com.springboot.pojo.Product">
+         update seckill_goods set
+          name=#{name},small_pice=#{small_pice},price=#{price},coat_price=#{coat_price},start_time=#{start_time},end_time=#{end_time},
+          status=#{status},num=#{num},introduction=#{introduction},create_time=#{create_time} where id=#{id}
+    </update>
+
+    <update id="deCreament" parameterType="com.example.com.springboot.pojo.Product">
+         update seckill_goods set stock_count=#{stock_count} where id=#{id}
+    </update>
+
+    <select id="getAllProduct" resultType="com.example.com.springboot.pojo.Product">
+        select *from seckill_goods where status='1' and end_time>#{nowTime} and stock_count>0
+    </select>
+</mapper>

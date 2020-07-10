@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.mapper.ResetUnitInfoMapper">
+  <resultMap id="BaseResultMap" type="com.insigma.po.soldier.ResetUnitInfo">
+    <id column="rui_id" jdbcType="INTEGER" property="ruiId" />
+    <result column="year" jdbcType="VARCHAR" property="year" />
+    <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+    <result column="city_of_unit" jdbcType="VARCHAR" property="cityOfUnit" />
+    <result column="regional_code" jdbcType="VARCHAR" property="regionalCode" />
+    <result column="unit_category" jdbcType="INTEGER" property="unitCategory" />
+    <result column="signing_regional" jdbcType="VARCHAR" property="signingRegional" />
+    <result column="posts_name" jdbcType="VARCHAR" property="postsName" />
+    <result column="demand_num" jdbcType="INTEGER" property="demandNum" />
+    <result column="contacts_name" jdbcType="VARCHAR" property="contactsName" />
+    <result column="position_name" jdbcType="VARCHAR" property="positionName" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from reset_unit_info
+    where rui_id = #{ruiId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.insigma.po.soldier.ResetUnitInfo">
+    insert into reset_unit_info (year, unit_name, 
+      city_of_unit, regional_code, unit_category, 
+      signing_regional, posts_name, demand_num, 
+      contacts_name, position_name, phone, 
+      telephone, remark,create_time)
+    values ( #{year,jdbcType=VARCHAR}, #{unitName,jdbcType=VARCHAR}, 
+      #{cityOfUnit,jdbcType=VARCHAR}, #{regionalCode,jdbcType=VARCHAR}, #{unitCategory,jdbcType=INTEGER}, 
+      #{signingRegional,jdbcType=VARCHAR}, #{postsName,jdbcType=VARCHAR}, #{demandNum,jdbcType=INTEGER}, 
+      #{contactsName,jdbcType=VARCHAR}, #{positionName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{telephone,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},sysdate())
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.ResetUnitInfo">
+    update reset_unit_info
+    set year = #{year,jdbcType=VARCHAR},
+      unit_name = #{unitName,jdbcType=VARCHAR},
+      city_of_unit = #{cityOfUnit,jdbcType=VARCHAR},
+      regional_code = #{regionalCode,jdbcType=VARCHAR},
+      unit_category = #{unitCategory,jdbcType=INTEGER},
+      signing_regional = #{signingRegional,jdbcType=VARCHAR},
+      posts_name = #{postsName,jdbcType=VARCHAR},
+      demand_num = #{demandNum,jdbcType=INTEGER},
+      contacts_name = #{contactsName,jdbcType=VARCHAR},
+      position_name = #{positionName,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time=sysdate()
+    where rui_id = #{ruiId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="com.insigma.po.soldier.ResetUnitInfo">
+    select rui_id, year, unit_name, city_of_unit, regional_code, unit_category, signing_regional, 
+    posts_name, demand_num, contacts_name, position_name, phone, telephone, remark
+    from reset_unit_info
+    where rui_id = #{ruiId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUnitName" parameterType="com.insigma.po.soldier.ResetUnitInfo" resultType="com.insigma.po.soldier.ResetUnitInfo">
+    select rui_id, year, unit_name, city_of_unit, regional_code, unit_category, signing_regional, 
+    posts_name, demand_num, contacts_name, position_name, phone, telephone, remark
+    from reset_unit_info
+    where unit_name = #{unitName,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="queryUnitNameCount" parameterType="com.insigma.po.soldier.ResetUnitInfo" resultType="java.lang.Integer">
+    select count(1)
+    from reset_unit_info
+    where unit_name = #{unitName,jdbcType=VARCHAR}
+      and regional_code = #{regionalCode,jdbcType=VARCHAR}
+      and year = #{year,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getResetUnitList" resultType="com.insigma.po.soldier.ResetUnitInfo" parameterType="java.util.Map">
+    select rui_id, year, unit_name, city_of_unit, 
+    (select param_value from sys_param_info where group_key='unitCategory' and param_key=t.unit_category) unit_category, 
+    ( SELECT regional_name FROM sys_regional e WHERE e.regional_code = t.regional_code ) regional_code,
+	( SELECT regional_name FROM sys_regional e WHERE e.regional_code = t.signing_regional) signing_regional, 
+    posts_name, demand_num, contacts_name, position_name, phone, telephone, remark
+    from reset_unit_info t
+    <where>
+        <if test='year !=null and year !="" '>
+            and year = #{year,jdbcType=VARCHAR}
+        </if>
+        <if test='unitName !=null and unitName !="" '>
+            and unit_name like  '%${unitName}%'
+        </if>
+        <if test='regionalCode !=null and regionalCode !="" '>
+			<if test='regionalCode.length()==4'>
+				and regional_code like '%${regionalCode}%'
+			</if>
+			<if test='regionalCode.length()==6'>
+				and regional_code = #{regionalCode,jdbcType=VARCHAR}
+			</if>
+		</if>
+    </where>
+    order by rui_id desc
+  </select>
+  
+  <select id="queryResetUnitInfoTreeNodes" resultType="com.insigma.po.soldier.SoldierBasicInfoTotal" parameterType="java.util.Map">
+	    <if test='flag == 1 '>
+			select count(1) pnum 
+			from reset_unit_info t
+			where year  = #{year}
+				<if test='regionalCode !=null and regionalCode !="" '>
+					<if test='regionalCode.length()==4'>
+						and t.regional_code like '${regionalCode}%'
+					</if>
+					<if test='regionalCode.length()==6'>
+						and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+					</if>
+				</if>
+		</if>
+	    <if test='flag == 2 '>
+			SELECT
+				a.regional_name,a.regional_code,
+				IFNULL( b.pnum, 0 ) pnum 
+			FROM
+				sys_regional a
+				LEFT JOIN (
+				SELECT
+					CONCAT( substr( regional_code, 1, 4 ), '00' ) regional_code,
+					count( 1 ) pnum 
+				FROM
+					reset_unit_info t
+				WHERE  year  = #{year}
+					<if test='regionalCode !=null and regionalCode !="" '>
+						<if test='regionalCode.length()==4'>
+							and t.regional_code like '${regionalCode}%'
+						</if>
+						<if test='regionalCode.length()==6'>
+							and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+						</if>
+					</if>
+				GROUP BY
+				substr( regional_code, 1, 4 )) b ON b.regional_code = a.regional_code 
+			WHERE
+				parent_id = 330000
+				<if test='regionalCode !=null and regionalCode !="" '>
+					and a.regional_code = CONCAT(  substr( #{regionalCode}, 1, 4 ), '00' )  
+				</if>
+				order by a.regional_code
+		</if>
+	    <if test='flag == 3 '>
+			SELECT
+				a.regional_name,
+				a.regional_code,
+				IFNULL( b.pnum, 0 ) pnum 
+			FROM
+				sys_regional a
+				LEFT JOIN ( SELECT regional_code, count( 1 ) pnum FROM reset_unit_info t
+							WHERE  year  = #{year}
+							<if test='regionalCode !=null and regionalCode !="" '>
+								<if test='regionalCode.length()==4'>
+									and t.regional_code like '${regionalCode}%'
+								</if>
+								<if test='regionalCode.length()==6'>
+									and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+								</if>
+							</if>
+							 GROUP BY regional_code ) b 
+				ON b.regional_code = a.regional_code 
+			WHERE 1=1 
+				<if test='regionalCode !=null and regionalCode !="" '>
+					<if test='regionalCode.length()==4'>
+						and a.parent_id = CONCAT( #{regionalCode}, '00' ) 
+					</if>
+					<if test='regionalCode.length()==6'>
+						and a.regional_code = #{regionalCode}
+					</if>								
+				</if>
+			ORDER BY
+				a.regional_code
+		</if>
+  	</select>
+  
+  	<select id="queryAllUnit"  parameterType="java.util.Map" resultType="com.insigma.po.soldier.ResetUnitInfo">
+	    SELECT
+			rui_id,unit_name ,CONCAT( '指标数量:',t.demand_num) demand_num,
+			CONCAT('剩余数量:',(t.demand_num-IFNULL((SELECT count( 1 ) dnum 
+			FROM post_selection_management b where b.rui_id=t.rui_id GROUP BY b.rui_id),0) )) surplus
+		FROM reset_unit_info t 
+		WHERE year=YEAR(NOW())
+		    and regional_code like '${regionalCode}%'
+			and ( t.rui_id, t.demand_num ) NOT IN (SELECT a.rui_id,count( 1 ) dnum FROM post_selection_management a GROUP BY a.rui_id) 
+	    	and unit_name like '%${unitName}%'
+	</select>
+</mapper>

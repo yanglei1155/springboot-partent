@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.ReceivingNoticeMapper" >
+  <resultMap id="BaseResultMap" type="com.insigma.po.soldier.ReceivingNotice" >
+    <id column="rn_id" property="rnId" jdbcType="INTEGER" />
+    <result column="year" property="year" jdbcType="INTEGER" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+    <result column="yb_id" property="ybId" jdbcType="INTEGER" />
+    <result column="regional_name" property="regionalName" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from receiving_notice
+    where rn_id = #{rnId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.insigma.po.soldier.ReceivingNotice" >
+    insert into receiving_notice (rn_id, year, num, 
+      unit_name, idcard, name, 
+      start_time, end_time, create_time,file_path,yb_id,regional_name
+      )
+    values (#{rnId,jdbcType=INTEGER}, #{year,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, 
+      #{unitName,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, sysdate(),#{filePath,jdbcType=VARCHAR},
+      #{ybId,jdbcType=INTEGER}, #{regionalName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.ReceivingNotice" >
+    update receiving_notice
+    set year = #{year,jdbcType=INTEGER},
+      num = #{num,jdbcType=INTEGER},
+      unit_name = #{unitName,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=VARCHAR},
+      end_time = #{endTime,jdbcType=VARCHAR},
+      file_path = #{filePath,jdbcType=VARCHAR},
+      yb_id=#{ybId,jdbcType=INTEGER},
+      regional_name=#{regionalName,jdbcType=VARCHAR}
+    where idcard = #{idcard,jdbcType=VARCHAR}
+<!--     rn_id = #{rnId,jdbcType=INTEGER} -->
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select *
+    from receiving_notice
+    where idcard in(select idcard from soldier_basic_info a where a.sbi_id=#{sbiId}) 
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select *
+    from receiving_notice where yb_id=#{ybId}
+  </select>
+  
+  <select id="getMaxNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select ifnull(nextval(#{name},#{year}),0) num
+  </select>
+  
+  <insert id="insertNextval" parameterType="java.util.Map" >
+    insert into mysql_seq values(#{name,jdbcType=VARCHAR},1,1,#{year})
+  </insert>
+</mapper>

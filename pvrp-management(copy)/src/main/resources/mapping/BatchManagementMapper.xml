@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.BatchManagementMapper" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from batch_management
+    where yb_id = #{ybId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.insigma.po.soldier.BatchManagement" useGeneratedKeys="true" keyProperty="ybId" keyColumn="yb_id">
+    insert into batch_management ( batch_name, year, 
+      status, operator, create_time,receiving_file_path
+      )
+    values ( #{batchName,jdbcType=VARCHAR}, #{year,jdbcType=INTEGER}, 
+      0, #{operator,jdbcType=VARCHAR}, sysdate(), #{receivingFilePath,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.BatchManagement" >
+    update batch_management
+    set <if test='batchName !=null and batchName !="" '>
+			batch_name = #{batchName,jdbcType=VARCHAR},
+		</if>
+		<if test='year !=null and year !="" '>
+			year = #{year,jdbcType=INTEGER},
+		</if>
+		<if test='status !=null  '>
+			status = #{status,jdbcType=INTEGER},
+		</if>
+		<if test='operator !=null and operator !="" '>
+			operator = #{operator,jdbcType=VARCHAR},
+		</if>
+		<if test='receivingFilePath !=null and receivingFilePath !="" '>
+			receiving_file_path = #{receivingFilePath,jdbcType=VARCHAR},
+		</if>
+		create_time = sysdate()
+    where yb_id = #{ybId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultType="com.insigma.po.soldier.BatchManagement" parameterType="java.lang.Integer" >
+    select yb_id, batch_name, year, status, operator, create_time,receiving_file_path
+    from batch_management
+    where yb_id = #{ybId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultType="com.insigma.po.soldier.BatchManagement" parameterType="com.insigma.po.soldier.BatchManagement" >
+    select yb_id, batch_name, year, status, operator, create_time,receiving_file_path
+    from batch_management where 1=1
+    <if test='year !=null and year !="" '>
+			and year=#{year}
+	</if>
+	<if test='batchName !=null and batchName !="" '>
+			and batch_name=#{batchName}
+	</if>
+	order by batch_name desc
+  </select>
+</mapper>

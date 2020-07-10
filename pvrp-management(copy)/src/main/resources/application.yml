@@ -1,0 +1,88 @@
+server:
+  port: 8082
+  servlet:
+    session:
+      timeout: PT60M
+  
+spring:
+  datasource:
+    password: root
+    driverClassName: com.mysql.jdbc.Driver
+    
+#   url: jdbc:mysql://59.202.23.155:3306/veteransplacement?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useOldAliasMetadataBehavior=true
+#   url: jdbc:mysql://192.168.1.14:3306/veteransplacement?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useOldAliasMetadataBehavior=true
+    url: jdbc:mysql://127.0.0.1:3306/veteransplacement?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useOldAliasMetadataBehavior=true&rewriteBatchedStatements=true
+#    url: jdbc:mysql://10.129.14.176:3306/veteransplacement?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useOldAliasMetadataBehavior=true
+    username: root
+    
+  redis:
+    password:
+    database: 0
+    port: 6379
+    jedis:
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 8
+        max-wait: 1
+    host: 192.168.101.72
+    timeout: 3000
+    transaction:
+      rollback-on-commit-failure: true
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+  type-aliases-package: com.insigma.po
+
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+    level:
+      com.insigma.mapper: DEBUG
+      
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+  
+
+  main:
+    web-application-type: none
+  
+    
+rootpath: D:/epsoft/jz/
+#rootpath: /var/epsoft/jz/
+
+filepersonnel: personnel/
+filenotice: notice/
+communication: communication/
+excelpath: excelpath/
+zippath: zippath/
+pdfpath: pdfpath/
+office: office/
+
+#fileurl: http://59.202.23.157:8080/download/
+#fileurl: http://localhost:8080/download/
+
+downloadpath: download/
+
+companyPlanName: 年省直、中央部署在杭有关单位军队转业干部接收安置任务表
+
+#公告提醒
+templateId2: 77d8480218614b7d9ad6bcdb1157fbe1
+
+#考试提醒
+templateId3: d6ad91c838aa4dea9f239622bb747aef
+
+#注册提醒
+templateId4: f9c7342870c246adbc327f1c86157300
+
+#简历提醒
+templateId5: 6064719a515a4464881c7fdc9834ea1d
+
+#志愿提醒
+templateId6: f9353c99edea4d2db6d7f1c8d620fcdb
+
+#简历审核通知
+templateId7: 8307532bfc444a129bba0bc26790fcce

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.com.springboot.mapper.UserMapper">
+    <insert id="saveUser">
+      insert into user(uid,username,password,head_img,power)values (#{uid},#{username},#{password},#{head_img},#{power})
+   </insert>
+    <select id="checkUser" resultType="com.example.com.springboot.pojo.User"
+            parameterType="com.example.com.springboot.pojo.User">
+        select *from user
+        <where>
+
+            username=#{username}
+
+            and password=#{password}
+
+            <if test="uid !=null and uid !=''">
+                and uid=#{uid}
+            </if>
+        </where>
+    </select>
+    <select id="getUserHead" resultType="com.example.com.springboot.pojo.User"
+            parameterType="com.example.com.springboot.pojo.User">
+        select *from user
+        <where>
+            <if test="username !=null and username !=''">
+                and username=#{username}
+            </if>
+        </where>
+    </select>
+</mapper>

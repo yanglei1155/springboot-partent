@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.com.springboot.mapper.OrderMapper">
+    <insert id="saveOrder" parameterType="com.example.com.springboot.pojo.Order">
+         insert into seckill_order(seckill_id,user_id,money,create_time,pay_time,status,receiver_address,receiver_phone,transaction_id,pd_way)
+         values (#{seckill_id},#{user_id},#{money},#{create_time},#{pay_time},#{status},#{receiver_address},#{receiver_phone},#{transaction_id},#{pd_way})
+     </insert>
+
+    <select id="selectOrderByUid" parameterType="com.example.com.springboot.pojo.User"
+            resultType="com.example.com.springboot.pojo.Order">
+        SELECT
+	o.create_time,
+	o.pay_time,
+	o.transaction_id,
+	o.money,
+	o.pd_way,
+	o. STATUS,
+	o.seckill_id,
+	g. NAME,
+	g.small_pice
+FROM
+	seckill_order o
+LEFT JOIN seckill_goods g ON o.seckill_id = g.id
+WHERE
+	o.user_id = #{uid}
+    </select>
+
+    <select id="selectOrderByWhere" parameterType="com.example.com.springboot.pojo.Order"
+            resultType="com.example.com.springboot.pojo.Order">
+		 select id from seckill_order where user_id=#{user_id} and seckill_id=#{seckill_id};
+	</select>
+
+    <select id="selectAllOrder" resultType="com.example.com.springboot.pojo.Order">
+		    SELECT
+	o.create_time,
+	o.pay_time,
+	o.transaction_id,
+	o.receiver_address,
+	o.receiver_phone,
+	o.money,
+	o.pd_way,
+	o. STATUS,
+	o.seckill_id,
+	g. NAME,
+	g.small_pice,
+  u.username
+FROM
+	seckill_order o
+LEFT JOIN seckill_goods g ON o.seckill_id = g.id
+LEFT JOIN user u on u.uid=o.user_id
+ order by  o.pay_time Desc LIMIT #{startIndex},#{pageSize}
+	</select>
+
+    <select id="selectOrderByTransactionId" parameterType="com.example.com.springboot.pojo.Order"
+            resultType="com.example.com.springboot.pojo.Order">
+		    SELECT
+	o.create_time,
+	o.pay_time,
+	o.transaction_id,
+	o.money,
+	o.pd_way,
+	o. STATUS,
+	o.seckill_id,
+	g. NAME,
+	g.small_pice
+FROM
+	seckill_order o
+LEFT JOIN seckill_goods g ON o.seckill_id = g.id
+ where o.transaction_id=#{transaction_id}
+	</select>
+
+	<select id="selectAllCount" resultType="java.lang.Integer">
+		select count(id)  from seckill_order where status='1'
+	</select>
+</mapper>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.PostSelectionManagementMapper">
+    <resultMap id="BaseResultMap" type="com.insigma.po.soldier.PostSelectionManagement">
+        <id column="psm_id" property="psmId" jdbcType="INTEGER"/>
+        <result column="sbi_id" property="sbiId" jdbcType="INTEGER"/>
+        <result column="year" property="year" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="rui_id" property="ruiId" jdbcType="INTEGER"/>
+        <result column="unit_name" property="unitName" jdbcType="VARCHAR"/>
+        <result column="whe_let_of_intro" property="wheLetOfIntro" jdbcType="INTEGER"/>
+        <result column="let_of_intro_file_path" property="letOfIntroFilePath" jdbcType="VARCHAR"/>
+        <result column="whe_registr_form" property="wheRegistrForm" jdbcType="INTEGER"/>
+        <result column="registr_form_file_path" property="registrFormFilePath" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from post_selection_management
+    where psm_id = #{psmId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.insigma.po.soldier.PostSelectionManagement">
+    insert into post_selection_management ( sbi_id, year, 
+      name, rui_id, unit_name, 
+      whe_let_of_intro, let_of_intro_file_path, whe_registr_form, 
+      registr_form_file_path, create_time)
+    values (#{sbiId,jdbcType=INTEGER}, #{year,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{ruiId,jdbcType=INTEGER}, #{unitName,jdbcType=VARCHAR}, 
+      #{wheLetOfIntro,jdbcType=INTEGER}, #{letOfIntroFilePath,jdbcType=VARCHAR}, #{wheRegistrForm,jdbcType=INTEGER}, 
+      #{registrFormFilePath,jdbcType=VARCHAR}, sysdate())
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.PostSelectionManagement">
+    update post_selection_management
+    set 
+      year = #{year,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      rui_id = #{ruiId,jdbcType=INTEGER},
+      unit_name = #{unitName,jdbcType=VARCHAR},
+      whe_let_of_intro = #{wheLetOfIntro,jdbcType=INTEGER},
+      let_of_intro_file_path = #{letOfIntroFilePath,jdbcType=VARCHAR},
+      whe_registr_form = #{wheRegistrForm,jdbcType=INTEGER},
+      registr_form_file_path = #{registrFormFilePath,jdbcType=VARCHAR},
+      create_time = sysdate(),
+      create_introletter_time=#{createIntroletterTime}
+    where sbi_id = #{sbiId,jdbcType=INTEGER}
+  </update>
+    <select id="selectByPrimaryKey" resultType="com.insigma.po.soldier.PostSelectionManagement"
+            parameterType="java.lang.Integer">
+    select psm_id, sbi_id, year, name, rui_id, unit_name, whe_let_of_intro, let_of_intro_file_path, 
+    whe_registr_form, registr_form_file_path, create_time
+    from post_selection_management
+    where sbi_id = #{sbiId,jdbcType=INTEGER}
+  </select>
+    <select id="selectAll" resultType="com.insigma.po.soldier.PostSelectionManagement" parameterType="java.util.Map">
+        select *
+        from post_selection_management
+        where sbi_id in(select sbi_id from soldier_baisc_info a
+        where
+        yb_id = #{ybId,jdbcType=INTEGER}
+        <if test='regionalCode !=null and regionalCode !="" '>
+            <if test='regionalCode.length()==4'>
+                and regional_code like '${regionalCode}%'
+            </if>
+            <if test='regionalCode.length()==6'>
+                and regional_code = #{regionalCode,jdbcType=VARCHAR}
+            </if>
+        </if>
+        ) and unit_name is not null
+    </select>
+    <select id="getPostSelectionManageMentList" parameterType="com.insigma.po.soldier.PostSelectionManagement"
+            resultType="com.insigma.po.soldier.PostSelectionManagement">
+        SELECT
+        p.psm_id,
+        p.receive_time,
+        p.resettlement_post,
+        p.report_end_time,
+        if(b.personnel_type=1,'退役士兵','退役消防')personnel_type,
+        IF (p.in_process = 1, '是', '否') in_process,
+        receive_status,
+        issue_notification,
+        p.issue_file_path,
+        p.unreceive_reason,
+        p.create_introletter_time,
+        i.unit_name,
+        i.param_value as unit_category,
+        i.rui_id,
+        b.idcard,
+        b.`name`,
+        b.sbi_id,
+        b.yb_id,
+        SUBSTR(b.reset_place ,-13)reset_place
+        FROM
+        post_selection_management p
+        LEFT JOIN (
+        SELECT
+        r.*, s.param_value
+        FROM
+        reset_unit_info r
+        LEFT JOIN (
+        SELECT
+        *
+        FROM
+        sys_param_info
+        WHERE
+        group_key = 'unitCategory'
+        ) s ON r.unit_category = s.param_key
+        ) i ON p.rui_id = i.rui_id
+        LEFT JOIN soldier_basic_info b on b.sbi_id=p.sbi_id
+        <where>
+            <if test="name !=null and name !=''">
+                and b.`name` like '%${name}%'
+            </if>
+            <if test="receiveStatus !=null and receiveStatus !=''">
+                and p.receive_status =#{receiveStatus}
+            </if>
+            <if test="issueNotification !=null and issueNotification !=''">
+                and p.issue_notification= #{issueNotification}
+            </if>
+            <if test="sbiId !=null and sbiId !=''">
+                and b.sbi_id= #{sbiId}
+            </if>
+            <if test="regionalCode !=null and regionalCode !=''">
+                and b.regional_code like '%${regionalCode}%'
+            </if>
+            <if test='ybId !=null and ybId !=""'>
+                AND b.yb_id =#{ybId}
+            </if>
+            <if test='ybId ==null || ybId==""'>
+                AND b.yb_id in(select yb_id from batch_management where year=#{year} )
+            </if>
+        </where>
+    </select>
+    <update id="updateBySubId" parameterType="com.insigma.po.soldier.PostSelectionManagement">
+        UPDATE post_selection_management
+        SET
+        receive_time = #{receiveTime},
+        resettlement_post = #{resettlementPost},
+        in_process = '1',
+        unreceive_reason = #{unreceiveReason},
+        issue_file_path=#{issueFilePath}
+        <where>
+            <if test="sbiId !=null and sbiId !=''">
+                and sbi_id=#{sbiId}
+            </if>
+        </where>
+    </update>
+    <!--目的就是查看新增加至接收单位的人报到时间是否过期了如果是就设置为0（可开具报告状态）没过期不变-->
+    <update id="updateStatusOfIssueNotification" parameterType="java.util.Map">
+        UPDATE post_selection_management
+        SET
+        <if test="nowTime !=null and nowTime !=''">
+            issue_notification =IF (
+            report_end_time&lt;= #{nowTime},
+            '0',
+            null
+            )
+        </if>
+        <if test="issueNotification !=null and issueNotification !=''">
+            issue_notification =#{issueNotification}
+        </if>
+        <where>
+            <if test="flag !=null and flag !=''">
+                and issue_notification is NULL or issue_notification=0
+            </if>
+            <if test="sbId !=null and sbId !=''">
+                and sbi_id=#{sbId}
+            </if>
+            and receive_status!=1
+        </where>
+    </update>
+    <select id="getTotalCountOfArea" parameterType="com.insigma.po.soldier.PostSelectionManagement"
+            resultType="com.insigma.po.soldier.AreaCascadeData">
+    select count(*)pnum from(SELECT
+	s.regional_code,
+	r.regional_name
+FROM
+	post_selection_management p
+LEFT JOIN soldier_basic_info s ON p.sbi_id = s.sbi_id
+LEFT JOIN sys_regional r ON r.regional_code = s.regional_code
+WHERE
+	s.regional_code LIKE '%${regionalCode}%' and  s.yb_id=#{ybId})r
+  </select>
+</mapper>

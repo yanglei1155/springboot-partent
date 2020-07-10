@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.ArchivesScoringFormMapper" >
+  <resultMap id="BaseResultMap" type="com.insigma.po.soldier.ArchivesScoringForm" >
+    <id column="asf_id" property="asfId" jdbcType="INTEGER" />
+    <result column="sbi_id" property="sbiId" jdbcType="INTEGER" />
+    <result column="military_service_years" property="militaryServiceYears" jdbcType="INTEGER" />
+    <result column="start_ym" property="startYm" jdbcType="VARCHAR" />
+    <result column="end_ym" property="endYm" jdbcType="VARCHAR" />
+    <result column="msy_score" property="msyScore" jdbcType="DECIMAL" />
+    <result column="peacetime_commendation_num" property="peacetimeCommendationNum" jdbcType="INTEGER" />
+    <result column="peacetime_commendation_no" property="peacetimeCommendationNo" jdbcType="VARCHAR" />
+    <result column="pcn_score" property="pcnScore" jdbcType="DECIMAL" />
+    <result column="peacetime_commendation_num3" property="peacetimeCommendationNum3" jdbcType="INTEGER" />
+    <result column="peacetime_commendation_no3" property="peacetimeCommendationNo3" jdbcType="VARCHAR" />
+    <result column="pcn_score3" property="pcnScore3" jdbcType="DECIMAL" />
+    <result column="peacetime_commendation_num2" property="peacetimeCommendationNum2" jdbcType="INTEGER" />
+    <result column="peacetime_commendation_no2" property="peacetimeCommendationNo2" jdbcType="VARCHAR" />
+    <result column="pcn_score2" property="pcnScore2" jdbcType="DECIMAL" />
+    <result column="peacetime_commendation_num1" property="peacetimeCommendationNum1" jdbcType="INTEGER" />
+    <result column="peacetime_commendation_no1" property="peacetimeCommendationNo1" jdbcType="VARCHAR" />
+    <result column="pcn_socre1" property="pcnSocre1" jdbcType="DECIMAL" />
+    <result column="wartime_commendation_num" property="wartimeCommendationNum" jdbcType="INTEGER" />
+    <result column="wartime_commendation_no" property="wartimeCommendationNo" jdbcType="VARCHAR" />
+    <result column="wcn_socre" property="wcnSocre" jdbcType="DECIMAL" />
+    <result column="wartime_commendation_num3" property="wartimeCommendationNum3" jdbcType="INTEGER" />
+    <result column="wartime_commendation_no3" property="wartimeCommendationNo3" jdbcType="VARCHAR" />
+    <result column="wcn_socre3" property="wcnSocre3" jdbcType="DECIMAL" />
+    <result column="wartime_commendation_num2" property="wartimeCommendationNum2" jdbcType="INTEGER" />
+    <result column="wartime_commendation_no2" property="wartimeCommendationNo2" jdbcType="VARCHAR" />
+    <result column="wcn_socre2" property="wcnSocre2" jdbcType="DECIMAL" />
+    <result column="wartime_commendation_num1" property="wartimeCommendationNum1" jdbcType="INTEGER" />
+    <result column="wartime_commendation_no1" property="wartimeCommendationNo1" jdbcType="VARCHAR" />
+    <result column="wcn_socre1" property="wcnSocre1" jdbcType="DECIMAL" />
+    <result column="cmc_commendation_num" property="cmcCommendationNum" jdbcType="INTEGER" />
+    <result column="cmc_commendation_no" property="cmcCommendationNo" jdbcType="VARCHAR" />
+    <result column="cmc_socre" property="cmcSocre" jdbcType="DECIMAL" />
+    <result column="cmc_commendation_num1" property="cmcCommendationNum1" jdbcType="INTEGER" />
+    <result column="cmc_commendation_no1" property="cmcCommendationNo1" jdbcType="VARCHAR" />
+    <result column="cmc_socre1" property="cmcSocre1" jdbcType="DECIMAL" />
+    <result column="disa_cate" property="disaCate" jdbcType="VARCHAR" />
+    <result column="dis_grade" property="disGrade" jdbcType="VARCHAR" />
+    <result column="backwoods_i_place" property="backwoodsIPlace" jdbcType="VARCHAR" />
+    <result column="backwoods_i_duration" property="backwoodsIDuration" jdbcType="INTEGER" />
+    <result column="backwoods_i_socre" property="backwoodsISocre" jdbcType="DECIMAL" />
+    <result column="backwoods_ii_place" property="backwoodsIiPlace" jdbcType="VARCHAR" />
+    <result column="backwoods_ii_duration" property="backwoodsIiDuration" jdbcType="INTEGER" />
+    <result column="backwoods_ii_socre" property="backwoodsIiSocre" jdbcType="DECIMAL" />
+    <result column="backwoods_iii_place" property="backwoodsIiiPlace" jdbcType="VARCHAR" />
+    <result column="backwoods_iii_duration" property="backwoodsIiiDuration" jdbcType="INTEGER" />
+    <result column="backwoods_iii_socre" property="backwoodsIiiSocre" jdbcType="DECIMAL" />
+    <result column="backwoods_iv_place" property="backwoodsIvPlace" jdbcType="VARCHAR" />
+    <result column="backwoods_iv_duration" property="backwoodsIvDuration" jdbcType="INTEGER" />
+    <result column="backwoods_iv_socre" property="backwoodsIvSocre" jdbcType="DECIMAL" />
+    <result column="backwoods_v_place" property="backwoodsVPlace" jdbcType="VARCHAR" />
+    <result column="backwoods_v_duration" property="backwoodsVDuration" jdbcType="INTEGER" />
+    <result column="backwoods_v_socre" property="backwoodsVSocre" jdbcType="DECIMAL" />
+    <result column="backwoods_vi_place" property="backwoodsViPlace" jdbcType="VARCHAR" />
+    <result column="backwoods_vi_duration" property="backwoodsViDuration" jdbcType="INTEGER" />
+    <result column="backwoods_vi_socre" property="backwoodsViSocre" jdbcType="DECIMAL" />
+    <result column="xz_ii_place" property="xzIiPlace" jdbcType="VARCHAR" />
+    <result column="xz_ii_duration" property="xzIiDuration" jdbcType="INTEGER" />
+    <result column="xz_ii_socre" property="xzIiSocre" jdbcType="DECIMAL" />
+    <result column="xz_iii_place" property="xzIiiPlace" jdbcType="VARCHAR" />
+    <result column="xz_iii_duration" property="xzIiiDuration" jdbcType="INTEGER" />
+    <result column="xz_iii_socre" property="xzIiiSocre" jdbcType="DECIMAL" />
+    <result column="xz_iv_place" property="xzIvPlace" jdbcType="VARCHAR" />
+    <result column="xz_iv_duration" property="xzIvDuration" jdbcType="INTEGER" />
+    <result column="xz_iv_socre" property="xzIvSocre" jdbcType="DECIMAL" />
+    <result column="island_i_place" property="islandIPlace" jdbcType="VARCHAR" />
+    <result column="island_i_duration" property="islandIDuration" jdbcType="INTEGER" />
+    <result column="island_i_socre" property="islandISocre" jdbcType="DECIMAL" />
+    <result column="island_ii_place" property="islandIiPlace" jdbcType="VARCHAR" />
+    <result column="island_ii_duration" property="islandIiDuration" jdbcType="INTEGER" />
+    <result column="island_ii_socre" property="islandIiSocre" jdbcType="DECIMAL" />
+    <result column="island_iii_place" property="islandIiiPlace" jdbcType="VARCHAR" />
+    <result column="island_iii_duration" property="islandIiiDuration" jdbcType="INTEGER" />
+    <result column="island_iii_socre" property="islandIiiSocre" jdbcType="DECIMAL" />
+    <result column="island_special_place" property="islandSpecialPlace" jdbcType="VARCHAR" />
+    <result column="island_special_duration" property="islandSpecialDuration" jdbcType="INTEGER" />
+    <result column="island_special_socre" property="islandSpecialSocre" jdbcType="DECIMAL" />
+    <result column="island_xs_place" property="islandXsPlace" jdbcType="VARCHAR" />
+    <result column="island_xs_duration" property="islandXsDuration" jdbcType="INTEGER" />
+    <result column="island_xs_socre" property="islandXsSocre" jdbcType="DECIMAL" />
+    <result column="island_zj_place" property="islandZjPlace" jdbcType="VARCHAR" />
+    <result column="island_zj_duration" property="islandZjDuration" jdbcType="INTEGER" />
+    <result column="island_zj_socre" property="islandZjSocre" jdbcType="DECIMAL" />
+    <result column="island_ns_place" property="islandNsPlace" jdbcType="VARCHAR" />
+    <result column="island_ns_duration" property="islandNsDuration" jdbcType="INTEGER" />
+    <result column="island_ns_socre" property="islandNsSocre" jdbcType="DECIMAL" />
+    <result column="overseas_place" property="overseasPlace" jdbcType="VARCHAR" />
+    <result column="overseas_duration" property="overseasDuration" jdbcType="INTEGER" />
+    <result column="overseas_socre" property="overseasSocre" jdbcType="DECIMAL" />
+    <result column="in_combat_day" property="inCombatDay" jdbcType="INTEGER" />
+    <result column="in_combat_no" property="inCombatNo" jdbcType="VARCHAR" />
+    <result column="in_combat_socre" property="inCombatSocre" jdbcType="DECIMAL" />
+    <result column="is_martyr_children" property="isMartyrChildren" jdbcType="INTEGER" />
+    <result column="martyr_idcard" property="martyrIdcard" jdbcType="VARCHAR" />
+    <result column="martyr_children_socre" property="martyrChildrenSocre" jdbcType="DECIMAL" />
+    <result column="add_score_subtotal" property="addScoreSubtotal" jdbcType="DECIMAL" />
+    <result column="party_punishment1" property="partyPunishment1" jdbcType="INTEGER" />
+    <result column="party_punishment2" property="partyPunishment2" jdbcType="INTEGER" />
+    <result column="party_punishment3" property="partyPunishment3" jdbcType="INTEGER" />
+    <result column="party_punishment4" property="partyPunishment4" jdbcType="INTEGER" />
+    <result column="party_expel" property="partyExpel" jdbcType="INTEGER" />
+    <result column="party_punishment_socre" property="partyPunishmentSocre" jdbcType="DECIMAL" />
+    <result column="army_punishment1" property="armyPunishment1" jdbcType="INTEGER" />
+    <result column="army_punishment2" property="armyPunishment2" jdbcType="INTEGER" />
+    <result column="army_punishment3" property="armyPunishment3" jdbcType="INTEGER" />
+    <result column="army_punishment4" property="armyPunishment4" jdbcType="INTEGER" />
+    <result column="army_punishment5" property="armyPunishment5" jdbcType="INTEGER" />
+    <result column="army_dismissal" property="armyDismissal" jdbcType="INTEGER" />
+    <result column="army_punishment_socre" property="armyPunishmentSocre" jdbcType="DECIMAL" />
+    <result column="violation_add_num" property="violationAddNum" jdbcType="INTEGER" />
+    <result column="violation_add_circumstances" property="violationAddCircumstances" jdbcType="VARCHAR" />
+    <result column="violation_add_file_socre" property="violationAddFileSocre" jdbcType="VARCHAR" />
+    <result column="violation_add_socre" property="violationAddSocre" jdbcType="DECIMAL" />
+    <result column="violation_reduced_num" property="violationReducedNum" jdbcType="VARCHAR" />
+    <result column="violation_reduced_circumstances" property="violationReducedCircumstances" jdbcType="VARCHAR" />
+    <result column="violation_reduced_file_socre" property="violationReducedFileSocre" jdbcType="VARCHAR" />
+    <result column="violation_reduced_socre" property="violationReducedSocre" jdbcType="DECIMAL" />
+    <result column="reduced_score_subtotal" property="reducedScoreSubtotal" jdbcType="DECIMAL" />
+    <result column="total_score" property="totalScore" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from archives_scoring_form
+    where asf_id = #{asfId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.insigma.po.soldier.ArchivesScoringForm" >
+    insert into archives_scoring_form (asf_id, sbi_id, military_service_years, 
+      start_ym, end_ym, msy_score, 
+      peacetime_commendation_num, peacetime_commendation_no, 
+      pcn_score, peacetime_commendation_num3, peacetime_commendation_no3, 
+      pcn_score3, peacetime_commendation_num2, peacetime_commendation_no2, 
+      pcn_score2, peacetime_commendation_num1, peacetime_commendation_no1, 
+      pcn_socre1, wartime_commendation_num, wartime_commendation_no, 
+      wcn_socre, wartime_commendation_num3, wartime_commendation_no3, 
+      wcn_socre3, wartime_commendation_num2, wartime_commendation_no2, 
+      wcn_socre2, wartime_commendation_num1, wartime_commendation_no1, 
+      wcn_socre1, cmc_commendation_num, cmc_commendation_no, 
+      cmc_socre, cmc_commendation_num1, cmc_commendation_no1, 
+      cmc_socre1, disa_cate, dis_grade, 
+      backwoods_i_place, backwoods_i_duration, backwoods_i_socre, 
+      backwoods_ii_place, backwoods_ii_duration, 
+      backwoods_ii_socre, backwoods_iii_place, backwoods_iii_duration, 
+      backwoods_iii_socre, backwoods_iv_place, backwoods_iv_duration, 
+      backwoods_iv_socre, backwoods_v_place, backwoods_v_duration, 
+      backwoods_v_socre, backwoods_vi_place, backwoods_vi_duration, 
+      backwoods_vi_socre, xz_ii_place, xz_ii_duration, 
+      xz_ii_socre, xz_iii_place, xz_iii_duration, 
+      xz_iii_socre, xz_iv_place, xz_iv_duration, 
+      xz_iv_socre, island_i_place, island_i_duration, 
+      island_i_socre, island_ii_place, island_ii_duration, 
+      island_ii_socre, island_iii_place, island_iii_duration, 
+      island_iii_socre, island_special_place, island_special_duration, 
+      island_special_socre, island_xs_place, island_xs_duration, 
+      island_xs_socre, island_zj_place, island_zj_duration, 
+      island_zj_socre, island_ns_place, island_ns_duration, 
+      island_ns_socre, overseas_place, overseas_duration, 
+      overseas_socre, in_combat_day, in_combat_no, 
+      in_combat_socre, is_martyr_children, martyr_idcard, 
+      martyr_children_socre, add_score_subtotal, 
+      party_punishment1, party_punishment2, party_punishment3, 
+      party_punishment4, party_expel, party_punishment_socre, 
+      army_punishment1, army_punishment2, army_punishment3, 
+      army_punishment4, army_punishment5, army_dismissal, 
+      army_punishment_socre, violation_add_num, violation_add_circumstances, 
+      violation_add_file_socre, violation_add_socre, 
+      violation_reduced_num, violation_reduced_circumstances, 
+      violation_reduced_file_socre, violation_reduced_socre, 
+      reduced_score_subtotal, total_score, create_time
+      )
+    values (#{asfId,jdbcType=INTEGER}, #{sbiId,jdbcType=INTEGER}, #{militaryServiceYears,jdbcType=INTEGER}, 
+      #{startYm,jdbcType=VARCHAR}, #{endYm,jdbcType=VARCHAR}, #{msyScore,jdbcType=DECIMAL}, 
+      #{peacetimeCommendationNum,jdbcType=INTEGER}, #{peacetimeCommendationNo,jdbcType=VARCHAR}, 
+      #{pcnScore,jdbcType=DECIMAL}, #{peacetimeCommendationNum3,jdbcType=INTEGER}, #{peacetimeCommendationNo3,jdbcType=VARCHAR}, 
+      #{pcnScore3,jdbcType=DECIMAL}, #{peacetimeCommendationNum2,jdbcType=INTEGER}, #{peacetimeCommendationNo2,jdbcType=VARCHAR}, 
+      #{pcnScore2,jdbcType=DECIMAL}, #{peacetimeCommendationNum1,jdbcType=INTEGER}, #{peacetimeCommendationNo1,jdbcType=VARCHAR}, 
+      #{pcnSocre1,jdbcType=DECIMAL}, #{wartimeCommendationNum,jdbcType=INTEGER}, #{wartimeCommendationNo,jdbcType=VARCHAR}, 
+      #{wcnSocre,jdbcType=DECIMAL}, #{wartimeCommendationNum3,jdbcType=INTEGER}, #{wartimeCommendationNo3,jdbcType=VARCHAR}, 
+      #{wcnSocre3,jdbcType=DECIMAL}, #{wartimeCommendationNum2,jdbcType=INTEGER}, #{wartimeCommendationNo2,jdbcType=VARCHAR}, 
+      #{wcnSocre2,jdbcType=DECIMAL}, #{wartimeCommendationNum1,jdbcType=INTEGER}, #{wartimeCommendationNo1,jdbcType=VARCHAR}, 
+      #{wcnSocre1,jdbcType=DECIMAL}, #{cmcCommendationNum,jdbcType=INTEGER}, #{cmcCommendationNo,jdbcType=VARCHAR}, 
+      #{cmcSocre,jdbcType=DECIMAL}, #{cmcCommendationNum1,jdbcType=INTEGER}, #{cmcCommendationNo1,jdbcType=VARCHAR}, 
+      #{cmcSocre1,jdbcType=DECIMAL}, #{disaCate,jdbcType=VARCHAR}, #{disGrade,jdbcType=VARCHAR}, 
+      #{backwoodsIPlace,jdbcType=VARCHAR}, #{backwoodsIDuration,jdbcType=INTEGER}, #{backwoodsISocre,jdbcType=DECIMAL}, 
+      #{backwoodsIiPlace,jdbcType=VARCHAR}, #{backwoodsIiDuration,jdbcType=INTEGER}, 
+      #{backwoodsIiSocre,jdbcType=DECIMAL}, #{backwoodsIiiPlace,jdbcType=VARCHAR}, #{backwoodsIiiDuration,jdbcType=INTEGER}, 
+      #{backwoodsIiiSocre,jdbcType=DECIMAL}, #{backwoodsIvPlace,jdbcType=VARCHAR}, #{backwoodsIvDuration,jdbcType=INTEGER}, 
+      #{backwoodsIvSocre,jdbcType=DECIMAL}, #{backwoodsVPlace,jdbcType=VARCHAR}, #{backwoodsVDuration,jdbcType=INTEGER}, 
+      #{backwoodsVSocre,jdbcType=DECIMAL}, #{backwoodsViPlace,jdbcType=VARCHAR}, #{backwoodsViDuration,jdbcType=INTEGER}, 
+      #{backwoodsViSocre,jdbcType=DECIMAL}, #{xzIiPlace,jdbcType=VARCHAR}, #{xzIiDuration,jdbcType=INTEGER}, 
+      #{xzIiSocre,jdbcType=DECIMAL}, #{xzIiiPlace,jdbcType=VARCHAR}, #{xzIiiDuration,jdbcType=INTEGER}, 
+      #{xzIiiSocre,jdbcType=DECIMAL}, #{xzIvPlace,jdbcType=VARCHAR}, #{xzIvDuration,jdbcType=INTEGER}, 
+      #{xzIvSocre,jdbcType=DECIMAL}, #{islandIPlace,jdbcType=VARCHAR}, #{islandIDuration,jdbcType=INTEGER}, 
+      #{islandISocre,jdbcType=DECIMAL}, #{islandIiPlace,jdbcType=VARCHAR}, #{islandIiDuration,jdbcType=INTEGER}, 
+      #{islandIiSocre,jdbcType=DECIMAL}, #{islandIiiPlace,jdbcType=VARCHAR}, #{islandIiiDuration,jdbcType=INTEGER}, 
+      #{islandIiiSocre,jdbcType=DECIMAL}, #{islandSpecialPlace,jdbcType=VARCHAR}, #{islandSpecialDuration,jdbcType=INTEGER}, 
+      #{islandSpecialSocre,jdbcType=DECIMAL}, #{islandXsPlace,jdbcType=VARCHAR}, #{islandXsDuration,jdbcType=INTEGER}, 
+      #{islandXsSocre,jdbcType=DECIMAL}, #{islandZjPlace,jdbcType=VARCHAR}, #{islandZjDuration,jdbcType=INTEGER}, 
+      #{islandZjSocre,jdbcType=DECIMAL}, #{islandNsPlace,jdbcType=VARCHAR}, #{islandNsDuration,jdbcType=INTEGER}, 
+      #{islandNsSocre,jdbcType=DECIMAL}, #{overseasPlace,jdbcType=VARCHAR}, #{overseasDuration,jdbcType=INTEGER}, 
+      #{overseasSocre,jdbcType=DECIMAL}, #{inCombatDay,jdbcType=INTEGER}, #{inCombatNo,jdbcType=VARCHAR}, 
+      #{inCombatSocre,jdbcType=DECIMAL}, #{isMartyrChildren,jdbcType=INTEGER}, #{martyrIdcard,jdbcType=VARCHAR}, 
+      #{martyrChildrenSocre,jdbcType=DECIMAL}, #{addScoreSubtotal,jdbcType=DECIMAL}, 
+      #{partyPunishment1,jdbcType=INTEGER}, #{partyPunishment2,jdbcType=INTEGER}, #{partyPunishment3,jdbcType=INTEGER}, 
+      #{partyPunishment4,jdbcType=INTEGER}, #{partyExpel,jdbcType=INTEGER}, #{partyPunishmentSocre,jdbcType=DECIMAL}, 
+      #{armyPunishment1,jdbcType=INTEGER}, #{armyPunishment2,jdbcType=INTEGER}, #{armyPunishment3,jdbcType=INTEGER}, 
+      #{armyPunishment4,jdbcType=INTEGER}, #{armyPunishment5,jdbcType=INTEGER}, #{armyDismissal,jdbcType=INTEGER}, 
+      #{armyPunishmentSocre,jdbcType=DECIMAL}, #{violationAddNum,jdbcType=INTEGER}, #{violationAddCircumstances,jdbcType=VARCHAR}, 
+      #{violationAddFileSocre,jdbcType=VARCHAR}, #{violationAddSocre,jdbcType=DECIMAL}, 
+      #{violationReducedNum,jdbcType=VARCHAR}, #{violationReducedCircumstances,jdbcType=VARCHAR}, 
+      #{violationReducedFileSocre,jdbcType=VARCHAR}, #{violationReducedSocre,jdbcType=DECIMAL}, 
+      #{reducedScoreSubtotal,jdbcType=DECIMAL}, #{totalScore,jdbcType=DECIMAL}, sysdate()
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.ArchivesScoringForm" >
+    update archives_scoring_form
+    set 
+      military_service_years = #{militaryServiceYears,jdbcType=INTEGER},
+      start_ym = #{startYm,jdbcType=VARCHAR},
+      end_ym = #{endYm,jdbcType=VARCHAR},
+      msy_score = #{msyScore,jdbcType=DECIMAL},
+      peacetime_commendation_num = #{peacetimeCommendationNum,jdbcType=INTEGER},
+      peacetime_commendation_no = #{peacetimeCommendationNo,jdbcType=VARCHAR},
+      pcn_score = #{pcnScore,jdbcType=DECIMAL},
+      peacetime_commendation_num3 = #{peacetimeCommendationNum3,jdbcType=INTEGER},
+      peacetime_commendation_no3 = #{peacetimeCommendationNo3,jdbcType=VARCHAR},
+      pcn_score3 = #{pcnScore3,jdbcType=DECIMAL},
+      peacetime_commendation_num2 = #{peacetimeCommendationNum2,jdbcType=INTEGER},
+      peacetime_commendation_no2 = #{peacetimeCommendationNo2,jdbcType=VARCHAR},
+      pcn_score2 = #{pcnScore2,jdbcType=DECIMAL},
+      peacetime_commendation_num1 = #{peacetimeCommendationNum1,jdbcType=INTEGER},
+      peacetime_commendation_no1 = #{peacetimeCommendationNo1,jdbcType=VARCHAR},
+      pcn_socre1 = #{pcnSocre1,jdbcType=DECIMAL},
+      wartime_commendation_num = #{wartimeCommendationNum,jdbcType=INTEGER},
+      wartime_commendation_no = #{wartimeCommendationNo,jdbcType=VARCHAR},
+      wcn_socre = #{wcnSocre,jdbcType=DECIMAL},
+      wartime_commendation_num3 = #{wartimeCommendationNum3,jdbcType=INTEGER},
+      wartime_commendation_no3 = #{wartimeCommendationNo3,jdbcType=VARCHAR},
+      wcn_socre3 = #{wcnSocre3,jdbcType=DECIMAL},
+      wartime_commendation_num2 = #{wartimeCommendationNum2,jdbcType=INTEGER},
+      wartime_commendation_no2 = #{wartimeCommendationNo2,jdbcType=VARCHAR},
+      wcn_socre2 = #{wcnSocre2,jdbcType=DECIMAL},
+      wartime_commendation_num1 = #{wartimeCommendationNum1,jdbcType=INTEGER},
+      wartime_commendation_no1 = #{wartimeCommendationNo1,jdbcType=VARCHAR},
+      wcn_socre1 = #{wcnSocre1,jdbcType=DECIMAL},
+      cmc_commendation_num = #{cmcCommendationNum,jdbcType=INTEGER},
+      cmc_commendation_no = #{cmcCommendationNo,jdbcType=VARCHAR},
+      cmc_socre = #{cmcSocre,jdbcType=DECIMAL},
+      cmc_commendation_num1 = #{cmcCommendationNum1,jdbcType=INTEGER},
+      cmc_commendation_no1 = #{cmcCommendationNo1,jdbcType=VARCHAR},
+      cmc_socre1 = #{cmcSocre1,jdbcType=DECIMAL},
+      disa_cate = #{disaCate,jdbcType=VARCHAR},
+      dis_grade = #{disGrade,jdbcType=VARCHAR},
+      backwoods_i_place = #{backwoodsIPlace,jdbcType=VARCHAR},
+      backwoods_i_duration = #{backwoodsIDuration,jdbcType=INTEGER},
+      backwoods_i_socre = #{backwoodsISocre,jdbcType=DECIMAL},
+      backwoods_ii_place = #{backwoodsIiPlace,jdbcType=VARCHAR},
+      backwoods_ii_duration = #{backwoodsIiDuration,jdbcType=INTEGER},
+      backwoods_ii_socre = #{backwoodsIiSocre,jdbcType=DECIMAL},
+      backwoods_iii_place = #{backwoodsIiiPlace,jdbcType=VARCHAR},
+      backwoods_iii_duration = #{backwoodsIiiDuration,jdbcType=INTEGER},
+      backwoods_iii_socre = #{backwoodsIiiSocre,jdbcType=DECIMAL},
+      backwoods_iv_place = #{backwoodsIvPlace,jdbcType=VARCHAR},
+      backwoods_iv_duration = #{backwoodsIvDuration,jdbcType=INTEGER},
+      backwoods_iv_socre = #{backwoodsIvSocre,jdbcType=DECIMAL},
+      backwoods_v_place = #{backwoodsVPlace,jdbcType=VARCHAR},
+      backwoods_v_duration = #{backwoodsVDuration,jdbcType=INTEGER},
+      backwoods_v_socre = #{backwoodsVSocre,jdbcType=DECIMAL},
+      backwoods_vi_place = #{backwoodsViPlace,jdbcType=VARCHAR},
+      backwoods_vi_duration = #{backwoodsViDuration,jdbcType=INTEGER},
+      backwoods_vi_socre = #{backwoodsViSocre,jdbcType=DECIMAL},
+      xz_ii_place = #{xzIiPlace,jdbcType=VARCHAR},
+      xz_ii_duration = #{xzIiDuration,jdbcType=INTEGER},
+      xz_ii_socre = #{xzIiSocre,jdbcType=DECIMAL},
+      xz_iii_place = #{xzIiiPlace,jdbcType=VARCHAR},
+      xz_iii_duration = #{xzIiiDuration,jdbcType=INTEGER},
+      xz_iii_socre = #{xzIiiSocre,jdbcType=DECIMAL},
+      xz_iv_place = #{xzIvPlace,jdbcType=VARCHAR},
+      xz_iv_duration = #{xzIvDuration,jdbcType=INTEGER},
+      xz_iv_socre = #{xzIvSocre,jdbcType=DECIMAL},
+      island_i_place = #{islandIPlace,jdbcType=VARCHAR},
+      island_i_duration = #{islandIDuration,jdbcType=INTEGER},
+      island_i_socre = #{islandISocre,jdbcType=DECIMAL},
+      island_ii_place = #{islandIiPlace,jdbcType=VARCHAR},
+      island_ii_duration = #{islandIiDuration,jdbcType=INTEGER},
+      island_ii_socre = #{islandIiSocre,jdbcType=DECIMAL},
+      island_iii_place = #{islandIiiPlace,jdbcType=VARCHAR},
+      island_iii_duration = #{islandIiiDuration,jdbcType=INTEGER},
+      island_iii_socre = #{islandIiiSocre,jdbcType=DECIMAL},
+      island_special_place = #{islandSpecialPlace,jdbcType=VARCHAR},
+      island_special_duration = #{islandSpecialDuration,jdbcType=INTEGER},
+      island_special_socre = #{islandSpecialSocre,jdbcType=DECIMAL},
+      island_xs_place = #{islandXsPlace,jdbcType=VARCHAR},
+      island_xs_duration = #{islandXsDuration,jdbcType=INTEGER},
+      island_xs_socre = #{islandXsSocre,jdbcType=DECIMAL},
+      island_zj_place = #{islandZjPlace,jdbcType=VARCHAR},
+      island_zj_duration = #{islandZjDuration,jdbcType=INTEGER},
+      island_zj_socre = #{islandZjSocre,jdbcType=DECIMAL},
+      island_ns_place = #{islandNsPlace,jdbcType=VARCHAR},
+      island_ns_duration = #{islandNsDuration,jdbcType=INTEGER},
+      island_ns_socre = #{islandNsSocre,jdbcType=DECIMAL},
+      overseas_place = #{overseasPlace,jdbcType=VARCHAR},
+      overseas_duration = #{overseasDuration,jdbcType=INTEGER},
+      overseas_socre = #{overseasSocre,jdbcType=DECIMAL},
+      in_combat_day = #{inCombatDay,jdbcType=INTEGER},
+      in_combat_no = #{inCombatNo,jdbcType=VARCHAR},
+      in_combat_socre = #{inCombatSocre,jdbcType=DECIMAL},
+      is_martyr_children = #{isMartyrChildren,jdbcType=INTEGER},
+      martyr_idcard = #{martyrIdcard,jdbcType=VARCHAR},
+      martyr_children_socre = #{martyrChildrenSocre,jdbcType=DECIMAL},
+      add_score_subtotal = #{addScoreSubtotal,jdbcType=DECIMAL},
+      party_punishment1 = #{partyPunishment1,jdbcType=INTEGER},
+      party_punishment2 = #{partyPunishment2,jdbcType=INTEGER},
+      party_punishment3 = #{partyPunishment3,jdbcType=INTEGER},
+      party_punishment4 = #{partyPunishment4,jdbcType=INTEGER},
+      party_expel = #{partyExpel,jdbcType=INTEGER},
+      party_punishment_socre = #{partyPunishmentSocre,jdbcType=DECIMAL},
+      army_punishment1 = #{armyPunishment1,jdbcType=INTEGER},
+      army_punishment2 = #{armyPunishment2,jdbcType=INTEGER},
+      army_punishment3 = #{armyPunishment3,jdbcType=INTEGER},
+      army_punishment4 = #{armyPunishment4,jdbcType=INTEGER},
+      army_punishment5 = #{armyPunishment5,jdbcType=INTEGER},
+      army_dismissal = #{armyDismissal,jdbcType=INTEGER},
+      army_punishment_socre = #{armyPunishmentSocre,jdbcType=DECIMAL},
+      violation_add_num = #{violationAddNum,jdbcType=INTEGER},
+      violation_add_circumstances = #{violationAddCircumstances,jdbcType=VARCHAR},
+      violation_add_file_socre = #{violationAddFileSocre,jdbcType=VARCHAR},
+      violation_add_socre = #{violationAddSocre,jdbcType=DECIMAL},
+      violation_reduced_num = #{violationReducedNum,jdbcType=VARCHAR},
+      violation_reduced_circumstances = #{violationReducedCircumstances,jdbcType=VARCHAR},
+      violation_reduced_file_socre = #{violationReducedFileSocre,jdbcType=VARCHAR},
+      violation_reduced_socre = #{violationReducedSocre,jdbcType=DECIMAL},
+      reduced_score_subtotal = #{reducedScoreSubtotal,jdbcType=DECIMAL},
+      total_score = #{totalScore,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=VARCHAR}
+    where sbi_id = #{sbiId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select asf_id, sbi_id, military_service_years, start_ym, end_ym, msy_score, peacetime_commendation_num, 
+    peacetime_commendation_no, pcn_score, peacetime_commendation_num3, peacetime_commendation_no3, 
+    pcn_score3, peacetime_commendation_num2, peacetime_commendation_no2, pcn_score2, 
+    peacetime_commendation_num1, peacetime_commendation_no1, pcn_socre1, wartime_commendation_num, 
+    wartime_commendation_no, wcn_socre, wartime_commendation_num3, wartime_commendation_no3, 
+    wcn_socre3, wartime_commendation_num2, wartime_commendation_no2, wcn_socre2, wartime_commendation_num1, 
+    wartime_commendation_no1, wcn_socre1, cmc_commendation_num, cmc_commendation_no, 
+    cmc_socre, cmc_commendation_num1, cmc_commendation_no1, cmc_socre1, disa_cate, 
+    dis_grade, backwoods_i_place, backwoods_i_duration, backwoods_i_socre, backwoods_ii_place, 
+    backwoods_ii_duration, backwoods_ii_socre, backwoods_iii_place, backwoods_iii_duration, 
+    backwoods_iii_socre, backwoods_iv_place, backwoods_iv_duration, backwoods_iv_socre, 
+    backwoods_v_place, backwoods_v_duration, backwoods_v_socre, backwoods_vi_place, backwoods_vi_duration, 
+    backwoods_vi_socre, xz_ii_place, xz_ii_duration, xz_ii_socre, xz_iii_place, xz_iii_duration, 
+    xz_iii_socre, xz_iv_place, xz_iv_duration, xz_iv_socre, island_i_place, island_i_duration, 
+    island_i_socre, island_ii_place, island_ii_duration, island_ii_socre, island_iii_place, 
+    island_iii_duration, island_iii_socre, island_special_place, island_special_duration, 
+    island_special_socre, island_xs_place, island_xs_duration, island_xs_socre, island_zj_place, 
+    island_zj_duration, island_zj_socre, island_ns_place, island_ns_duration, island_ns_socre, 
+    overseas_place, overseas_duration, overseas_socre, in_combat_day, in_combat_no, in_combat_socre, 
+    is_martyr_children, martyr_idcard, martyr_children_socre, add_score_subtotal, party_punishment1, 
+    party_punishment2, party_punishment3, party_punishment4, party_expel, party_punishment_socre, 
+    army_punishment1, army_punishment2, army_punishment3, army_punishment4, army_punishment5, 
+    army_dismissal, army_punishment_socre, violation_add_num, violation_add_circumstances, 
+    violation_add_file_socre, violation_add_socre, violation_reduced_num, violation_reduced_circumstances, 
+    violation_reduced_file_socre, violation_reduced_socre, reduced_score_subtotal, total_score, 
+    create_time
+    from archives_scoring_form
+    where asf_id = #{asfId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.insigma.po.soldier.ArchivesScoringForm">
+    select asf_id, sbi_id, military_service_years, start_ym, end_ym, msy_score, peacetime_commendation_num, 
+    peacetime_commendation_no, pcn_score, peacetime_commendation_num3, peacetime_commendation_no3, 
+    pcn_score3, peacetime_commendation_num2, peacetime_commendation_no2, pcn_score2, 
+    peacetime_commendation_num1, peacetime_commendation_no1, pcn_socre1, wartime_commendation_num, 
+    wartime_commendation_no, wcn_socre, wartime_commendation_num3, wartime_commendation_no3, 
+    wcn_socre3, wartime_commendation_num2, wartime_commendation_no2, wcn_socre2, wartime_commendation_num1, 
+    wartime_commendation_no1, wcn_socre1, cmc_commendation_num, cmc_commendation_no, 
+    cmc_socre, cmc_commendation_num1, cmc_commendation_no1, cmc_socre1, disa_cate, 
+    dis_grade, backwoods_i_place, backwoods_i_duration, backwoods_i_socre, backwoods_ii_place, 
+    backwoods_ii_duration, backwoods_ii_socre, backwoods_iii_place, backwoods_iii_duration, 
+    backwoods_iii_socre, backwoods_iv_place, backwoods_iv_duration, backwoods_iv_socre, 
+    backwoods_v_place, backwoods_v_duration, backwoods_v_socre, backwoods_vi_place, backwoods_vi_duration, 
+    backwoods_vi_socre, xz_ii_place, xz_ii_duration, xz_ii_socre, xz_iii_place, xz_iii_duration, 
+    xz_iii_socre, xz_iv_place, xz_iv_duration, xz_iv_socre, island_i_place, island_i_duration, 
+    island_i_socre, island_ii_place, island_ii_duration, island_ii_socre, island_iii_place, 
+    island_iii_duration, island_iii_socre, island_special_place, island_special_duration, 
+    island_special_socre, island_xs_place, island_xs_duration, island_xs_socre, island_zj_place, 
+    island_zj_duration, island_zj_socre, island_ns_place, island_ns_duration, island_ns_socre, 
+    overseas_place, overseas_duration, overseas_socre, in_combat_day, in_combat_no, in_combat_socre, 
+    is_martyr_children, martyr_idcard, martyr_children_socre, add_score_subtotal, party_punishment1, 
+    party_punishment2, party_punishment3, party_punishment4, party_expel, party_punishment_socre, 
+    army_punishment1, army_punishment2, army_punishment3, army_punishment4, army_punishment5, 
+    army_dismissal, army_punishment_socre, violation_add_num, violation_add_circumstances, 
+    violation_add_file_socre, violation_add_socre, violation_reduced_num, violation_reduced_circumstances, 
+    violation_reduced_file_socre, violation_reduced_socre, reduced_score_subtotal, total_score, 
+    create_time
+    from archives_scoring_form 
+    where 1=1 
+    <if test='sbiId !=null '>
+		and sbi_id = #{sbiId,jdbcType=INTEGER}
+	</if>
+  </select>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.PersonnelArchivesLogMapper" >
+  <resultMap id="BaseResultMap" type="com.insigma.po.soldier.PersonnelArchivesLog" >
+    <id column="pal_id" property="palId" jdbcType="INTEGER" />
+    <result column="sbi_id" property="sbiId" jdbcType="INTEGER" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from personnel_archives_log
+    where pal_id = #{palId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.insigma.po.soldier.PersonnelArchivesLog" >
+    insert into personnel_archives_log (pal_id, sbi_id, context, 
+      operator, create_time)
+    values (#{palId,jdbcType=INTEGER}, #{sbiId,jdbcType=INTEGER}, #{context,jdbcType=VARCHAR}, 
+      #{operator,jdbcType=VARCHAR}, sysdate())
+  </insert>
+  
+  
+  	<insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="palId" keyColumn="pal_id">
+        insert into personnel_archives_log (sbi_id,context,operator,create_time) values
+        <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+        <foreach collection="list" item="p" separator="," close=";">
+            (#{p.sbiId},#{p.context},#{p.operator},sysdate())
+        </foreach>
+    </insert>
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.PersonnelArchivesLog" >
+    update personnel_archives_log
+    set sbi_id = #{sbiId,jdbcType=INTEGER},
+      context = #{context,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where pal_id = #{palId,jdbcType=INTEGER}
+  </update>
+  	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	    select pal_id, sbi_id, context, operator, create_time
+	    from personnel_archives_log
+	    where pal_id = #{palId,jdbcType=INTEGER}
+  	</select>
+  	
+  	<select id="selectAll" resultMap="BaseResultMap" parameterType="com.insigma.po.soldier.PersonnelArchivesLog">
+	    select pal_id, sbi_id, context, operator, create_time
+	    from personnel_archives_log 
+	    where 1=1 
+	    <if test='sbiId !=null and sbiId !="" '>
+			and sbi_id = #{sbiId,jdbcType=INTEGER}
+		</if>
+  	</select>
+</mapper>

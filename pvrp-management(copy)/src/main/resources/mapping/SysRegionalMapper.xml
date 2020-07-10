@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.SysRegionalMapper">
+    <resultMap id="BaseResultMap" type="com.insigma.po.soldier.SysRegional">
+        <id column="sr_id" property="srId" jdbcType="INTEGER"/>
+        <result column="parent_id" property="parentId" jdbcType="INTEGER"/>
+        <result column="regional_name" property="regionalName" jdbcType="VARCHAR"/>
+        <result column="regional_code" property="regionalCode" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_regional
+    where sr_id = #{srId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.insigma.po.soldier.SysRegional">
+    insert into sys_regional (sr_id, parent_id, regional_name, 
+      regional_code, status, create_time, 
+      modify_time)
+    values (#{srId,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{regionalName,jdbcType=VARCHAR}, 
+      #{regionalCode,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.SysRegional">
+    update sys_regional
+    set parent_id = #{parentId,jdbcType=INTEGER},
+      regional_name = #{regionalName,jdbcType=VARCHAR},
+      regional_code = #{regionalCode,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where sr_id = #{srId,jdbcType=INTEGER}
+  </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select sr_id, parent_id, regional_name, regional_code, status, create_time, modify_time
+    from sys_regional
+    where sr_id = #{srId,jdbcType=INTEGER}
+  </select>
+
+    <select id="selectAll" resultMap="BaseResultMap" parameterType="com.insigma.po.soldier.SysRegional">
+        select sr_id, parent_id, regional_name, regional_code, status, create_time, modify_time
+        from sys_regional
+        where status=1
+        <if test='regionalCode !=null and regionalCode !="" '>
+            and regional_code = #{regionalCode,jdbcType=VARCHAR}
+        </if>
+        <if test='parentId !=null and parentId !="" '>
+            and parent_id = #{parentId}
+        </if>
+    </select>
+
+    <!-- 根据导入的所属地查询 条件值 例：浙江省台州市路桥区 -->
+    <select id="selectAllName" resultMap="BaseResultMap" parameterType="com.insigma.po.soldier.SysRegional">
+        SELECT
+        *
+        FROM
+        (
+        SELECT
+        CONCAT( c.value1, c.value2, d.regional_name ) regional_name,
+        CONCAT( c.key1, ',', c.key2, ',', d.regional_code ) regional_code
+        FROM
+        (
+        SELECT
+        a.regional_name value1,
+        a.regional_code key1,
+        b.regional_name value2,
+        b.regional_code key2
+        FROM
+        ( SELECT regional_name, regional_code FROM sys_regional WHERE parent_id = 0 AND STATUS = 1 ) a,
+        sys_regional b
+        WHERE
+        b.parent_id = a.regional_code
+        ) c,
+        sys_regional d
+        WHERE
+        d.parent_id = c.key2
+        AND STATUS = 1
+        ) t
+        WHERE 1=1
+        <if test='regionalName !=null and regionalName !="" '>
+            and t.regional_name = #{regionalName,jdbcType=VARCHAR}
+        </if>
+        <if test='regionalCode !=null and regionalCode !="" '>
+            and t.regional_code like '%${regionalCode}'
+        </if>
+
+    </select>
+
+
+    <select id="queryRegionalTotal" resultMap="BaseResultMap" parameterType="com.insigma.po.soldier.SysRegional">
+        select *
+        from sys_regional_total
+        where 1=1
+        <if test='regionalCode !=null and regionalCode !="" '>
+            and regional_code = #{regionalCode,jdbcType=VARCHAR}
+        </if>
+        <if test='regionalName !=null and regionalName !="" '>
+            and regional_name = #{regionalName,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="queryParentData" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select * from sys_regional 
+     where regional_code in(
+     	select parent_id from sys_regional a 
+     	where a.regional_code = #{regionalCode,jdbcType=VARCHAR})
+  </select>
+ <!--获取浙江省所有地区全名-->
+  <select id="getFullNameOfAllArea" resultType="com.insigma.po.soldier.SysRegional">
+     SELECT
+  CONCAT(s3.area,',',s4.regional_name)regional_name
+FROM
+	sys_regional s4
+RIGHT JOIN  (
+  SELECT
+	s2.regional_code,
+  CONCAT(s1.regional_name,',',s2.regional_name)as area
+FROM
+	sys_regional s2
+RIGHT JOIN (
+	SELECT
+		regional_name,
+		regional_code
+	FROM
+		sys_regional
+	WHERE
+		regional_code = '330000') as s1 on s2.parent_id=s1.regional_code
+) as s3 on  s4.parent_id=s3.regional_code
+  </select>
+</mapper>

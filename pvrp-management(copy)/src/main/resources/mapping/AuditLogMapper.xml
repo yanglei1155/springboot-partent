@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.AuditLogMapper" >
+  <resultMap id="BaseResultMap" type="com.insigma.po.soldier.AuditLog" >
+    <id column="al_id" property="alId" jdbcType="INTEGER" />
+    <result column="sbi_id" property="sbiId" jdbcType="INTEGER" />
+    <result column="audit_dept" property="auditDept" jdbcType="VARCHAR" />
+    <result column="audit_result" property="auditResult" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="audit_time" property="auditTime" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="returnRemark" property="return_remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from audit_log
+    where al_id = #{alId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.insigma.po.soldier.AuditLog" >
+    insert into audit_log (al_id, sbi_id, audit_dept, 
+      audit_result, operator, audit_time, 
+      remark,return_remark)
+    values (#{alId,jdbcType=INTEGER}, #{sbiId,jdbcType=INTEGER}, #{auditDept,jdbcType=VARCHAR}, 
+      #{auditResult,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, sysdate(), 
+      #{remark,jdbcType=VARCHAR},#{returnRemark,jdbcType=VARCHAR})
+  </insert>
+  
+  	<insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="alId" keyColumn="al_id">
+        insert into audit_log (sbi_id, audit_dept,audit_result, operator, audit_time,remark,return_remark)
+		    values
+        <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+        <foreach collection="list" item="p" separator="," close=";">
+            (#{p.sbiId},#{p.auditDept},#{p.auditResult},#{p.operator},sysdate(),#{p.remark},#{p.returnRemark})
+        </foreach>
+    </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.AuditLog" >
+    update audit_log
+    set sbi_id = #{sbiId,jdbcType=INTEGER},
+      audit_dept = #{auditDept,jdbcType=VARCHAR},
+      audit_result = #{auditResult,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      return_remark = #{returnRemark,jdbcType=VARCHAR}
+    where al_id = #{alId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select al_id, sbi_id, audit_dept, audit_result, operator, audit_time, remark
+    from audit_log
+    where al_id = #{alId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.insigma.po.soldier.AuditLog">
+    select al_id, sbi_id, audit_dept, audit_result, operator, audit_time, remark,
+    (select param_value from sys_param_info where group_key='returnRemark' and param_key=t.return_remark) return_remark
+    from audit_log t where 1=1 
+    <if test='sbiId !=null and sbiId !="" '>
+		and sbi_id = #{sbiId,jdbcType=INTEGER}
+	</if>
+	order by al_id desc
+  </select>
+</mapper>

@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.insigma.mapper.SoldierRegisterMapper" >
+   
+  	<!-- 地市报到管理查询数据 -->
+  	<select id="selectAll" resultType="com.insigma.po.soldier.SoldierRegister" parameterType="com.insigma.po.soldier.SoldierRegister">
+		SELECT
+			a.sbi_id,
+			a.NAME,
+			a.idcard,
+			a.domicile,
+			a.reset_place,
+			a.register_time_slot,
+			a.reset_type,
+			a.new_reset_type,
+			a.register_status,
+		CASE WHEN a.register_status='1' and a.renounce_status = '未开具' THEN
+			CASE WHEN DATEDIFF(SYSDATE(),CONCAT(SUBSTR( a.register_time_slot, 1, 4 ),"-",
+				REPLACE ( REPLACE ( SUBSTRING_INDEX( a.register_time_slot, '至',- 1 ), '月', '-' ), '日', '' )) 
+				)> 0 THEN
+				'未开具' 
+			ELSE 
+				'--' 
+			END 
+		WHEN a.register_status='2' and a.renounce_status = '未开具' THEN
+			'--' 
+		ELSE 
+			a.renounce_status 
+		END renounce_status,
+			a.register_time
+		FROM
+			(SELECT
+			t.sbi_id,
+			t.NAME,
+			t.idcard,
+			t.domicile,
+			t.reset_place, 
+			( SELECT CONCAT(rn.year,"年",rn.start_time,"至", rn.end_time) FROM receiving_notice rn WHERE rn.idcard = t.idcard) register_time_slot,
+			t.reset_type,
+			t.new_reset_type,
+			t.register_status,
+			IF ((select count(1) from renounce_resettlement_notice rrn where rrn.idcard = t.idcard)> 0, '已开具', '未开具' ) renounce_status,
+			( SELECT create_time FROM soldier_register sr WHERE sr.idcard = t.idcard ) register_time
+		FROM
+			soldier_basic_info t
+		WHERE 
+			yb_id = #{ybId,jdbcType=INTEGER}
+			and status in(1,2,13)
+		  	AND notice_status=1
+			AND reset_type=1 
+			and (new_reset_type is null or new_reset_type=1)
+			<if test='regionalCode !=null and regionalCode !="" '>
+				<if test='regionalCode.length()==4'>
+					and t.regional_code like '${regionalCode}%'
+				</if>
+				<if test='regionalCode.length()==6'>
+					and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+				</if>
+			</if>
+			<if test='name !=null and name !="" '>
+				and t.name like '%${name}%'
+			</if>
+			<if test='personnelType !=null and personnelType !="" '>
+				and t.personnel_type = #{personnelType} 
+			</if> 
+			<if test='registerStatus =="1" '>
+				and (t.register_status = '1' or register_status is null)
+			</if>
+			<if test='registerStatus =="2" '>
+				and t.register_status = '2'
+			</if>
+	    order by regional_code,sbi_id
+		) a
+  	</select>
+  	
+  	<select id="querySoldierRegisterTreeNodes" resultType="com.insigma.po.soldier.SoldierBasicInfoTotal"  parameterType="com.insigma.po.soldier.TreeNodesParam">
+	    <if test='flag == 1 '>
+			select count(1) pnum 
+			from soldier_basic_info t
+			where 
+				yb_id = #{ybId,jdbcType=INTEGER}
+				and status in(1,2,13)
+			  	<if test='queryType =="1" '>
+			  		AND notice_status=1
+					AND reset_type=1 
+					and (new_reset_type is null or new_reset_type=1)
+				</if>
+				<if test='queryType =="2" '>
+					AND new_reset_type=2 
+				</if>
+				<if test='queryType =="3" '>
+					AND (reset_type=2 or new_reset_type in(2,3) )
+				</if>
+				<if test='regionalCode !=null and regionalCode !="" '>
+					<if test='regionalCode.length()==4'>
+						and t.regional_code like '${regionalCode}%'
+					</if>
+					<if test='regionalCode.length()==6'>
+						and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+					</if>
+				</if>
+				<if test='personnelType !=null and personnelType !="" '>
+					and t.personnel_type = #{personnelType} 
+				</if> 
+				<if test='registerStatus =="1" '>
+					and (t.register_status = '1' or register_status is null)
+				</if>
+				<if test='registerStatus =="2" '>
+					and t.register_status = '2'
+				</if>
+		</if>
+	    <if test='flag == 2 '>
+			SELECT
+				a.regional_name,a.regional_code,
+				IFNULL( b.pnum, 0 ) pnum 
+			FROM
+				sys_regional a
+				LEFT JOIN (
+				SELECT
+					CONCAT( substr( regional_code, 1, 4 ), '00' ) regional_code,
+					count( 1 ) pnum 
+				FROM
+					soldier_basic_info t
+				WHERE  
+					yb_id = #{ybId,jdbcType=INTEGER}
+					and status in(1,2,13)
+					<if test='queryType =="1" '>
+				  		AND notice_status=1
+						AND reset_type=1 
+						and (new_reset_type is null or new_reset_type=1)
+					</if>
+					<if test='queryType =="2" '>
+						AND new_reset_type=2 
+					</if>
+					<if test='queryType =="3" '>
+						AND (reset_type=2 or new_reset_type in(2,3) )
+					</if>
+					<if test='regionalCode !=null and regionalCode !="" '>
+						<if test='regionalCode.length()==4'>
+							and t.regional_code like '${regionalCode}%'
+						</if>
+						<if test='regionalCode.length()==6'>
+							and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+						</if>
+					</if>
+					<if test='personnelType !=null and personnelType !="" '>
+						and t.personnel_type = #{personnelType} 
+					</if> 
+					<if test='registerStatus =="1" '>
+						and (t.register_status = '1' or register_status is null)
+					</if>
+					<if test='registerStatus =="2" '>
+						and t.register_status = '2'
+					</if>
+				GROUP BY
+				substr( regional_code, 1, 4 )) b ON b.regional_code = a.regional_code 
+			WHERE
+				parent_id = 330000
+				<if test='regionalCode !=null and regionalCode !="" '>
+					and a.regional_code = CONCAT(  substr( #{regionalCode}, 1, 4 ), '00' )  
+				</if>
+				order by a.regional_code
+		</if>
+	    <if test='flag == 3 '>
+			SELECT
+				a.regional_name,
+				a.regional_code,
+				IFNULL( b.pnum, 0 ) pnum 
+			FROM
+				sys_regional a
+				LEFT JOIN ( SELECT regional_code, count( 1 ) pnum FROM soldier_basic_info t
+							WHERE  
+								yb_id = #{ybId,jdbcType=INTEGER}
+								and status in(1,2,13)
+							<if test='queryType =="1" '>
+						  		AND notice_status=1
+								AND reset_type=1 
+								and (new_reset_type is null or new_reset_type=1)
+							</if>
+							<if test='queryType =="2" '>
+								AND new_reset_type=2 
+							</if>
+							<if test='queryType =="3" '>
+								AND (reset_type=2 or new_reset_type in(2,3) )
+							</if>
+							<if test='regionalCode !=null and regionalCode !="" '>
+								<if test='regionalCode.length()==4'>
+									and t.regional_code like '${regionalCode}%'
+								</if>
+								<if test='regionalCode.length()==6'>
+									and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+								</if>
+							</if>
+							<if test='personnelType !=null and personnelType !="" '>
+								and t.personnel_type = #{personnelType} 
+							</if> 
+							<if test='registerStatus =="1" '>
+								and (t.register_status = '1' or register_status is null)
+							</if>
+							<if test='registerStatus =="2" '>
+								and t.register_status = '2'
+							</if>
+							 GROUP BY regional_code ) b 
+				ON b.regional_code = a.regional_code 
+			WHERE 1=1 
+				<if test='regionalCode !=null and regionalCode !="" '>
+					<if test='regionalCode.length()==4'>
+						and a.parent_id = CONCAT( #{regionalCode}, '00' ) 
+					</if>
+					<if test='regionalCode.length()==6'>
+						and a.regional_code = #{regionalCode}
+					</if>								
+				</if>
+			ORDER BY
+				a.regional_code
+		</if>
+  	</select>
+  	
+  	
+  	<!-- 安置方式管理查询  -->
+  	<select id="queryRegisterData" resultType="com.insigma.po.soldier.SoldierBasicInfoStatic" parameterType="java.util.Map">
+  		SELECT
+			t.sbi_id,
+			t.NAME,
+			idcard,
+			domicile,
+			reset_place,
+			reset_type,
+			new_reset_type,
+			(select file_path from flexible_employment_info i where i.sbi_id=t.sbi_id) file_path
+		FROM
+			soldier_basic_info t 
+		WHERE yb_id = #{ybId,jdbcType=INTEGER}
+			and status in(1,2,13)
+			and notice_status=1
+			<if test='name !=null and name !="" '>
+				and name like '%${name}%'
+			</if>
+			<if test='regionalCode !=null and regionalCode !="" '>
+				<if test='regionalCode.length()==4'>
+					and regional_code like '${regionalCode}%'
+				</if>
+				<if test='regionalCode.length()==6'>
+					and regional_code = #{regionalCode,jdbcType=VARCHAR}
+				</if>
+			</if>
+			
+			<if test='personnelType !=null and personnelType !="" '>
+				AND t.personnel_type = #{personnelType} 
+			</if> 
+			<if test='queryType =="1" '>
+				AND notice_status=1
+				AND reset_type=1 
+				and (new_reset_type is null or new_reset_type=1)
+			</if> 
+			<if test='queryType =="2" '>
+				AND new_reset_type=2 
+			</if>
+			<if test='queryType =="3" '>
+				AND (reset_type=2 or new_reset_type in(2,3) )
+			</if>
+			
+  	</select>
+  
+  	<select id="querySoldierBasicInfo" resultType="com.insigma.po.soldier.SoldierBasicInfo" parameterType="java.util.Map" >
+	    select sbi_id,name,idcard from soldier_basic_info t
+	    where reset_type=1 
+	    and (new_reset_type is null or new_reset_type=1)  
+	    and status in(1,2,13)
+	    and regional_code like '${regionalCode}%'
+	    AND t.notice_status=1
+	    and yb_id = #{ybId} 
+	    and name like '%${name}%'
+  	</select>
+  	
+  	<insert id="insertSR" parameterType="com.insigma.po.soldier.SoldierRegister" >
+	    insert into soldier_register (idcard,operator,create_time)
+	    values (#{idcard,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},#{registerTime})
+  	</insert>
+  	
+  	<select id="querySR" resultType="com.insigma.po.soldier.SoldierRegister" parameterType="java.lang.String" >
+	    select * from soldier_register where idcard = #{idcard,jdbcType=VARCHAR}
+  	</select>
+  	
+  	<update id="updateSR" parameterType="com.insigma.po.soldier.SoldierRegister" >
+	    update soldier_register
+	    set operator=#{operator,jdbcType=VARCHAR},create_time = #{registerTime}
+	    where idcard = #{idcard,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<insert id="insert" parameterType="com.insigma.po.soldier.FlexibleEmploymentInfo" >
+	    insert into flexible_employment_info (fei_id, sbi_id, bank_account, 
+	      name, bank_name, whe_rece_relf_subs, 
+	      self_subs_amount, whe_Liv_allow, payment_money, 
+	      payment_month, domicile)
+	    values (#{feiId,jdbcType=INTEGER}, #{sbiId,jdbcType=INTEGER}, #{bankAccount,jdbcType=VARCHAR}, 
+	      #{name,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, #{wheReceRelfSubs,jdbcType=INTEGER}, 
+	      #{selfSubsAmount,jdbcType=DECIMAL}, #{wheLivAllow,jdbcType=INTEGER}, #{paymentMoney,jdbcType=DECIMAL}, 
+	      #{paymentMonth,jdbcType=INTEGER}, #{domicile,jdbcType=VARCHAR})
+  	</insert>
+  	<update id="updateByPrimaryKey" parameterType="com.insigma.po.soldier.FlexibleEmploymentInfo" >
+	    update flexible_employment_info
+	    set sbi_id = #{sbiId,jdbcType=INTEGER},
+	      bank_account = #{bankAccount,jdbcType=VARCHAR},
+	      name = #{name,jdbcType=VARCHAR},
+	      bank_name = #{bankName,jdbcType=VARCHAR},
+	      whe_rece_relf_subs = #{wheReceRelfSubs,jdbcType=INTEGER},
+	      self_subs_amount = #{selfSubsAmount,jdbcType=DECIMAL},
+	      whe_Liv_allow = #{wheLivAllow,jdbcType=INTEGER},
+	      payment_money = #{paymentMoney,jdbcType=DECIMAL},
+	      payment_month = #{paymentMonth,jdbcType=INTEGER},
+	      domicile = #{domicile,jdbcType=VARCHAR}
+	    where fei_id = #{feiId,jdbcType=INTEGER}
+  	</update>
+  	<select id="selectByPrimaryKey" resultType="com.insigma.po.soldier.FlexibleEmploymentInfo" parameterType="java.lang.Integer" >
+	    select fei_id, sbi_id, bank_account, name, bank_name, whe_rece_relf_subs, self_subs_amount, 
+	    whe_Liv_allow, payment_money, payment_month, domicile
+	    from flexible_employment_info
+	    where fei_id = #{feiId,jdbcType=INTEGER}
+  	</select>
+  
+  	<select id="queryScoreList" resultType="com.insigma.po.soldier.SoldierScore" parameterType="com.insigma.po.soldier.SoldierScore"  >
+	    SELECT
+			t.sbi_id,
+			t.NAME,
+			idcard,
+			archives_score,
+			exam_score
+		FROM
+			soldier_basic_info t 
+		WHERE
+			yb_id = #{ybId,jdbcType=INTEGER}
+<!-- 			and status in(1,2,13) -->
+			and reset_type=1
+			AND (new_reset_type IS NULL or new_reset_type=1)
+			and notice_status=1
+			<if test='name !=null and name !="" '>
+				and name like '%${name}%'
+			</if>
+			<if test='regionalCode !=null and regionalCode !="" '>
+				<if test='regionalCode.length()==4'>
+					and t.regional_code like '${regionalCode}%'
+				</if>
+				<if test='regionalCode.length()==6'>
+					and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+				</if>
+			</if>
+  	</select>
+  	
+  	<update id="updateSoldierScore" parameterType="com.insigma.po.soldier.SoldierScore" >
+	    update soldier_basic_info
+	       set archives_score = #{archivesScore,jdbcType=VARCHAR},
+	      	   exam_score = #{examScore,jdbcType=VARCHAR},
+	      	   total_score = #{totalScore,jdbcType=VARCHAR}
+<!-- 	      	   truncate(cast(#{archivesScore,jdbcType=VARCHAR} as decimal(11,2))*0.6,2)+truncate(cast(#{examScore,jdbcType=VARCHAR} as decimal(11,2))*0.4,2) -->
+	     where sbi_id = #{sbiId,jdbcType=INTEGER}
+  	</update>
+  	
+  	
+  	
+  	<select id="queryPSMSoldierData" resultType="com.insigma.po.soldier.PostSelectionManagement" parameterType="java.util.Map">
+    	select * from (
+    	SELECT 
+			t.sbi_id,
+			t.NAME,
+			idcard,
+			archives_score,
+			exam_score,
+			total_score ,
+			a.rui_id,a.unit_name,
+			IF (a.whe_let_of_intro =2, '已开具', '未开具' ) whe_let_of_intro,
+			IF (a.whe_registr_form =2, '已开具', '未开具' ) whe_registr_form,
+			(select let_of_intro_file_path from post_selection_management where sbi_id=t.sbi_id) let_of_intro_file_path ,
+			(select registr_form_file_path from post_selection_management where sbi_id=t.sbi_id) registr_form_file_path 
+	   FROM soldier_basic_info t 
+	   		left join post_selection_management a 
+	   		on a.sbi_id=t.sbi_id
+      where yb_id = #{ybId,jdbcType=INTEGER}
+			and status in(1,2,13)
+			and notice_status=1
+			AND reset_type=1 
+			and (new_reset_type is null or new_reset_type=1)
+			<if test='name !=null and name !="" '>
+				and t.name like '%${name}%'
+			</if>
+			<if test='regionalCode !=null and regionalCode !="" '>
+				<if test='regionalCode.length()==4'>
+					and t.regional_code like '${regionalCode}%'
+				</if>
+				<if test='regionalCode.length()==6'>
+					and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+				</if>
+			</if>
+			) a
+			where 1=1
+			<if test=' wheLetOfIntro == "2" '>
+				and whe_let_of_intro='已开具'
+			</if>
+			<if test=' wheLetOfIntro == "1" '>
+				and whe_let_of_intro='未开具'
+			</if>
+			<if test='wheRegistrForm == "2" '>
+				and whe_registr_form='已开具'
+			</if>
+			<if test='wheRegistrForm == "1" '>
+				and whe_registr_form='未开具'
+			</if>
+			order by total_score desc,sbi_id
+  	</select>
+  	
+  	
+  	<select id="queryPSMSoldierDataTreeNodes" resultType="com.insigma.po.soldier.SoldierBasicInfoTotal"  parameterType="java.util.Map">
+	    <if test='flag == 1 '>
+			select count(1) pnum 
+			from soldier_basic_info t
+			where 
+				yb_id = #{ybId,jdbcType=INTEGER}
+				and status in(1,2,13)
+				AND reset_type=1 
+				and notice_status=1
+				and (new_reset_type is null or new_reset_type=1)
+				<if test='wheLetOfIntro == "2" '>
+					and t.sbi_id in(select sbi_id from post_selection_management where whe_let_of_intro=2)
+				</if>
+				<if test='wheLetOfIntro == "1" '>
+					and t.sbi_id not in(select sbi_id from post_selection_management where whe_let_of_intro=1)
+				</if>
+				<if test='wheRegistrForm == "2" '>
+					and t.sbi_id in(select sbi_id from post_selection_management where whe_registr_form=2)
+				</if>
+				<if test='wheRegistrForm == "1" '>
+					and t.sbi_id not in(select sbi_id from post_selection_management where whe_registr_form=1)
+				</if>
+				<if test='regionalCode !=null and regionalCode !="" '>
+					<if test='regionalCode.length()==4'>
+						and t.regional_code like '${regionalCode}%'
+					</if>
+					<if test='regionalCode.length()==6'>
+						and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+					</if>
+				</if>
+		</if>
+	    <if test='flag == 2 '>
+			SELECT
+				a.regional_name,a.regional_code,
+				IFNULL( b.pnum, 0 ) pnum 
+			FROM
+				sys_regional a
+				LEFT JOIN (
+				SELECT
+					CONCAT( substr( regional_code, 1, 4 ), '00' ) regional_code,
+					count( 1 ) pnum 
+				FROM
+					soldier_basic_info t
+				WHERE  
+					yb_id = #{ybId,jdbcType=INTEGER}
+					and status in(1,2,13)
+					AND reset_type=1 
+					and notice_status=1
+					and (new_reset_type is null or new_reset_type=1)
+					<if test='wheLetOfIntro == "2" '>
+						and t.sbi_id in(select sbi_id from post_selection_management where whe_let_of_intro=2)
+					</if>
+					<if test='wheLetOfIntro == "1" '>
+						and t.sbi_id not in(select sbi_id from post_selection_management where whe_let_of_intro=1)
+					</if>
+					<if test='wheRegistrForm == "2" '>
+						and t.sbi_id in(select sbi_id from post_selection_management where whe_registr_form=2)
+					</if>
+					<if test='wheRegistrForm == "1" '>
+						and t.sbi_id not in(select sbi_id from post_selection_management where whe_registr_form=1)
+					</if>
+					<if test='regionalCode !=null and regionalCode !="" '>
+						<if test='regionalCode.length()==4'>
+							and t.regional_code like '${regionalCode}%'
+						</if>
+						<if test='regionalCode.length()==6'>
+							and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+						</if>
+					</if>
+				GROUP BY
+				substr( regional_code, 1, 4 )) b ON b.regional_code = a.regional_code 
+			WHERE
+				parent_id = 330000
+				<if test='regionalCode !=null and regionalCode !="" '>
+					and a.regional_code = CONCAT(  substr( #{regionalCode}, 1, 4 ), '00' )  
+				</if>
+				order by a.regional_code
+		</if>
+	    <if test='flag == 3 '>
+			SELECT
+				a.regional_name,
+				a.regional_code,
+				IFNULL( b.pnum, 0 ) pnum 
+			FROM
+				sys_regional a
+				LEFT JOIN ( SELECT regional_code, count( 1 ) pnum FROM soldier_basic_info t
+							WHERE  
+								yb_id = #{ybId,jdbcType=INTEGER}
+								and status in(1,2,13)
+								AND reset_type=1 
+								and notice_status=1
+								and (new_reset_type is null or new_reset_type=1)
+								<if test='wheLetOfIntro == "2" '>
+									and t.sbi_id in(select sbi_id from post_selection_management where whe_let_of_intro=2)
+								</if>
+								<if test='wheLetOfIntro == "1" '>
+									and t.sbi_id not in(select sbi_id from post_selection_management where whe_let_of_intro=1)
+								</if>
+								<if test='wheRegistrForm == "2" '>
+									and t.sbi_id in(select sbi_id from post_selection_management where whe_registr_form=2)
+								</if>
+								<if test='wheRegistrForm == "1" '>
+									and t.sbi_id not in(select sbi_id from post_selection_management where whe_registr_form=1)
+								</if>
+								<if test='regionalCode !=null and regionalCode !="" '>
+									<if test='regionalCode.length()==4'>
+										and t.regional_code like '${regionalCode}%'
+									</if>
+									<if test='regionalCode.length()==6'>
+										and t.regional_code = #{regionalCode,jdbcType=VARCHAR}
+									</if>
+								</if>
+							 GROUP BY regional_code ) b 
+				ON b.regional_code = a.regional_code 
+			WHERE 1=1 
+				<if test='regionalCode !=null and regionalCode !="" '>
+					<if test='regionalCode.length()==4'>
+						and a.parent_id = CONCAT( #{regionalCode}, '00' ) 
+					</if>
+					<if test='regionalCode.length()==6'>
+						and a.regional_code = #{regionalCode}
+					</if>								
+				</if>
+			ORDER BY
+				a.regional_code
+		</if>
+  	</select>
+</mapper>

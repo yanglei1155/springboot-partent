@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.com.springboot.mapper.AddressMapper">
+     <select id="addressList" resultType="com.example.com.springboot.pojo.Address" parameterType="com.example.com.springboot.pojo.User">
+         select *from seckill_address where uid=#{uid} <where>
+         <if test="status !=null and status !=''">
+            and status=#{status}
+         </if>
+     </where>
+     </select>
+    <insert id="saveAddress" parameterType="com.example.com.springboot.pojo.User">
+        insert into seckill_address(id,uid,address,phone,status)values (#{addressId},#{uid},#{address},#{phone},#{status})
+    </insert>
+    <select id="getAddressById" parameterType="com.example.com.springboot.pojo.Address" resultType="com.example.com.springboot.pojo.Address">
+        select phone,address from seckill_address where id=#{id}
+    </select>
+</mapper>
