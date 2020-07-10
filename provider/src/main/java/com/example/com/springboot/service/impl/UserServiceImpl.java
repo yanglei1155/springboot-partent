@@ -11,7 +11,11 @@ import java.util.UUID;
 
 @Service
 public class UserServiceImpl extends BaseServcieImpl<UserMapper> implements UserService {
-
+    /**
+     * 保存用户
+     * @param user
+     * @return
+     */
     @Override
     public User saveUser(User user) {
        String uid= UUID.randomUUID().toString().replaceAll("-","");
